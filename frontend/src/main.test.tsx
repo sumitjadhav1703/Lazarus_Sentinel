@@ -43,3 +43,17 @@ it('invalid bundle suppresses graph and counts with a display failure',async()=>
   expect((await screen.findByRole('alert')).textContent).toContain('Display verification failed');
   expect(screen.queryByTestId('network')).toBeNull(); expect(screen.queryByRole('button')).toBeNull();
 });
+
+it('exposes a skip link to the main landmark and labelled regions',async()=>{
+  vi.mocked(loadDemo).mockResolvedValue(demo());
+  render(<App/>);
+  await screen.findByText('Trace authorization questions back to code');
+  const skip=screen.getByRole('link',{name:'Skip to main content'});
+  expect(skip.getAttribute('href')).toBe('#main');
+  expect(document.querySelector('a')).toBe(skip);
+  expect(screen.getByRole('main').id).toBe('main');
+  expect(screen.getByRole('complementary',{name:'Endpoints'})).toBeTruthy();
+  expect(screen.getByRole('navigation',{name:'Endpoint list'})).toBeTruthy();
+  expect(screen.getByRole('complementary',{name:'Endpoint context'})).toBeTruthy();
+  expect(screen.getByRole('region',{name:'Coverage and limitations'})).toBeTruthy();
+});
