@@ -31,6 +31,7 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 ## Evidence (measured 2026-11-03 on branch `codex/agent-investigation`)
 
 - `scripts/verify_demo.py` reported PASSED with `live_provider_attempts: 0` on the unchanged packaged bundle (6 endpoints, 23 nodes, 36 edges, 2 findings).
+- After merging `main` with PR #55 (2026-11-04): backend 243 passed and 4 skipped, frontend 28 passed, the LangGraph extra 3 passed, the context-MCP extra 7 passed, and `verify_demo.py` PASSED with 0 live attempts.
 - After the weakness references were added (2026-11-04): with the default install, backend 236 passed and 3 skipped, frontend 22 passed, and `verify_demo.py` PASSED with 0 live attempts.
 - Backend at the first checkpoint: 218 passed and 3 skipped. 32 of the passing tests are new investigation tests covering hostile model output, tampered records, request shape, a separate ledger and the attempt cap. The optional LangGraph tests passed (3). Frontend: 21 tests passed, and typecheck, lint and build passed.
 - An end-to-end CLI rehearsal on a fresh scan recorded a 6-call mock investigation and exported a bundle with graph, explanation and investigation sidecars. The viewer rendered it on loopback. The record is about 7.9 KB, and the largest tool result was 1939 bytes.

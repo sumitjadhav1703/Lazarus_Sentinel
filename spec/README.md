@@ -9,6 +9,7 @@ See [competition verification](06_COMPETITION_VERIFICATION.md) for the recorded 
 For the deadline checklist and budget, start with the [submission and cost plan](07_SUBMISSION_AND_COST_PLAN.md).
 
 The read-only agent investigation and weakness references are specified in [agent investigation](10_AGENT_INVESTIGATION.md). They are built offline, and their live runs are gated on review.
+The [repository context guide](09_AGENT_CONTEXT.md) covers the local CLI, JSON, MCP, and viewer interfaces.
 
 ## Read in this order
 

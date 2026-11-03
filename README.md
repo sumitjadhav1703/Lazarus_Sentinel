@@ -72,7 +72,7 @@ Lazarus Sentinel builds a deterministic graph of the code and flags *candidates*
 | Meta explanation | One validated live Muse Spark 1.3 explanation, recorded and replayed in the public viewer |
 | Agent investigation | Muse Spark calls read-only graph tools step by step, and every step is replayed on load. **Built and tested offline. The live run is pending review.** See [spec/10](spec/10_AGENT_INVESTIGATION.md). |
 | Weakness references | Reviewed CWE/OWASP links per rule, with an optional refresh through Meta's built-in `web_search` (allowlisted hosts only). **Live search pending review.** |
-| Quality | [Native Windows, macOS and Linux CI](docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md); on macOS, measured 2026-11-04: 236 backend tests passed and 3 skipped (2 need the optional LangGraph extra, 1 is Windows-only); 22 frontend tests passed |
+| Quality | [Native Windows, macOS and Linux CI](docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md); on macOS, measured 2026-11-04: 243 backend tests passed and 4 skipped (optional-extra or Windows-only tests); 28 frontend tests passed |
 | Controlled assessments | Separate fixed-fixture DATA, TRUST and actor/action/resource reports |
 | Optional workflow | LangGraph over the fixed demo stages. See [orchestration](docs/05_ORCHESTRATION.md). |
 | Blocked / deferred | Joern, canonical DATA/TRUST graph integration, HTTP API, durable review, arbitrary repositories, OS isolation |

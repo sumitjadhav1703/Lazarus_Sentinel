@@ -31,6 +31,7 @@ def validate_graph(graph: Graph) -> None:
         len(nodes) != len(graph.nodes)
         or len(edges) != len(graph.edges)
         or len(evidence) != len(graph.evidence)
+        or nodes.keys() & edges.keys()
     ):
         raise ValueError("DUPLICATE_IDENTIFIERS")
     revision = graph.repository.get("revision")

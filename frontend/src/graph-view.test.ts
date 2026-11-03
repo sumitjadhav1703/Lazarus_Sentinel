@@ -14,3 +14,15 @@ it('does not collapse parallel relationships with distinct stored IDs',()=>{
   expect(context.edges.filter(e=>e.source===first.source&&e.target===first.target).map(e=>e.id)).toEqual([first.id,parallel.id]);
   expect(projectGraph(input,undefined,'overview','').edges).toHaveLength(graph.edges.length+1);
 });
+it('keeps uncertain handler and call edges out of focused paths',()=>{
+  const f=graph.findings[0];
+  const first=graph.edges.find(e=>e.id===f.path_edge_ids[0])!;
+  const call=graph.edges.find(e=>e.id===f.path_edge_ids[1])!;
+  const inferred={...first,id:'edge:inferred-test',fact_status:'INFERRED'};
+  const unresolved={...call,id:'edge:unresolved-test',fact_status:'UNRESOLVED'};
+  const input={nodes:graph.nodes,edges:[...graph.edges,inferred,unresolved]};
+  const focused=projectGraph(input,undefined,'path',f.entry_node_id);
+  expect(focused.edges.every(e=>e.fact_status==='OBSERVED')).toBe(true);
+  expect(focused.edges.map(e=>e.id)).toContain(first.id);
+  expect(projectGraph(input,undefined,'overview','').edges).toEqual(input.edges);
+});

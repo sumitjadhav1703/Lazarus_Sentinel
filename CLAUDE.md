@@ -35,7 +35,7 @@ Implemented. Verify against `AGENT.md` and `TASK_BOARD.md`, which are the live l
   - An optional Meta `web_search` refresh that keeps only allowlisted https citations, on the agent ledger.
   - Built and tested offline.
 - **Optional extras** (not in the default install): `--extra langgraph` (opt-in LangGraph rehearsal over the same fixed stages, mock by default, no tracing).
-- **Repository context for agents** (`lazarus context build|query|serve`, `spec/09_AGENT_CONTEXT.md`, `--extra context-mcp`): on the PR #55 branch (`codex/agent-context`). Check whether it is merged before relying on it.
+- **Repository context for agents** (`context.py`, `context_index.py`, `context_mcp.py`, `frontend/src/AgentContext*`, [spec/09](spec/09_AGENT_CONTEXT.md)): `lazarus context build|query|serve --target self`, merged through PR #55. It is a structural index of this repository, not data flow or proof of behaviour. Optional extra: `--extra context-mcp`.
 
 Never make a live provider call without the owner's explicit authorization in the current conversation.
 
@@ -57,14 +57,15 @@ npm run dev --prefix frontend                                          # viewer 
 ```
 
 - Add `--no-env-file` to `uv run` for anything that must not load `.env`.
-- Optional-extra test: `uv run --project backend --locked --extra langgraph --no-env-file pytest backend/tests/test_langgraph_demo.py`.
+- Optional-extra tests: `uv run --project backend --locked --extra langgraph --no-env-file pytest backend/tests/test_langgraph_demo.py` and `uv run --project backend --locked --extra context-mcp --no-env-file pytest backend/tests/test_context.py backend/tests/test_context_index.py`.
 - Python is pinned to 3.13 (`backend/pyproject.toml`, `.python-version`), and Node to 24.14.0.
 - Counts of passing tests change. Record the measured number from your own run, not a remembered one.
 
 ## Where things are
 
 - **`backend/src/lazarus_sentinel/`**
-  - `cli.py`, with commands `scan`, `demo export`, `explain`, `investigate` and `references`.
+  - `cli.py`, with commands `scan`, `demo export`, `explain`, `investigate`, `references` and `context build|query|serve`.
+  - Repository context: `context.py`, `context_index.py`, `context_mcp.py`.
   - `models.py`: schema 0.1.0, authoritative.
   - Pipeline: `intake.py`, `worker.py`, `analysis.py`, `rules.py`, `service.py`.
   - Artifacts and reports: `persistence.py`, `bundle.py`, `report.py`.
@@ -77,7 +78,7 @@ npm run dev --prefix frontend                                          # viewer 
 - **`scripts/`:** trusted tools (`verify_demo.py`, `prepare_demo.py`, `inspect_artifacts.py`, `assess_*.py`, `semantic_spike.py`).
 - **`fixtures/`:** synthetic targets. The expected-results oracle is test-only.
 - **`docs/`:** numbered specs and evidence, 00-24. `docs/assets/` holds the README walkthrough GIF.
-- **`spec/`:** blueprint audit, competition verification (06), submission (07), agent investigation (10).
+- **`spec/`:** blueprint audit, competition verification (06), submission (07), agent context (09), agent investigation (10).
 - **Authority, newest first:** `AGENT.md` > `TASK_BOARD.md` > `spec/10_AGENT_INVESTIGATION.md` > `spec/06_COMPETITION_VERIFICATION.md` > `docs/24_CONTRIBUTOR_READINESS_AND_CI.md`.
 
 ## CI and GitHub workflow
@@ -85,7 +86,7 @@ npm run dev --prefix frontend                                          # viewer 
 - **`.github/workflows/ci.yml`** (name `CI`) runs only on pull requests and on pushes to `main`. Jobs:
   - `backend`: ruff, format check, mypy, pytest.
   - `frontend`: typecheck, lint, vitest, build.
-  - `verify`: a 3-OS matrix (macOS, Windows, Ubuntu) that runs `scripts/verify_demo.py` and the optional LangGraph tests.
+  - `verify`: a 3-OS matrix (macOS, Windows, Ubuntu) that runs `scripts/verify_demo.py` plus the optional LangGraph and context-MCP tests.
 - **Other workflows:** `codeql.yml` (Python and JS/TS, weekly) and `dependabot.yml`. `pages.yml` is a manual, opt-in static-viewer deploy from `main` with an output allowlist; do not trigger it.
 - **Cancelled macOS job:** a hosted-runner queue cancellation is not a code failure. Re-run the job instead of editing code.
 - **Issues:** the GitHub issue backlog (labels `good first issue`, `frontend`, `testing`, `ci`, `security`, `roadmap`, `owner-decision`) is the live task list for contributors. Check `gh issue list` for status.
