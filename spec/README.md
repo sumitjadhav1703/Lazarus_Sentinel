@@ -2,6 +2,8 @@
 
 Reviewed **2026-11-02** against the original **33-page, version 1.0 blueprint prepared 01 November 2026**, all numbered sections 1–20, appendices A–D and the closing note. This folder is a compact planning space for teammates using Claude Code or Codex.
 
+For release rehearsal and remaining gates, see [demo closeout](05_DEMO_CLOSEOUT.md).
+
 ## Read in this order
 
 1. [Implementation audit](01_BLUEPRINT_IMPLEMENTATION_AUDIT.md): source-page references, current evidence, implemented/partial/missing capabilities, approved substitutions and every Appendix B checklist item.

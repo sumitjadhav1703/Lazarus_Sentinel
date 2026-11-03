@@ -88,6 +88,8 @@ Then run the full verification. This step makes no network or model calls and ne
 uv run --project backend --locked python scripts/verify_demo.py
 ```
 
+For a fresh mock explanation bundle and a short walkthrough, see the [demo closeout guide](spec/05_DEMO_CLOSEOUT.md).
+
 ## How it works
 
 ```mermaid

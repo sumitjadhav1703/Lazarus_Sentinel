@@ -79,3 +79,9 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 - [ ] Resolve P06 owner prerequisites and P08 runtime approval. P09 depends on verified isolation.
 - [x] P10 local readiness. Verify root and repository subpath builds and prepare a manual Pages workflow.
 - [ ] Review P10 publication and verify the deployed URL before setting the repository Website.
+
+### Demo closeout
+
+- [x] Merge PR #51 after native verification and pass a credential-free fresh clone on this Mac.
+- [x] Rehearse and export the synthetic mock explanation without replacing packaged assets.
+- [ ] Collect teammate, native accessibility and portal evidence. Live Meta and Pages retain their review gates.
