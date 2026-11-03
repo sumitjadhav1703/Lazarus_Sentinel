@@ -22,7 +22,7 @@
 - **Primary code-analysis candidate:** Python AST structure adapter; Joern NOT_ATTEMPTED (absent from PATH; no failed POC claim).
 - **Graph computation:** NetworkX for MVP.
 - **Persistence:** SQLite for scans/findings/artifact references; normalized JSON graph/findings/coverage and Markdown reports.
-- **Workflow orchestration:** Linear Python pipeline; LangGraph deferred.
+- **Workflow orchestration:** Default linear Python pipeline with an opt-in LangGraph demo workflow.
 - **Frontend:** React/Vite/TypeScript/Cytoscape fixed synthetic bundle viewer plus CLI/JSON/Markdown; HTTP API skipped.
 - **Runtime model provider:** Disabled by default; deterministic mock and bounded Standard Meta adapter implemented. Live Muse Spark explanation validated and exported. Four settled attempts total USD 0.023824 estimated. USD 3/five-attempt application cap.
 - **MVP mode:** Controlled fixture ID only; read-only parsing; candidate findings; no automatic fixes, arbitrary repositories, or target execution.
@@ -337,3 +337,8 @@ Owner authorized the work and reviewer fallback. Three separately reviewed live 
 Implemented separate controlled DATA, TRUST and actor/action/resource assessments with policy and byte-level evidence. They do not change the fixed FastAPI graph contract. See [competition verification](spec/06_COMPETITION_VERIFICATION.md) for reproducible commands, counts and open gates.
 
 PR #53 merged at 47c5d2e after native macOS, Windows and Ubuntu checks. Hosted backend pytest reported 185 passed and one skipped. The [public viewer](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) deploy completed from that revision, all three public bundle files matched the reviewed recording, and the repository Website field was verified. The static demo needs no API credential. [Deployment evidence](https://github.com/sumitjadhav1703/Lazarus_Sentinel/actions/runs/41624406844).
+
+
+### Submission documentation and optional LangGraph
+
+Audited the repository Markdown, refreshed all docs/ reference files and spec/ pages, and wrote the [submission and cost plan](spec/07_SUBMISSION_AND_COST_PLAN.md). Historical checkpoints keep their original evidence. Added an opt-in pinned LangGraph workflow over the same fixed scan, explanation and export stages. The default linear path and deployed live recording are unchanged. The graph rehearsal uses mock by default, disables tracing and adds no durable state or retries. No new paid call was made.

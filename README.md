@@ -57,11 +57,12 @@ Correlate program structure with endpoints, permissions and trust boundaries, an
 | Quality | [Native Windows, macOS and Linux CI passed](docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md); 139 backend tests plus 1 Windows-only skip, 16 frontend tests at last verification |
 | Demo | Hash-verified immutable bundle, disabled/mock explanation sidecars, fixed React + Cytoscape viewer with a recorded live Muse Spark explanation |
 | Controlled assessments | Separate fixed-fixture DATA, TRUST, and actor/action/resource reports |
-| Blocked / deferred | Joern, canonical DATA/TRUST graph integration, HTTP API, LangGraph, arbitrary repositories, OS isolation |
+| Optional workflow | LangGraph over the fixed demo stages. See [orchestration](docs/05_ORCHESTRATION.md). |
+| Blocked / deferred | Joern, canonical DATA/TRUST graph integration, HTTP API, durable review, arbitrary repositories, OS isolation |
 
 The fixture intentionally contains unsupported dynamic registration, so its normal outcome is **PARTIAL / exit 2**. A matching authorization declaration is syntax evidence, not proof of enforcement.
 
-See [competition verification](spec/06_COMPETITION_VERIFICATION.md) for the live annotation, the bounded assessment results, and the demo limitations. The [public demo](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) replays the recorded Meta result.
+For the deadline checklist and costs, read the [submission and cost plan](spec/07_SUBMISSION_AND_COST_PLAN.md). See [competition verification](spec/06_COMPETITION_VERIFICATION.md) for the live annotation, the bounded assessment results, and the demo limitations. The [public demo](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) replays the recorded Meta result.
 
 ## Quickstart
 

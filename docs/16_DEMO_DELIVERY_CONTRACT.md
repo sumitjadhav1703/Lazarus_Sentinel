@@ -1,5 +1,7 @@
 # 16 — Approved integrated demo contract
 
+The [competition verification](../spec/06_COMPETITION_VERIFICATION.md) records later release results. This document retains its original checkpoint and scope.
+
 > Team/platform update (2026-11-02): [team handoff](21_TEAM_HANDOFF.md), [finite next-phase plan](22_NEXT_PHASE_PLAN.md), and [current portability/publication evidence](23_PORTABILITY_AND_RELEASE_VERIFICATION.md) supersede earlier onboarding, remote-state and platform assumptions. Historical checks below retain their original date and scope.
 
 

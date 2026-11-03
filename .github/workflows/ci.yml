@@ -85,3 +85,5 @@ jobs:
       - run: npm ci --ignore-scripts --no-audit --no-fund
         working-directory: frontend
       - run: uv run --project backend --locked python scripts/verify_demo.py
+      - name: Verify optional LangGraph workflow
+        run: uv run --project backend --locked --extra langgraph --no-env-file pytest backend/tests/test_langgraph_demo.py -q

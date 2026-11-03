@@ -2,7 +2,9 @@
 
 Dated **2026-11-02**. Documentation-only comparison of the owner's 33-page, version 1.0 research blueprint (01 November 2026) with reviewed source `06f993e` and documentation HEAD `9f3d021`. The private PDF/text is not reproduced or published here. Page references use printed PDF pages, not text line numbers.
 
-**The approved fixed-fixture baseline and integrated offline demo are complete. The original three-detector blueprint MVP is not complete.** The current product performs deterministic, conservative authorization-*declaration* assessment on one synthetic FastAPI fixture. It does not prove effective authorization, data flow, trust-boundary handling or production security accuracy.
+**At this checkpoint, the fixed-fixture baseline and integrated offline demo were complete.** The reviewed implementation assessed authorization declarations on one synthetic FastAPI fixture.
+
+The matrix and counts below preserve the November 2 snapshot. The November 3 [competition checkpoint](06_COMPETITION_VERIFICATION.md) supersedes its live Meta and deployment statuses and records separate controlled DATA, TRUST, and actor/action/resource assessments. Canonical integration and runtime effectiveness remain open.
 
 ## Reading the result
 
@@ -237,4 +239,4 @@ The PDF reader map abbreviates the document, but the actual body contains **20 n
 
 The foundation is concrete: a safe fixed synthetic manifest, reproducible deterministic graph, conservative declaration-context candidates, traceable evidence, verified exports, bounded optional explanations, fixed interactive viewer and successful native project CI. The proposed three-layer semantic graph remains sparse: actual packaged node kinds are MODULE/FUNCTION/API_ENDPOINT; typed metadata and policy assertions should not be advertised as a complete security graph. `graph.findings` is a valid separate finding representation; absence of a FINDING node is not itself a gap.
 
-The next useful analysis increment is a predeclared controlled semantic capability experiment and review, as scoped in the [gated plan](02_NEXT_STAGE_PLAN.md). Existing controlled fixture experiments do not require opening arbitrary-repository intake. Broader intake specifically requires isolation proof first. Joern remains a candidate, LangGraph remains optional for a demonstrated orchestration need, and a public static website is a separate presentation option.
+The [gated plan](02_NEXT_STAGE_PLAN.md) tracks subsequent work. The [controlled provenance experiment](04_CONTROLLED_SEMANTIC_EXPERIMENT.md) and [competition checkpoint](06_COMPETITION_VERIFICATION.md) record later evidence separately. Broader repository intake still requires isolation proof.

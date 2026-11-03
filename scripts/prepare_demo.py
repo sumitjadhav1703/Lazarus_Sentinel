@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import TypedDict
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend" / "src"))
@@ -48,60 +49,111 @@ class DemoCommandError(Exception):
         self.codes = codes
 
 
-def prepare(*, verify_only: bool = False, provider: str = "mock") -> dict:
+class DemoState(TypedDict, total=False):
+    scan_id: str
+    finding_id: str
+    graph_bytes: bytes
+    annotation_id: str
+    exported: dict
+
+
+def prepare(
+    *, verify_only: bool = False, provider: str = "mock", workflow: str = "linear"
+) -> dict:
     if provider not in {"mock", "meta"} or (provider == "meta" and not verify_only):
         raise ValueError("INVALID_PROVIDER")
+    if workflow not in {"linear", "langgraph"}:
+        raise ValueError("INVALID_WORKFLOW")
+    if workflow == "langgraph" and not verify_only:
+        raise ValueError("LANGGRAPH_REQUIRES_VERIFY_ONLY")
     budget = ROOT / "artifacts" / "model-budget.sqlite3"
     budget_before = (
         budget.read_bytes() if provider == "mock" and budget.exists() else None
     )
-    scan = cli("scan", "--target", "fixture:fastapi-demo", expected=2)
-    loaded = load_committed_graph(scan["scan_id"])
-    finding = next(f for f in loaded.graph.findings if f.confidence == "LOW")
-    disabled = cli("explain", "--scan-id", scan["scan_id"], "--finding-id", finding.id)
-    if disabled != {"status": "DISABLED", "provider": "disabled"}:
-        raise ValueError("INVALID_DISABLED_RESULT")
-    annotation = cli(
-        "explain",
-        "--scan-id",
-        scan["scan_id"],
-        "--finding-id",
-        finding.id,
-        "--provider",
-        provider,
-    )
-    exported = cli(
-        "demo",
-        "export",
-        "--scan-id",
-        scan["scan_id"],
-        "--annotation-id",
-        annotation["annotation_id"],
-    )
+
+    def scan_fixture(_state: DemoState) -> DemoState:
+        scan = cli("scan", "--target", "fixture:fastapi-demo", expected=2)
+        loaded = load_committed_graph(scan["scan_id"])
+        finding = next(f for f in loaded.graph.findings if f.confidence == "LOW")
+        return {
+            "scan_id": scan["scan_id"],
+            "finding_id": finding.id,
+            "graph_bytes": loaded.graph_bytes,
+        }
+
+    def explain_finding(state: DemoState) -> DemoState:
+        args = (
+            "explain",
+            "--scan-id",
+            state["scan_id"],
+            "--finding-id",
+            state["finding_id"],
+        )
+        disabled = cli(*args)
+        if disabled != {"status": "DISABLED", "provider": "disabled"}:
+            raise ValueError("INVALID_DISABLED_RESULT")
+        annotation = cli(*args, "--provider", provider)
+        return {"annotation_id": annotation["annotation_id"]}
+
+    def export_bundle(state: DemoState) -> DemoState:
+        return {
+            "exported": cli(
+                "demo",
+                "export",
+                "--scan-id",
+                state["scan_id"],
+                "--annotation-id",
+                state["annotation_id"],
+            )
+        }
+
+    if workflow == "langgraph":
+        try:
+            from langgraph.graph import END, START, StateGraph
+            from langsmith import tracing_context
+        except ModuleNotFoundError:
+            raise DemoCommandError(["LANGGRAPH_EXTRA_REQUIRED"]) from None
+
+        graph = StateGraph(DemoState)
+        graph.add_node("scan_fixture", scan_fixture)
+        graph.add_node("explain_finding", explain_finding)
+        graph.add_node("export_bundle", export_bundle)
+        graph.add_edge(START, "scan_fixture")
+        graph.add_edge("scan_fixture", "explain_finding")
+        graph.add_edge("explain_finding", "export_bundle")
+        graph.add_edge("export_bundle", END)
+        with tracing_context(enabled=False):
+            state = graph.compile().invoke({})
+    else:
+        state = scan_fixture({})
+        state.update(explain_finding(state))
+        state.update(export_bundle(state))
+
+    exported = state["exported"]
     if (
         provider == "mock"
         and (budget.read_bytes() if budget.exists() else None) != budget_before
     ):
         raise ValueError("MOCK_MODIFIED_LIVE_BUDGET")
-    if load_committed_graph(scan["scan_id"]).graph_bytes != loaded.graph_bytes:
+    if load_committed_graph(state["scan_id"]).graph_bytes != state["graph_bytes"]:
         raise ValueError("CANONICAL_GRAPH_CHANGED")
     source = ROOT / exported["artifact_dir"]
     manifest_bytes = read_bounded(source / "bundle.json")
     manifest = parse_json(manifest_bytes)
     payloads = {name: read_bounded(source / name) for name in manifest["artifacts"]}
     validate_bundle(manifest, payloads)
-    if payloads["graph.json"] != loaded.graph_bytes:
+    if payloads["graph.json"] != state["graph_bytes"]:
         raise ValueError("GRAPH_BYTES_CHANGED")
     recorded = parse_json(payloads["explanations.json"])["annotations"][0]
     if (
-        recorded["annotation_id"] != annotation["annotation_id"]
+        recorded["annotation_id"] != state["annotation_id"]
         or recorded["provider"] != provider
     ):
         raise ValueError("ANNOTATION_BINDING_MISMATCH")
     result = {
         **exported,
-        "annotation_id": annotation["annotation_id"],
-        "finding_id": finding.id,
+        "annotation_id": state["annotation_id"],
+        "finding_id": state["finding_id"],
         "provider": provider,
         "model": recorded["model"],
         "generation": recorded["generation"],
@@ -130,13 +182,20 @@ if __name__ == "__main__":
         help="Create and validate a demo bundle under artifacts/ without updating the viewer.",
     )
     parser.add_argument("--provider", choices=("mock", "meta"), default="mock")
+    parser.add_argument("--workflow", choices=("linear", "langgraph"), default="linear")
     args = parser.parse_args()
     if args.provider == "meta" and not args.verify_only:
         parser.error("--provider meta requires --verify-only")
+    if args.workflow == "langgraph" and not args.verify_only:
+        parser.error("--workflow langgraph requires --verify-only")
     try:
         print(
             json.dumps(
-                prepare(verify_only=args.verify_only, provider=args.provider),
+                prepare(
+                    verify_only=args.verify_only,
+                    provider=args.provider,
+                    workflow=args.workflow,
+                ),
                 sort_keys=True,
             )
         )

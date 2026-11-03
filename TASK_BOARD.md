@@ -91,3 +91,10 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 - [x] Add the explicit fixed-fixture Meta demo mode and offline workflow regressions.
 - [x] Run and independently review one successful live annotation export.
 - [x] Replay the reviewed live annotation in Chrome and verify the public bundle bytes.
+
+
+### Submission freeze and costs
+
+- [x] Reconcile project docs against the public Meta recording and controlled assessment evidence.
+- [x] Add the opt-in LangGraph workflow for credential-free rehearsal.
+- [ ] Confirm portal fields and keep the submission receipt. Use the [submission and cost plan](spec/07_SUBMISSION_AND_COST_PLAN.md).

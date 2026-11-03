@@ -1,6 +1,6 @@
 # Fixed-fixture demo closeout
 
-The demo presents reproducible authorization-context evidence for a controlled synthetic FastAPI application. Its release baseline is GitHub main at `ec7754dff49726b5a3283c994392f6239d315f0b`, which includes PR #51. The eight project checks passed on that PR, including native Windows, macOS, and Ubuntu verification.
+The demo presents reproducible authorization-context evidence for a controlled synthetic FastAPI application. The [public competition viewer](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) runs release revision `47c5d2ed4090ffa0d7b77c1882608a483bccfb26`, with native Windows, macOS and Ubuntu checks passing on PR #53. The earlier fresh-clone rehearsal used the PR #51 baseline.
 
 A fresh clone on macOS arm64 passed all nine offline checks and returned the expected scan exit code 2. Initial dependency installation used the package registries because the local cache lacked a locked wheel. The new rehearsal command was verified separately in the closeout checkout.
 
@@ -49,11 +49,11 @@ Open `http://127.0.0.1:4173/`, choose the candidate identified by the annotation
 
 - Second-person reproduction, real screen reader output, native 200% zoom, and audience feedback remain separate from local browser and CI results.
 - A recorded live Meta annotation is available for the competition demo. Offline rehearsal defaults to mock and requires no credential.
-- Pages has a manual, opt-in workflow. Publication requires the release review and a successful URL smoke check before adding the repository Website.
+- The current Pages deployment and Website link are verified. Any replacement still requires the publication review and URL smoke check.
 - Owner verifies the actual portal requirements, records the license choice, and retains a submission receipt if submitting.
 
 ## Next AI increment after the freeze
 
-Keep the existing scan, evidence validation, provider and persistence boundaries. Evaluate a small LangGraph pilot when there is a concrete need to pause for human review and resume. The candidate workflow is committed scan validation → evidence selection → one bounded provider attempt → annotation validation → human review → publication. Checkpoint only safe identifiers and decisions. Reuse the shared budget, and ensure replay cannot repeat transport after settlement or an unresolved reservation. Compare the pilot with the current linear workflow using offline tests before adding a runtime dependency.
+The optional [LangGraph demo workflow](../docs/05_ORCHESTRATION.md) runs the existing scan, explanation and export stages. The next AI increment is resumable human review. Freeze checkpoint and replay behavior before enabling durable state. Checkpoint only safe identifiers and decisions, and prevent replay from repeating a paid request.
 
 Production DATA and TRUST detectors and broader repository intake have their own evidence and isolation gates in [the semantic-stage plan](02_NEXT_STAGE_PLAN.md).

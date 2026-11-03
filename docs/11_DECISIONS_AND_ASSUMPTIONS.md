@@ -7,7 +7,7 @@
 
 The approved [demo contract](16_DEMO_DELIVERY_CONTRACT.md) is implemented alongside the preserved first-slice analyzer: immutable hash-verified bundles, disabled/mock explanations with a gated Meta adapter, and a fixed React/Vite/TypeScript/Cytoscape viewer. See [capability gates](17_CAPABILITY_AND_RESEARCH_REPORT.md), [finite evaluation](18_DEMO_EVALUATION.md), and [integrated verification](19_INTEGRATED_DEMO_REVIEW.md) for current checks and review disposition. Document 14 remains historical first-slice evidence; its 73-test count is not the integrated total.
 
-Baseline commit `7797b85`, integrated demo `4f0346c` and viewer refinement `2cda191` are preserved on `feat/integrated-demo`. Publication to the owner-specified repository is now authorized; actual remote/CI outcomes are recorded in document 23. License and submission decisions remain unresolved. Only fixed synthetic intake is supported. Live access is BLOCKED by the missing key; zero paid calls were made. Joern setup is blocked and analysis NOT_ATTEMPTED; data/trust rules remain NOT_IMPLEMENTED. OS sandbox launch failed before execution, so broader intake remains blocked.
+At this 2026-11-02 checkpoint, the recorded milestones were baseline `7797b85`, integrated demo `4f0346c`, and viewer refinement `2cda191`. The demo ran offline. The later [competition verification](../spec/06_COMPETITION_VERIFICATION.md) records the live Meta result, public Pages deployment, and separate controlled DATA, TRUST, and actor/action/resource reports. Fixed synthetic intake remains the supported scope.
 
 Updated 2026-11-02. Approved current scope is in [document 13](13_FIRST_SLICE_CONTRACT.md); verified behavior in [document 14](14_IMPLEMENTATION_REVIEW.md). [Document 15](15_NEXT_STEPS.md) contains recommendations, not newly accepted implementation decisions.
 
@@ -94,3 +94,8 @@ Owner authorized public repository publication and macOS/Windows support. Preser
 ### D-028 — Bounded value provenance experiment (2026-11-03)
 
 Use a standalone standard-library AST experiment to test local assignment provenance against a fixed synthetic oracle. Owner approved an independent fallback review for this increment after Astra routing could not be verified. The result is research evidence for the documented syntax subset. Production graph schema, policy and detector acceptance require their own review. See [contract and measured results](../spec/04_CONTROLLED_SEMANTIC_EXPERIMENT.md).
+
+
+### D-029 — Opt-in LangGraph demo orchestration (2026-11-03)
+
+Keep the default linear scanner and published recording. Add a pinned optional LangGraph extra for the fixed rehearsal stages, with tracing disabled and the existing Meta ledger unchanged. Durable review and pause/resume require a separate design and replay checks. The live competition recording predates this optional integration.

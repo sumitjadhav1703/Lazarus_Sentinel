@@ -2,6 +2,8 @@
 
 Dated **2026-11-02**. One item per BP row in the [audit](01_BLUEPRINT_IMPLEMENTATION_AUDIT.md); status/evidence there are authoritative for this snapshot. The [gated plan](02_NEXT_STAGE_PLAN.md) chooses bounded next work; this list does not authorize executing every unchecked item.
 
+This checklist preserves the November 2 audit statuses. The [competition checkpoint](06_COMPETITION_VERIFICATION.md) records later P07/P10 completion and separate controlled assessments without changing the historical denominator. Use the [gated stage plan](02_NEXT_STAGE_PLAN.md) for remaining work.
+
 Checked means `IMPLEMENTED` for its stated scope or `NOT_APPLICABLE` because it is an explicit non-goal. Partial, blocked, superseded technology choices and future ideas remain unchecked. A checked declaration-context capability does not mean effective authorization, and a checked evidence hash does not prove semantic correctness.
 
 
