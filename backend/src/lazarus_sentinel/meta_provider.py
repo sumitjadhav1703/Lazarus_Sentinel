@@ -110,7 +110,7 @@ def generate(payload: bytes, ledger_path: Path) -> dict[str, Any]:
     result = bounded_transport(payload, key)
     usage = result.get("usage")
     if not isinstance(usage, dict):
-        raise TypeError("UNVERIFIABLE_USAGE")
+        raise ValueError("UNVERIFIABLE_USAGE")  # noqa: TRY004 - allowlisted CLI diagnostic
     input_tokens, output_tokens = usage.get("prompt_tokens"), usage.get("completion_tokens")
     if type(input_tokens) is not int or type(output_tokens) is not int:
         raise ValueError("UNVERIFIABLE_USAGE")
@@ -120,21 +120,29 @@ def generate(payload: bytes, ledger_path: Path) -> dict[str, Any]:
     ):
         raise ValueError("UNVERIFIABLE_USAGE")
     budget.settle(attempt, input_tokens, output_tokens)
+    choices = result.get("choices")
+    if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+        raise ValueError("META_INVALID_RESPONSE")
+    choice = choices[0]
+    message = choice.get("message")
+    if not isinstance(message, dict):
+        raise ValueError("META_INVALID_RESPONSE")  # noqa: TRY004 - allowlisted CLI diagnostic
+    if (
+        choice.get("finish_reason") == "tool_calls"
+        or message.get("tool_calls")
+        or message.get("function_call")
+    ):
+        raise ValueError("META_UNEXPECTED_TOOLS")
+    content = message.get("content")
+    if choice.get("finish_reason") == "length" or not isinstance(content, str):
+        raise ValueError("META_INVALID_RESPONSE")
     try:
-        choice = result["choices"][0]
-        message = choice["message"]
-        if (
-            choice.get("finish_reason") == "tool_calls"
-            or message.get("tool_calls")
-            or message.get("function_call")
-        ):
-            raise ValueError("META_UNEXPECTED_TOOLS")
-        content = message["content"]
-        if not isinstance(content, str) or len(content.encode()) > MAX_RESPONSE_BYTES:
-            raise TypeError("META_INVALID_RESPONSE")
-        response = parse_json(content.encode())
-        if not isinstance(response, dict):
-            raise TypeError("META_INVALID_RESPONSE")
-        return response
-    except (KeyError, IndexError, TypeError):
-        raise TypeError("META_INVALID_RESPONSE") from None
+        encoded = content.encode()
+        if len(encoded) > MAX_RESPONSE_BYTES:
+            raise ValueError("META_INVALID_RESPONSE")
+        response = parse_json(encoded)
+    except (ValueError, RecursionError):
+        raise ValueError("META_INVALID_RESPONSE") from None
+    if not isinstance(response, dict):
+        raise ValueError("META_INVALID_RESPONSE")  # noqa: TRY004 - allowlisted CLI diagnostic
+    return response

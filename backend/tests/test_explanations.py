@@ -97,3 +97,86 @@ def test_cli_rejects_invalid_meta_explanation_without_echoing_content(
     assert json.loads(stdout)["diagnostic_codes"] == ["META_INVALID_EXPLANATION"]
     assert "untrusted-provider-content" not in stdout
     assert not (root / "artifacts" / "explanations").exists()
+
+
+@pytest.mark.parametrize(
+    "case,code,state",
+    [
+        ("valid", None, "SETTLED"),
+        ("invalid-json", "META_INVALID_RESPONSE", "SETTLED"),
+        ("missing-content", "META_INVALID_RESPONSE", "SETTLED"),
+        ("truncated", "META_INVALID_RESPONSE", "SETTLED"),
+        ("missing-choice", "META_INVALID_RESPONSE", "SETTLED"),
+        ("invalid-message", "META_INVALID_RESPONSE", "SETTLED"),
+        ("invalid-fields", "META_INVALID_EXPLANATION", "SETTLED"),
+        ("tool-call", "META_UNEXPECTED_TOOLS", "SETTLED"),
+        ("invalid-citation", "INVALID_CITATIONS", "SETTLED"),
+        ("unknown-usage", "UNVERIFIABLE_USAGE", "RESERVED"),
+    ],
+)
+def test_meta_cli_response_and_accounting(committed_scan, monkeypatch, capsys, case, code, state):
+    import sqlite3
+
+    from lazarus_sentinel import meta_provider
+    from lazarus_sentinel.cli import main
+
+    root, scan_id = committed_scan
+    loaded = load_committed_graph(scan_id)
+    finding_id = loaded.graph.findings[0].id
+    evidence = build_request(loaded, finding_id, "meta")["context"]["evidence"]
+    prose = {
+        "summary": "Untrusted response text.",
+        "why_it_matters": "The synthetic policy protects this operation.",
+        "limitations": ["Runtime enforcement is unverified."],
+        "evidence_ids": [evidence[0]["id"]],
+    }
+    if case == "invalid-fields":
+        prose["severity"] = "HIGH"
+    if case == "invalid-citation":
+        prose["evidence_ids"] = ["invented"]
+    choice = {"finish_reason": "stop", "message": {"content": json.dumps(prose)}}
+    if case == "invalid-json":
+        choice["message"]["content"] = '{"summary":"Untrusted response text."'
+    if case == "missing-content":
+        choice["message"].clear()
+    if case == "truncated":
+        choice["finish_reason"] = "length"
+    if case == "invalid-message":
+        choice["message"] = "Untrusted response text."
+    if case == "tool-call":
+        choice["message"]["tool_calls"] = [{"id": "unexpected"}]
+    response = {
+        "choices": [] if case == "missing-choice" else [choice],
+        "usage": {"prompt_tokens": 100, "completion_tokens": 20},
+    }
+    if case == "unknown-usage":
+        response.pop("usage")
+    calls = []
+
+    def transport(*_):
+        calls.append(1)
+        return response
+
+    monkeypatch.setenv("MODEL_API_KEY", "offline-test-key")
+    monkeypatch.setattr(meta_provider, "bounded_transport", transport)
+    command = ["explain", "--scan-id", scan_id, "--finding-id", finding_id, "--provider", "meta"]
+    assert main(command) == (1 if code else 0)
+    output = capsys.readouterr().out
+    result = json.loads(output)
+    assert "Untrusted response text." not in output
+    if code:
+        assert result["diagnostic_codes"] == [code]
+        assert not (root / "artifacts" / "explanations").exists()
+    else:
+        annotation = json.loads((root / result["artifact_path"]).read_bytes())
+        assert validate_annotation(annotation, loaded).generation == "live"
+    if state == "RESERVED":
+        assert main(command) == 1
+        assert json.loads(capsys.readouterr().out)["diagnostic_codes"] == [
+            "BUDGET_RECONCILIATION_REQUIRED"
+        ]
+    assert calls == [1]
+    with sqlite3.connect(root / "artifacts" / "model-budget.sqlite3") as db:
+        assert db.execute("select state, actual from attempts").fetchall() == [
+            (state, 210 if state == "SETTLED" else None)
+        ]

@@ -19,13 +19,19 @@ import { loadDemo } from './validation';
 const encoder = new TextEncoder();
 const bytes = encoder.encode(JSON.stringify(graph));
 const hex = (data:ArrayBuffer) => Array.from(new Uint8Array(data)).map(x=>x.toString(16).padStart(2,'0')).join('');
-afterEach(()=>vi.unstubAllGlobals());
-it('verifies exact graph bytes before exposing results', async()=>{
+afterEach(()=>{vi.unstubAllGlobals(); vi.unstubAllEnvs();});
+it.each(['/','/Lazarus_Sentinel/'])('verifies exact graph bytes at base %s', async(base)=>{
+  vi.stubEnv('BASE_URL',base);
   vi.stubGlobal('crypto',webcrypto);
   const hash=hex(await webcrypto.subtle.digest('SHA-256',bytes));
   const manifest={bundle_version:'0.1.0',bundle_id:'11111111-1111-4111-8111-111111111111',origin:'controlled-synthetic-fixture',generator_version:'0.1.0',scan:{scan_id:'11111111-1111-4111-8111-111111111111',revision:graph.repository.revision,status:'PARTIAL',profile:'reduced-static-auth'},artifacts:{'graph.json':{sha256:hash,size:bytes.length}}};
   let changed=false;
-  vi.stubGlobal('fetch',async (url:string)=>new Response(url.endsWith('bundle.json')?JSON.stringify(manifest):changed?new Uint8Array([...bytes.slice(0,-1),32]):bytes));
+  const fetchBundle=vi.fn(async (url:string)=>{
+    if(url===base+'demo/v1/bundle.json') return new Response(JSON.stringify(manifest));
+    if(url===base+'demo/v1/graph.json') return new Response(changed?new Uint8Array([...bytes.slice(0,-1),32]):bytes);
+    return new Response(null,{status:404});
+  });
+  vi.stubGlobal('fetch',fetchBundle);
   expect((await loadDemo()).graph.findings).toHaveLength(2);
   changed=true;
   await expect(loadDemo()).rejects.toThrow('Integrity check failed');

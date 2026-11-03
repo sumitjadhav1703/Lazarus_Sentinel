@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import Ajv2020 from 'ajv/dist/2020';
 import bundleSchema from './schemas/bundle.schema.json';
 import graphSchema from './schemas/graph.schema.json';
@@ -34,7 +36,7 @@ export function validateGraph(graph:Graph, revision:string) {
   }
 }
 async function readBounded(name:string, limit:number) {
-  const response = await fetch(`/demo/v1/${name}`, {cache:'no-store'});
+  const response = await fetch(`${import.meta.env.BASE_URL}demo/v1/${name}`, {cache:'no-store'});
   if (!response.ok || !response.body) fail(`Cannot load ${name}`);
   const reader = response.body!.getReader(); const parts:Uint8Array[]=[]; let size=0;
   while (true) { const {done,value}=await reader.read(); if(done) break; size+=value.length; if(size>limit) { await reader.cancel(); fail('Bundle exceeds size limit'); } parts.push(value); }

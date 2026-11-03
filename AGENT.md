@@ -315,3 +315,9 @@ Merged mypy #43 and Vitest #47 after eight passing checks on each reviewed head.
 ### Next-phase baseline verification
 
 Preserved the existing provenance experiment and provider diagnostic changes on a scoped branch from 03600d8. Installed locked dependencies including mypy 2.4.1 and Vitest 5.0.5. All nine checks in the offline verifier passed on macOS. The verifier reported zero live provider attempts. The private blueprint and generated evidence remain local.
+
+### Next-phase implementation and integration
+
+Baseline 96b93e6 passed native Windows, macOS and Ubuntu CI and merged as 66bed8c in PR #50. P07's offline CLI tests exercise real parsing, annotation validation and budget accounting through stubbed transport. Malformed or truncated content emits META_INVALID_RESPONSE, known usage settles, and missing usage retains the reservation and prevents a second transport. Independent offline review and all 29 focused provider tests passed. No live request or credential access this increment. The security reviewer could not independently verify Astra routing, so the new live attempt remains gated.
+
+P05 measurements and P04 local browser evidence are in document 22. P10 root and subpath production builds passed browser checks for both validated and corrupt artifacts. Pages workflow is manual and opt-in, with an output allowlist. Local full offline verifier passed nine checks, with 161 backend tests passed plus one skip and 18 frontend tests passed. P03 awaits a second teammate machine. P06 owner decisions and P08 approved isolation runner remain open. P09 depends on measured isolation.
