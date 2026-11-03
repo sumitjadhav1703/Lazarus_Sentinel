@@ -1,8 +1,8 @@
 # 22 — Next phase: finite, gated team plan
 
-Proposed execution order, updated 2026-11-02. Completed baseline/demo/viewer work must not restart. [Document 15](15_NEXT_STEPS.md) preserves N01–N18 dispositions; this plan turns remaining work into finite team assignments. [Document 23](23_PORTABILITY_AND_RELEASE_VERIFICATION.md) records actual current checks and publication outcomes. P01 and P02 are now complete for the bounded fixed-fixture profile; document23 links native three-platform success and published main. Begin with P03, while P04/P06 can proceed independently. Other listed actions remain unexecuted proposals.
+Historical execution plan from 2026-11-02. Current status follows. Completed baseline/demo/viewer work must not restart. [Document 15](15_NEXT_STEPS.md) preserves N01–N18 dispositions; this plan turns remaining work into finite team assignments. [Document 23](23_PORTABILITY_AND_RELEASE_VERIFICATION.md) records actual current checks and publication outcomes. P01 and P02 are now complete for the bounded fixed-fixture profile; document23 links native three-platform success and published main. P03, the remaining P04 accessibility checks, and P06 owner decisions can proceed independently.
 
-For product capability expansion, use the [original-blueprint audit and semantic-stage plan](../spec/README.md). Its S01 semantic contract can proceed alongside P03 reproduction and owner prerequisites; optional P10 website work does not close detector gaps. Existing P tasks remain valid and are not replaced by the audit.
+For product capability expansion, use the [original-blueprint audit and semantic-stage plan](../spec/README.md). The S01 semantic contract and controlled assessment reports are available. Comparative evaluation and canonical graph integration remain separate milestones. Existing P tasks remain valid and are not replaced by the audit.
 
 | ID | Owner / dependency | Bounded task and acceptance gate |
 |---|---|---|
@@ -16,7 +16,7 @@ For product capability expansion, use the [original-blueprint audit and semantic
 | P08 | Security/Astra + infrastructure; before N15 | Resolve N14 with a reviewed runtime. Prove filesystem/network/credential denial, resource/deadline limits, cleanup and no host socket/agent exposure using controlled probes. A process limit or Windows Job Object is not filesystem/network sandbox evidence. Owner approves platform/runner before installation. Broader intake stays blocked until measured review passes. |
 | P09 | Backend + research/Astra; P08 | Freeze one explicitly authorized, bounded next intake contract with provenance, caps, threat model, unknowns and predeclared fixture oracle. Implement only that contract. Joern spike remains optional/time-bounded; DATA/TRUST require real data-flow/policy evidence, never relabel CALLS. |
 
-P07 has a verified recorded live explanation. The [competition checkpoint](../spec/06_COMPETITION_VERIFICATION.md) records that run and the later controlled assessments.
+P07 completed with a verified recorded live explanation. P10 completed with the public Pages replay and verified repository Website field. The [competition checkpoint](../spec/06_COMPETITION_VERIFICATION.md) records that run and the later controlled assessments.
 
 ## Step-by-step execution rule
 
@@ -29,9 +29,9 @@ P07 has a verified recorded live explanation. The [competition checkpoint](../sp
 Keep the demo working throughout. No speculative API, LangGraph, microservices, upload UI, automatic remediation or global tool installation is required by this plan. A broader accuracy program, retention service and multi-language scanner remain separate future proposals.
 
 
-## Optional next coding milestone: public demo readiness (P10, proposed)
+## Historical P10 implementation plan
 
-The repository About description/topics are configured; Website remainsblank because no deployedURL exists. After selecting this increment, keep only the existing public synthetic viewer:
+This checklist records the original implementation and publication gates for the static synthetic viewer.
 
 1. Preserve P03 teammate reproduction and run P04 accessibility/P05 loading measurements alongside development.
 2. Make Vite assets and fixed bundle loading work under `/Lazarus_Sentinel/`, preserving the fixed artifact allowlist, hashes, schemas and invalid-data suppression. Test both local root and repository subpath; never add arbitrary URL/upload input.
@@ -39,16 +39,16 @@ The repository About description/topics are configured; Website remainsblank bec
 4. Prepare a reviewable GitHub Pages workflow and static-file inventory. Obtain required owner/Astra publication review before enabling deployment; source publication is not automatic deployment authorization.
 5. Once selected deployment actually succeeds, verify the live synthetic graph/evidence, set the About Website to its realURL, and recheck the Deployments homepage option.
 
-Acceptance: reviewed production build loads the same validated bundle at both supported bases, no secrets/backend/modelkeys are shipped, actual deployedURL works before being advertised. No release/package/deployment is created merely to populate sidebar counters. [Official Vite GitHub Pages guidance](https://vite.dev/guide/static-deploy.html#github-pages) documents the repository base-path requirement. This remains a proposal, not implemented or deployed work.
+Acceptance: reviewed production build loads the same validated bundle at both supported bases, no secrets/backend/modelkeys are shipped, actual deployedURL works before being advertised. No release/package/deployment is created merely to populate sidebar counters. [Official Vite GitHub Pages guidance](https://vite.dev/guide/static-deploy.html#github-pages) documents the repository base-path requirement. The [competition checkpoint](../spec/06_COMPETITION_VERIFICATION.md) records the verified deployment outcome.
 
 
-### P07 checkpoint — 2026-11-03
+### Historical P07 first-attempt checkpoint — 2026-11-03
 
 One owner-authorized Standard Muse Spark 1.3 call against a committed synthetic finding authenticated and returned billable usage. The ledger settled at USD 0.007014 estimated using the documented rates. Explanation recording failed with INTERNAL_ERROR after settlement. The exact response was discarded by the CLI error boundary, so the precise cause remains unknown. P07 is partial. An offline test now covers safe schema-rejection diagnostics. The next live check is a separate attempt under the existing budget and approval process.
 
 [Meta pricing](https://dev.meta.ai/docs/pricing-rate-limits) · [Chat Completions protocol](https://dev.meta.ai/docs/protocols/chat-completions)
 
-### Next-phase implementation checkpoint
+### Historical checkpoint before the live recording and Pages deployment
 
 - **P03 — awaiting teammate evidence.** Use the exact baseline PR revision and the credential-free steps in document 21 on a second machine. Return the commit, OS and tool versions, offline verifier summary, expected PARTIAL scan exit code, one viewer screenshot, and any failed command. A run on this workstation does not close the item.
 - **P04 — partial.** Chrome 156 on macOS confirmed Tab reaches the skip link and Enter focuses main. At 320 px the page had no horizontal overflow. A corrupt graph response displayed the error alert and suppressed graph and summary. Native 200% zoom, a real screen reader and feedback across the three audiences remain open.

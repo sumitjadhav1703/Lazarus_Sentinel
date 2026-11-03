@@ -1,5 +1,7 @@
 # 24 — Contributor readiness, CI and issue backlog
 
+The [competition verification](../spec/06_COMPETITION_VERIFICATION.md) records later release results. This document retains its original checkpoint and scope.
+
 Written 2026-11-03 by Claude Code (Sonnet 5.5) for the owner. Read this so any agent (Codex or Claude) knows what changed in the repository's collaboration layer. It does not change product behaviour, fixtures, schemas, artifacts or the analyzer.
 
 ## What was done

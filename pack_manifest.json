@@ -34,16 +34,18 @@
     "docs/21_TEAM_HANDOFF.md",
     "docs/22_NEXT_PHASE_PLAN.md",
     "docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md",
+    "docs/24_CONTRIBUTOR_READINESS_AND_CI.md",
     "spec/01_BLUEPRINT_IMPLEMENTATION_AUDIT.md",
     "spec/02_NEXT_STAGE_PLAN.md",
     "spec/03_MASTER_CHECKLIST.md",
     "spec/04_CONTROLLED_SEMANTIC_EXPERIMENT.md",
     "spec/05_DEMO_CLOSEOUT.md",
     "spec/06_COMPETITION_VERIFICATION.md",
+    "spec/07_SUBMISSION_AND_COST_PLAN.md",
     "spec/README.md"
   ],
   "entrypoint": "CODEX_BOOTSTRAP_PROMPT.md",
   "persistent_instructions": "AGENTS.md",
   "living_log": "AGENT.md",
-  "documentation_refreshed_on": "2026-11-02"
+  "documentation_refreshed_on": "2026-11-03"
 }

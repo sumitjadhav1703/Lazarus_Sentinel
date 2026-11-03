@@ -1,5 +1,7 @@
 # 23 — Portability, team handoff and repository publication
 
+The [competition verification](../spec/06_COMPETITION_VERIFICATION.md) records later release results. This document retains its original checkpoint and scope.
+
 Updated **2026-11-02**. This document owns the current macOS/Windows and GitHub publication evidence. Documents 14, 19 and 20 retain their historical verification results; the team setup and next phase are in [document 21](21_TEAM_HANDOFF.md) and [document 22](22_NEXT_PHASE_PLAN.md).
 
 ## Release scope

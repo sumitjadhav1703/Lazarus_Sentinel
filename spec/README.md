@@ -6,6 +6,8 @@ For release rehearsal and remaining gates, see [demo closeout](05_DEMO_CLOSEOUT.
 
 See [competition verification](06_COMPETITION_VERIFICATION.md) for the recorded live Meta run and controlled assessment results.
 
+For the deadline checklist and budget, start with the [submission and cost plan](07_SUBMISSION_AND_COST_PLAN.md).
+
 ## Read in this order
 
 1. [Implementation audit](01_BLUEPRINT_IMPLEMENTATION_AUDIT.md): source-page references, current evidence, implemented/partial/missing capabilities, approved substitutions and every Appendix B checklist item.

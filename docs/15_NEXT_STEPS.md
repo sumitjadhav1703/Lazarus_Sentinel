@@ -5,31 +5,31 @@
 
 Updated **2026-11-02**. This is the recommended roadmap after the completed first slice, not authorization to implement every item. Document 13 remains the approved implemented scope; document 14 contains verification evidence. Task IDs below are mirrored in TASK_BOARD.md.
 
-See [competition verification](../spec/06_COMPETITION_VERIFICATION.md) for the newer live run and controlled assessments. The dated dispositions below preserve the original demo checkpoint.
+See [competition verification](../spec/06_COMPETITION_VERIFICATION.md) for the live Meta result, Pages deployment, and controlled assessments. The disposition table reflects that release. The dated sequence below preserves the original acceptance criteria.
 
 ## Integrated demo status — 2026-11-02
 
 The approved [demo contract](16_DEMO_DELIVERY_CONTRACT.md) is implemented alongside the preserved first-slice analyzer: immutable hash-verified bundles, disabled/mock explanations with a gated Meta adapter, and a fixed React/Vite/TypeScript/Cytoscape viewer. See [capability gates](17_CAPABILITY_AND_RESEARCH_REPORT.md), [finite evaluation](18_DEMO_EVALUATION.md), and [integrated verification](19_INTEGRATED_DEMO_REVIEW.md) for current checks and review disposition. Document 14 remains historical first-slice evidence; its 73-test count is not the integrated total.
 
-Baseline commit `7797b85`, integrated demo `4f0346c` and viewer refinement `2cda191` are preserved on `feat/integrated-demo`. Publication to the owner-specified repository is now authorized; actual remote/CI outcomes are recorded in document 23. License and submission decisions remain unresolved. Only fixed synthetic intake is supported. Live access is BLOCKED by the missing key; zero paid calls were made. Joern setup is blocked and analysis NOT_ATTEMPTED; data/trust rules remain NOT_IMPLEMENTED. OS sandbox launch failed before execution, so broader intake remains blocked.
+At this 2026-11-02 checkpoint, the recorded milestones were baseline `7797b85`, integrated demo `4f0346c`, and viewer refinement `2cda191`. The demo ran offline. The later [competition verification](../spec/06_COMPETITION_VERIFICATION.md) records the live Meta result, public Pages deployment, and separate controlled DATA, TRUST, and actor/action/resource reports. Fixed synthetic intake remains the supported scope.
 
 ## Current disposition of every task
 
 | ID | Status | Evidence / remaining gate |
 |---|---|---|
 | N01 | BLOCKED | Owner portal acceptance, complete rules and receipt unknown. |
-| N02 | BLOCKED | Missing key/account verification; no live request. |
+| N02 | VERIFIED | Standard Muse Spark API access verified on the fixed synthetic workflow. |
 | N03 | DONE; license pending | Baseline 7797b85 and subsequent demo/viewer commits preserved; current owner-authorized publication evidence in document 23. |
 | N04 | DONE | Predeclared variant: 3 endpoints, 1 candidate, 1 declaration, 1 unknown; finite synthetic evaluation only. |
 | N05 | DONE | Bundle/explanation/viewer contract frozen in document 16. |
 | N06 | DONE | Fixed accessible graph/findings/coverage viewer; final checks/review in document 19. |
 | N07 | DONE | Disabled/offline mock boundary and hostile-output validation; canonical facts unchanged. |
-| N08 | ADAPTER TESTED; live BLOCKED | Explicit Meta adapter and transactional budget; zero paid calls; USD3 / five-attempt cap. |
+| N08 | LIVE VERIFIED | One validated live annotation exported and replayed publicly. Four settled attempts cost an estimated USD 0.023824 under the USD 3 and five-attempt cap. |
 | N09 | SETUP_BLOCKED; NOT_ATTEMPTED | Joern v4.0.666 pinned; release README JDK21 versus installation docs19; installed JDK26. No Joern; 1.64GB asset not downloaded. |
-| N10 | NOT_IMPLEMENTED | DATA/TRUST capability/policy gates unmet; CALLS is not value flow. |
+| N10 | CONTROLLED ASSESSMENTS | Separate DATA, TRUST, and actor/action/resource reports are executable. Canonical graph integration and comparative evaluation remain open. |
 | N11 | SKIPPED | Fixed assets meet demo need; no HTTP service. |
 | N12 | DONE (offline) | Exact integrated checks and Astra disposition are authoritative in document 19. |
-| N13 | LOCAL MATERIALS READY; submission BLOCKED | Synthetic bundle and local walkthrough available; portal requirements/receipt unknown. |
+| N13 | PUBLIC DEMO READY; submission unverified | Pages replays the reviewed synthetic Meta recording. Portal requirements and receipt remain external. |
 | N14 | BLOCKED | sandbox-exec exit71: sandbox_apply: Operation not permitted. Denial probes not run; no enforced isolation claim. |
 | N15 | BLOCKED | Requires N14 before broader authorized intake. |
 | N16 | FINITE PILOT DONE; broader OPEN | Controlled variant support measured; no broad accuracy or interprocedural/data-flow claim. |

@@ -9,7 +9,7 @@ The [competition checkpoint](../spec/06_COMPETITION_VERIFICATION.md) records the
 
 The approved [demo contract](16_DEMO_DELIVERY_CONTRACT.md) is implemented alongside the preserved first-slice analyzer: immutable hash-verified bundles, disabled/mock explanations with a gated Meta adapter, and a fixed React/Vite/TypeScript/Cytoscape viewer. See [capability gates](17_CAPABILITY_AND_RESEARCH_REPORT.md), [finite evaluation](18_DEMO_EVALUATION.md), and [integrated verification](19_INTEGRATED_DEMO_REVIEW.md) for current checks and review disposition. Document 14 remains historical first-slice evidence; its 73-test count is not the integrated total.
 
-Baseline commit `7797b85`, integrated demo `4f0346c` and viewer refinement `2cda191` are preserved on `feat/integrated-demo`. Publication to the owner-specified repository is now authorized; actual remote/CI outcomes are recorded in document 23. License and submission decisions remain unresolved. Only fixed synthetic intake is supported. Live access is BLOCKED by the missing key; zero paid calls were made. Joern setup is blocked and analysis NOT_ATTEMPTED; data/trust rules remain NOT_IMPLEMENTED. OS sandbox launch failed before execution, so broader intake remains blocked.
+At this 2026-11-02 checkpoint, the recorded milestones were baseline `7797b85`, integrated demo `4f0346c`, and viewer refinement `2cda191`. The demo ran offline. The later [competition verification](../spec/06_COMPETITION_VERIFICATION.md) records the live Meta result, public Pages deployment, and separate controlled DATA, TRUST, and actor/action/resource reports. Fixed synthetic intake remains the supported scope.
 
 ## Implemented LS-AUTH-001
 
@@ -28,14 +28,14 @@ Every candidate carries rule/version, repository revision, ordered node/edge pat
 
 The measured fixture produces candidates for GET /weak and GET /authenticated, recognizes three matching declarations with effectiveness unverified, and leaves the public/no-policy path unflagged. Dynamic registration remains a coverage diagnostic.
 
-## Future rule families — NOT_IMPLEMENTED
+## Controlled rule assessments and broader scope
 
-**LS-DATA-001:** candidate untrusted/sensitive flow to a classified sink. Requires actual value-propagation evidence, source/sink definitions, control semantics and a tested uncertainty policy. CALLS edges cannot substitute for taint/data flow.
+**LS-DATA-001:** candidate untrusted/sensitive flow to a classified sink. The fixed synthetic assessment verifies value origin against an explicit policy. Canonical integration requires evidence for wider value propagation, source/sink classification, and context-specific controls. CALLS edges carry call relationships only.
 
-**LS-TRUST-001:** candidate handling gap across an explicitly modeled trust boundary. Requires a documented expected-handling policy, boundary evidence and uncertainty treatment. Crossing a boundary alone is not a vulnerability.
+**LS-TRUST-001:** candidate handling gap across an explicitly modeled trust boundary. The fixed synthetic assessment checks an explicit zone transition and handling declaration. Canonical integration requires boundary and handling evidence for each supported application scope. The assessment leaves runtime enforcement unverified.
 
 Dependency advisory correlation, configuration/secrets analysis, access-control inconsistencies, logging exposure and cloud/runtime context are later ideas. No common GraphRule protocol is implemented. The explanation pipeline validates references without adjudicating finding truth; freeze new detector interfaces only for a selected increment.
 
 ## Model interpretation guardrails
 
-The optional explanation provider may explain supplied evidence or identify missing context. It may not invent graph/source facts, establish absent controls from missing extraction, confirm vulnerabilities, execute payloads or modify targets. Schema/evidence-reference validation and minimized synthetic context are implemented under document 16; live account/privacy verification remains blocked. Threat-category/ASVS mappings require verified source identifiers; none should be guessed.
+The optional explanation provider may explain supplied evidence or identify missing context. It may not invent graph/source facts, establish absent controls from missing extraction, confirm vulnerabilities, execute payloads or modify targets. Schema/evidence-reference validation and minimized synthetic context are implemented under document 16; the competition checkpoint records the validated live result and the separately reviewed narrative. Threat-category/ASVS mappings require verified source identifiers; none should be guessed.
