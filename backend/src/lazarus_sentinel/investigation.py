@@ -401,7 +401,8 @@ def investigate(scan_id: str, finding_id: str, provider: str = "disabled") -> di
         messages += [
             {
                 "role": "assistant",
-                "content": None,
+                # Matches Meta's documented replay (`msg.content or ""`), checked 2026-11-04.
+                "content": "",
                 "tool_calls": [
                     {
                         "id": call["id"],

@@ -151,6 +151,9 @@ def test_scripted_live_run_records_usage(committed_scan, monkeypatch):
     assert value.usage.estimated_micro_usd == 2 * (1250 + 850)
     assert requests[1]["messages"][-1]["role"] == "tool"
     assert requests[1]["messages"][-2]["tool_calls"][0]["id"] == "call_1"
+    assert requests[1]["messages"][-2]["content"] == ""
+    assert requests[1]["messages"][-2]["tool_calls"][0]["type"] == "function"
+    assert all("strict" not in tool["function"] for tool in requests[0]["tools"])
 
 
 @pytest.mark.parametrize(

@@ -38,7 +38,16 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 
 ## Not verified
 
-- No live call has been made. It is not yet known whether `muse-spark-1.3` accepts these function tools with `parallel_tool_calls: false` and the reconstructed assistant message (`content: null` plus `tool_calls`). The first live run will show this.
+- No live call has been made. On 2026-11-04 the request shapes were checked against Meta's docs ([tool calling](https://dev.meta.ai/docs/tool-calling), [cookbook](https://dev.meta.ai/docs/cookbook/tool-function-calling), [search grounding](https://dev.meta.ai/docs/search-grounding), [Responses](https://dev.meta.ai/docs/protocols/responses), [models](https://dev.meta.ai/docs/models)):
+  - **Tools:** function tools nested under `function` with no `strict` (optional, default false).
+  - **Parallel calls:** `parallel_tool_calls: false` is supported.
+  - **`tool_choice`:** omitted, so the only supported value, `auto`, applies.
+  - **Replay:** the assistant message goes back with `tool_calls` and `content: ""`, as in Meta's example, followed by one `role: "tool"` message per `tool_call_id`.
+  - **Reasoning:** no reasoning replay is required on Chat Completions. `reasoning_effort` and `max_completion_tokens` are already proven by the recorded live explanation.
+  - **Web search:** `web_search` is a Responses-only built-in tool, with `search_context_size`, `reasoning.effort`, `max_output_tokens` and `store: false`.
+  - **Model:** Meta lists tool calling and search grounding for Muse Spark.
+- Still unproven until a live run: that `muse-spark-1.3` uses the tools as intended within 6 turns at `reasoning_effort: "low"` and 2048 output tokens, and that it returns `url_citation` annotations on the allowlisted hosts.
+- **Failure cost:** a provider error such as HTTP 400 leaves that call's reservation unsettled, by design. The agent ledger then refuses new calls (`BUDGET_RECONCILIATION_REQUIRED`) until the owner reconciles it by hand. The shared explanation ledger is not affected.
 - The viewer does not recompute `request_sha256` and does not replay tools. The backend verifier does both.
 
 ## Weakness references and Meta web search
