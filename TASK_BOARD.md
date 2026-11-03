@@ -68,3 +68,14 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 
 - [x] Merge reviewed PRs #42, #44, #45, #48 and #49, and sync local main.
 - [x] Merge #43 (mypy) and #47 (Vitest) after passing CI. Close #46 for a dedicated Vite migration.
+
+### Next-phase execution
+
+- [x] Publish the locked local baseline for review in PR #50.
+- [x] Exercise P07 offline response and accounting paths through the CLI.
+- [x] Record P05 production cold-load baseline on loopback.
+- [ ] Collect P03 teammate evidence and finish P04 native accessibility and feedback checks.
+- [ ] Complete P07 live annotation verification after required review.
+- [ ] Resolve P06 owner prerequisites and P08 runtime approval. P09 depends on verified isolation.
+- [x] P10 local readiness. Verify root and repository subpath builds and prepare a manual Pages workflow.
+- [ ] Review P10 publication and verify the deployed URL before setting the repository Website.

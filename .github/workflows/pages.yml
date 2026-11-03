@@ -1,0 +1,72 @@
+name: Synthetic viewer Pages
+on:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: Publish the reviewed synthetic viewer to GitHub Pages
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: synthetic-viewer-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24.14.0"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm test
+      - run: npm run build -- --base /Lazarus_Sentinel/
+      - name: Verify public output inventory
+        shell: bash
+        run: |
+          test -z "$(find dist ! -type d ! -type f -print)"
+          for path in index.html demo/v1/bundle.json demo/v1/graph.json demo/v1/explanations.json; do
+            test -s "dist/$path"
+          done
+          while IFS= read -r path; do
+            case "$path" in
+              dist/index.html|dist/demo/v1/bundle.json|dist/demo/v1/graph.json|dist/demo/v1/explanations.json) ;;
+              *)
+                [[ "$path" =~ ^dist/assets/[A-Za-z0-9_-]+\.(js|css)$ ]] || {
+                  echo "Unexpected public output: $path" >&2
+                  exit 1
+                }
+                ;;
+            esac
+          done < <(find dist -type f -print)
+          cmp public/demo/v1/bundle.json dist/demo/v1/bundle.json
+          cmp public/demo/v1/graph.json dist/demo/v1/graph.json
+          cmp public/demo/v1/explanations.json dist/demo/v1/explanations.json
+      - uses: actions/upload-pages-artifact@v4
+        if: inputs.deploy
+        with:
+          path: frontend/dist
+  deploy:
+    if: github.ref == 'refs/heads/main' && inputs.deploy
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
