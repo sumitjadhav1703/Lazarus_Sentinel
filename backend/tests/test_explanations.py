@@ -75,3 +75,25 @@ def test_context_and_response_boundaries(committed_scan):
     ):
         with pytest.raises(ValueError):
             ExplanationResponse.model_validate(base | change)
+
+
+def test_cli_rejects_invalid_meta_explanation_without_echoing_content(
+    committed_scan, monkeypatch, capsys
+):
+    from lazarus_sentinel import meta_provider
+    from lazarus_sentinel.cli import main
+
+    root, scan_id = committed_scan
+    finding_id = load_committed_graph(scan_id).graph.findings[0].id
+    monkeypatch.setattr(
+        meta_provider, "generate", lambda *_: {"summary": "untrusted-provider-content"}
+    )
+
+    assert (
+        main(["explain", "--scan-id", scan_id, "--finding-id", finding_id, "--provider", "meta"])
+        == 1
+    )
+    stdout = capsys.readouterr().out
+    assert json.loads(stdout)["diagnostic_codes"] == ["META_INVALID_EXPLANATION"]
+    assert "untrusted-provider-content" not in stdout
+    assert not (root / "artifacts" / "explanations").exists()

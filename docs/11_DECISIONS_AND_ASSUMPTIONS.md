@@ -90,3 +90,7 @@ Owner selected all three audiences: first-time/demo, developer and security revi
 ### D-027 — Team handoff and bounded native portability (2026-11-02)
 
 Owner authorized public repository publication and macOS/Windows support. Preserve canonical AGENT.md across case-insensitive platforms; AGENTS.md shared rules and CLAUDE.md entry point serve both agents. Retain POSIX no-follow/resource controls; Windows uses explicit reparse rejection, bounded binary identity checks, spawn and byte-range writer locks, with no OS-isolation equivalence claim. Native Windows/macOS/Linux setup/tests/build passed for06f993e; strict canonical POSIX artifact/snapshot identities are unchanged. P01/P02 complete; future account/intake/license/remote-service decisions remain gated. See document23 for original failures, repairs and primary job evidence.
+
+### D-028 — Bounded value provenance experiment (2026-11-03)
+
+Use a standalone standard-library AST experiment to test local assignment provenance against a fixed synthetic oracle. Owner approved an independent fallback review for this increment after Astra routing could not be verified. The result is research evidence for the documented syntax subset. Production graph schema, policy and detector acceptance require their own review. See [contract and measured results](../spec/04_CONTROLLED_SEMANTIC_EXPERIMENT.md).
