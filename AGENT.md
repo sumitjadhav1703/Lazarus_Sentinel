@@ -24,7 +24,7 @@
 - **Persistence:** SQLite for scans/findings/artifact references; normalized JSON graph/findings/coverage and Markdown reports.
 - **Workflow orchestration:** Linear Python pipeline; LangGraph deferred.
 - **Frontend:** React/Vite/TypeScript/Cytoscape fixed synthetic bundle viewer plus CLI/JSON/Markdown; HTTP API skipped.
-- **Runtime model provider:** Disabled by default; deterministic mock and bounded Standard Meta adapter implemented. Live API access verified on one settled synthetic request (USD 0.007014 at ledger rates). Explanation recording remains incomplete. USD 3/five-attempt application cap.
+- **Runtime model provider:** Disabled by default; deterministic mock and bounded Standard Meta adapter implemented. Live Muse Spark explanation validated and exported. Four settled attempts total USD 0.023824 estimated. USD 3/five-attempt application cap.
 - **MVP mode:** Controlled fixture ID only; read-only parsing; candidate findings; no automatic fixes, arbitrary repositories, or target execution.
 
 ## Owner's model preferences
@@ -325,3 +325,13 @@ P05 measurements and P04 local browser evidence are in document 22. P10 root and
 ### Demo closeout
 
 Merged PR #51 at ec7754d after eight project checks passed. A fresh clone on the same Mac installed the locks, passed the nine-check offline verifier and produced the expected PARTIAL scan (exit 2, 23 nodes, 36 edges and two candidates). The initial offline install lacked a pinned wheel, so the successful install used the package registries. Added a verify-only rehearsal path that generated a fresh validated mock explanation bundle without replacing tracked viewer assets. See [closeout guide](spec/05_DEMO_CLOSEOUT.md) for the walkthrough, teammate evidence requirements and next AI pilot. Live Meta and Pages remain subject to the required security review.
+
+### Competition Meta evidence review workflow
+
+Added explicit Meta mode to the fixed-fixture rehearsal command. It selects one candidate, reuses the existing Meta adapter and shared ledger, validates citations, and exports an immutable bundle without replacing the packaged viewer. Default mock mode remains available. Offline tests exercise the Meta path through stubbed transport, including one valid bundle and a rejected citation with no retry or mock fallback. The user authorized one bounded live test. The requested Astra worker could not independently verify its model identity, so live verification awaits the scoped fallback decision. No secret file was inspected and no new paid request was made.
+
+### Competition live verification and controlled assessments
+
+Owner authorized the work and reviewer fallback. Three separately reviewed live request variants ran through the existing shared budget. The first new request returned META_INVALID_RESPONSE, minimal reasoning reached local schema rejection, and strict structured output plus minimal reasoning exported a valid live annotation. The successful attempt cost USD 0.004686 estimated and all four historical attempts total USD 0.023824 estimated. Independent review accepted the narrative and public synthetic artifact inventory. Chrome replay rendered the actual recorded annotation with all five citations bound. The demo packages the reviewed live recording while credential-free rehearsal defaults to mock.
+
+Implemented separate controlled DATA, TRUST and actor/action/resource assessments with policy and byte-level evidence. They do not change the fixed FastAPI graph contract. See [competition verification](spec/06_COMPETITION_VERIFICATION.md) for reproducible commands, counts and open gates.

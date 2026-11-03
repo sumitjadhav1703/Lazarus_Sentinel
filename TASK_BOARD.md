@@ -11,9 +11,9 @@ Updated **2026-11-02**. The first-slice baseline is complete. The integrated dem
 | N05 | DONE | Bundle/explanation/viewer contract frozen in document 16. |
 | N06 | DONE | Fixed accessible graph/findings/coverage viewer; final checks/review in document 19. |
 | N07 | DONE | Disabled/offline mock boundary and hostile-output validation; canonical facts unchanged. |
-| N08 | PARTIAL | Live response usage settled at USD 0.007014 estimated. CLI failed before recording the explanation. P07 remains open. |
+| N08 | LIVE VERIFIED | P07 saved and exported the reviewed Muse Spark annotation. See [competition verification](spec/06_COMPETITION_VERIFICATION.md). |
 | N09 | SETUP_BLOCKED; NOT_ATTEMPTED | Joern v4.0.666 pinned; release README JDK21 versus installation docs19; installed JDK26. No Joern; 1.64GB asset not downloaded. |
-| N10 | NOT_IMPLEMENTED | DATA/TRUST capability/policy gates unmet; CALLS is not value flow. |
+| N10 | CONTROLLED ASSESSMENTS | Separate DATA and TRUST reports are executable for fixed synthetic policies. Canonical integration remains open. |
 | N11 | SKIPPED | Fixed assets meet demo need; no HTTP service. |
 | N12 | DONE (offline) | Exact integrated checks and Astra disposition are authoritative in document 19. |
 | N13 | LOCAL MATERIALS READY; submission BLOCKED | Synthetic bundle and local walkthrough available; portal requirements/receipt unknown. |
@@ -85,3 +85,8 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 - [x] Merge PR #51 after native verification and pass a credential-free fresh clone on this Mac.
 - [x] Rehearse and export the synthetic mock explanation without replacing packaged assets.
 - [ ] Collect teammate, native accessibility and portal evidence. Live Meta and Pages retain their review gates.
+
+### Competition Meta workflow
+
+- [x] Add the explicit fixed-fixture Meta demo mode and offline workflow regressions.
+- [x] Run and independently review one successful live annotation export.

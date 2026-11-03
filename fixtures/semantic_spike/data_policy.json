@@ -1,0 +1,8 @@
+{
+  "policy_version": "1",
+  "rule_id": "LS-DATA-001",
+  "scope": "fixture:semantic-spike",
+  "source": {"selector": "case(source)", "classification": "synthetic-sensitive"},
+  "sink": {"selector": "consume(value)", "classification": "synthetic-external"},
+  "required_argument_origin": "literal"
+}

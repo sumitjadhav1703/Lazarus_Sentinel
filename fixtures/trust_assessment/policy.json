@@ -1,0 +1,13 @@
+{
+  "policy_version": "1",
+  "rule_id": "LS-TRUST-001",
+  "scope": "fixture:trust-assessment",
+  "entry": "transfer",
+  "origin_zone": "internal",
+  "destination_zones": ["internal", "partner"],
+  "handoff_marker": "handoff",
+  "required_handling": {
+    "destination_zone": "partner",
+    "marker": "check_consent"
+  }
+}

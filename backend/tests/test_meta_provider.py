@@ -22,7 +22,8 @@ def request_bytes():
             "model": "muse-spark-1.3",
             "messages": [],
             "max_completion_tokens": 1024,
-            "response_format": {"type": "json_object"},
+            "reasoning_effort": "minimal",
+            "response_format": meta_provider.RESPONSE_FORMAT,
             "stream": False,
         }
     ).encode()
