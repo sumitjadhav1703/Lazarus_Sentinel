@@ -16,6 +16,7 @@
 
 - **Project:** Lazarus Sentinel
 - **Status:** Integrated fixed synthetic demo complete; 139 backend tests (plus one Windows-only skip on macOS), 16 frontend tests and quality checks pass; independent Astra review accepted. Live access/submission and platform-expansion gates remain explicit in docs/19_INTEGRATED_DEMO_REVIEW.md.
+- **Blueprint audit:** [spec/README.md](spec/README.md) maps 107 scope items and all 28 Appendix B bullets; the original three-detector MVP remains incomplete. Next analysis step is a controlled semantic contract, alongside teammate reproduction.
 - **Current phase:** Team-ready source published on GitHub main; native Windows/macOS/Linux CI verified. See docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md.
 - **Primary MVP language/framework:** CPython 3.13.14 analyzing a synthetic FastAPI fixture without importing FastAPI.
 - **Primary code-analysis candidate:** Python AST structure adapter; Joern NOT_ATTEMPTED (absent from PATH; no failed POC claim).
@@ -23,7 +24,7 @@
 - **Persistence:** SQLite for scans/findings/artifact references; normalized JSON graph/findings/coverage and Markdown reports.
 - **Workflow orchestration:** Linear Python pipeline; LangGraph deferred.
 - **Frontend:** React/Vite/TypeScript/Cytoscape fixed synthetic bundle viewer plus CLI/JSON/Markdown; HTTP API skipped.
-- **Runtime model provider:** Disabled by default; deterministic mock and bounded Standard Meta adapter implemented. Live access unverified, zero paid calls. USD3/five-attempt application cap.
+- **Runtime model provider:** Disabled by default; deterministic mock and bounded Standard Meta adapter implemented. Live API access verified on one settled synthetic request (USD 0.007014 at ledger rates). Explanation recording remains incomplete. USD 3/five-attempt application cap.
 - **MVP mode:** Controlled fixture ID only; read-only parsing; candidate findings; no automatic fixes, arbitrary repositories, or target execution.
 
 ## Owner's model preferences
@@ -269,3 +270,48 @@ Commit28798be published to owner repo main. OAuthpush rejected workflow scope; e
 Owner requested repository details and next coding direction. Saved239-character truthfuldescription and11topics (application-security,authorization,cytoscape,evidence-graph,fastapi,networkx,python,react,security-tools,static-analysis,typescript), verified API/UI. Website remainsblank: no deployedURL. Releases/Packages alreadyenabled andverified. Deployments checkboxchecked/savedtwice throughnormalUI butreopenedunchecked; notclaimedpersisted, no fabricateddeploymentcreated. Proof:artifacts/browser/github-about-settings.png. No sourcecode/dependency/modelcallchanges or tests rerun for metadata.
 
 Next remainsP03 teammatefreshclone, P04 observeda11yfixes andP05 measuredproductionload. A separately selected fixedsyntheticviewer GitHubPagesincrement couldthen provide a realwebsiteURL;repository-baseassetpaths and hashloading mustpassbeforedeployment. Liveprovider and broaderintake gatesunchanged.
+
+
+### 2026-11-02 — Original blueprint audit and next-stage specification
+
+Owner requested a full comparison of the 33-page original blueprint with current implementation and a separate root planning folder. Created [spec/README.md](spec/README.md), source/page-linked implementation audit, gated next-stage plan and master checklist. Sol inventoried requirements; Astra independently reviewed semantic claims and stage gates. Coordinator verified corrections: CLASS declaration/containment extraction exists, while inheritance/type semantics do not; valid model citations do not establish free-text factuality.
+
+Audit catalogue: 107 scope items — 37 IMPLEMENTED, 34 PARTIAL, 25 NOT_IMPLEMENTED, 6 BLOCKED, 3 SUPERSEDED and 2 NOT_APPLICABLE. The MVP-only inventory has 78 rows (33 implemented, 31 partial, 11 absent, 3 blocked). Counts are unweighted inventory items, not completion percentages or accuracy. All 28 Appendix B bullets and sections 1–20/appendices A–D are mapped. Accepted reduced demo remains complete; original three-detector MVP remains incomplete.
+
+Next recommended analysis assignment: freeze one controlled semantic capability with exact syntax/policy/evidence and positive/control/unknown cases before coding. P03 teammate reproduction and owner prerequisite decisions can proceed in parallel. Isolation must be demonstrated before broader intake; optional website work does not close detector gaps.
+
+Verification for this documentation-only session: 35 manifest files and 300 relative links resolve; 107 unique consecutive IDs agree between audit/checklist; 28 Appendix B bullets map; PDF SHA256 unchanged; backend/frontend/scripts/CI source unchanged from tested 06f993e. Existing 139 backend/16 frontend results are recorded prior evidence, not rerun here. Independent Astra review accepted stage order with the two claim corrections applied. Original confidential PDF remains local/untracked; extracted text/renderings remain ignored artifacts. No feature changes, paid calls, tool installation, deployment, submission or publication in this session.
+
+
+### 2026-11-02 — Credential-free environment template
+
+Added root `.env.example` with blank `MODEL_API_KEY`, matching the backend's actual environment lookup. README explains macOS/PowerShell copying and explicit `uv run --env-file .env` loading; no dotenv dependency or automatic loading was added. Existing `.gitignore` already excludes `.env`/variants while allowing `.env.example`. Owner explicitly requested that secret `.env` files not be inspected: none were opened, read, loaded or modified. Verified template contents, ignore rules and installed uv's `--env-file` option without loading secrets; no API calls or behavior tests performed. Historical MODEL_API_KEY/META_API_KEY mentions are environment-check notes; the adapter currently consumes only MODEL_API_KEY.
+
+
+### 2026-11-03 — Contributor readiness, CI rewrite and issue backlog
+
+Claude Code (Sonnet 5.5) filed 40 GitHub issues (#1–#40) with new labels, rewrote CI into backend/frontend/verify jobs (triggers: push to main, pull_request, workflow_dispatch; concurrency; CodeQL; Dependabot), and added issue/PR templates, SECURITY.md, CODE_OF_CONDUCT.md, a new README and CONTRIBUTING via PR #41. No product code, fixtures or artifacts changed. Full details, evidence and open limits: [docs/24_CONTRIBUTOR_READINESS_AND_CI.md](docs/24_CONTRIBUTOR_READINESS_AND_CI.md). Local: ruff clean, 139 backend tests passed, 1 skipped. PR #41 checks: all passed except macOS verify, which was still waiting for a hosted runner. Earlier main run 41494823283 failed only through a cancelled macOS job, not code. License still undecided (issue #40).
+
+### 2026-11-03 — First bounded Meta API check
+
+The owner authorized one synthetic live request using the configured key. uv loaded the local credential into the CLI process. Only safe status fields were captured. Standard Muse Spark 1.3 pricing and Chat Completions were checked against the provider docs before the request. The existing ledger recorded one SETTLED attempt, 100000 micro-USD reserved and 7014 micro-USD estimated usage. This verifies authenticated transport and usage reporting. The CLI returned INTERNAL_ERROR after settlement and saved no annotation. The precise post-settlement cause is unknown because the original response was discarded. No request was repeated.
+
+An offline regression reproduced the generic CLI error for a schema-invalid explanation. Those validation errors now return META_INVALID_EXPLANATION without echoing provider output or publishing a sidecar. This change does not identify the original failure.
+
+### 2026-11-03 — Controlled semantic experiment
+
+The owner approved the available coordinator and an independent reviewer for this increment after the requested Astra route could not be verified. The fallback reviewer froze the straight-line provenance contract in [spec/04](spec/04_CONTROLLED_SEMANTIC_EXPERIMENT.md). The implementation worker added the standalone script, a fixed 12-file synthetic corpus, a separate oracle and focused tests. The reviewer independently checked six unseen inputs and accepted the bounded experiment. Agent routing labels were requested through the supported delegation interface. The worker's underlying model display label was not independently verified.
+
+S01 and the selected standard-library AST S04 experiment passed. Ran `backend/.venv/bin/python scripts/semantic_spike.py` under a 30-second outer deadline on macOS arm64, CPython 3.13.14. The report matched 12 of 12 expected results (four flows, four negative controls, four unknowns). Local artifact: `artifacts/semantic-spike/0be59eeb-9904-4b97-98a7-e4fb767b22e8/result.json`. Ruff lint and format, strict backend mypy and backend pytest passed (151 passed, one Windows-only skip). Fresh Windows/Linux execution remains unverified. Production DATA and TRUST remain unimplemented. S05 requires a separate security policy, semantic-path validator and review.
+
+### GitHub PR triage and local main sync
+
+Reviewed open PRs #42–49 and confirmed #41 was already in main. Squash-merged #49 (keyboard navigation), #42 (artifact action), #48 (CodeQL action), #44 (build tooling minimum), and #45 (Cytoscape types) after all eight checks passed on each reviewed head. GitHub and local main advanced to 7437e20. Kept #43, #46 and #47 open for separate major-upgrade review. The Vitest macOS check was cancelled. The local semantic experiment and API diagnostic edits remained uncommitted and were preserved during the branch switch.
+
+### Remaining dependency PRs
+
+Merged mypy #43 and Vitest #47 after eight passing checks on each reviewed head. Vitest's replacement CI passed on macOS, Windows and Ubuntu. Closed Vite #46 for a dedicated migration because Vite 8 changes the bundler and default browser targets. Fast-forwarded local main to 03600d8. GitHub listed no open PRs at verification.
+
+### Next-phase baseline verification
+
+Preserved the existing provenance experiment and provider diagnostic changes on a scoped branch from 03600d8. Installed locked dependencies including mypy 2.4.1 and Vitest 5.0.5. All nine checks in the offline verifier passed on macOS. The verifier reported zero live provider attempts. The private blueprint and generated evidence remain local.

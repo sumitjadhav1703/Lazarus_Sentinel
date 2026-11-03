@@ -6,6 +6,8 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
+from pydantic import ValidationError
+
 from . import intake
 from .bundle import LoadedScan, canonical_bytes, digest, load_committed_graph
 from .demo_models import Annotation, ExplanationResponse
@@ -128,9 +130,13 @@ def explain_finding(scan_id: str, finding_id: str, provider: str = "disabled") -
     else:
         from .meta_provider import generate
 
-        response = ExplanationResponse.model_validate(
-            generate(transport_payload(request), WORKSPACE / "artifacts" / "model-budget.sqlite3")
+        generated = generate(
+            transport_payload(request), WORKSPACE / "artifacts" / "model-budget.sqlite3"
         )
+        try:
+            response = ExplanationResponse.model_validate(generated)
+        except ValidationError:
+            raise ValueError("META_INVALID_EXPLANATION") from None
     annotation = Annotation(
         annotation_version="0.1.0",
         display_provenance="recorded",

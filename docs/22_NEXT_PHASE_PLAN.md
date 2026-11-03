@@ -2,6 +2,8 @@
 
 Proposed execution order, updated 2026-11-02. Completed baseline/demo/viewer work must not restart. [Document 15](15_NEXT_STEPS.md) preserves N01–N18 dispositions; this plan turns remaining work into finite team assignments. [Document 23](23_PORTABILITY_AND_RELEASE_VERIFICATION.md) records actual current checks and publication outcomes. P01 and P02 are now complete for the bounded fixed-fixture profile; document23 links native three-platform success and published main. Begin with P03, while P04/P06 can proceed independently. Other listed actions remain unexecuted proposals.
 
+For product capability expansion, use the [original-blueprint audit and semantic-stage plan](../spec/README.md). Its S01 semantic contract can proceed alongside P03 reproduction and owner prerequisites; optional P10 website work does not close detector gaps. Existing P tasks remain valid and are not replaced by the audit.
+
 | ID | Owner / dependency | Bounded task and acceptance gate |
 |---|---|---|
 | P01 | Coordinator + backend; first | Finish native Windows/macOS compatibility without weakening worker isolation, provider deadline, redaction or budget concurrency. Run locked offline verifier on native macOS and hosted Windows/macOS/Linux. Record exact commit, runner, counts and links; unsupported isolation stays explicit. |
@@ -36,3 +38,10 @@ The repository About description/topics are configured; Website remainsblank bec
 5. Once selected deployment actually succeeds, verify the live synthetic graph/evidence, set the About Website to its realURL, and recheck the Deployments homepage option.
 
 Acceptance: reviewed production build loads the same validated bundle at both supported bases, no secrets/backend/modelkeys are shipped, actual deployedURL works before being advertised. No release/package/deployment is created merely to populate sidebar counters. [Official Vite GitHub Pages guidance](https://vite.dev/guide/static-deploy.html#github-pages) documents the repository base-path requirement. This remains a proposal, not implemented or deployed work.
+
+
+### P07 checkpoint — 2026-11-03
+
+One owner-authorized Standard Muse Spark 1.3 call against a committed synthetic finding authenticated and returned billable usage. The ledger settled at USD 0.007014 estimated using the documented rates. Explanation recording failed with INTERNAL_ERROR after settlement. The exact response was discarded by the CLI error boundary, so the precise cause remains unknown. P07 is partial. An offline test now covers safe schema-rejection diagnostics. The next live check is a separate attempt under the existing budget and approval process.
+
+[Meta pricing](https://dev.meta.ai/docs/pricing-rate-limits) · [Chat Completions protocol](https://dev.meta.ai/docs/protocols/chat-completions)
