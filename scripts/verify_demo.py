@@ -29,7 +29,7 @@ def check_bundle() -> dict[str, int]:
     manifest = parse_json(raw_manifest)
     payloads = {
         name: read_bounded(root / name)
-        for name in ("graph.json", "explanations.json")
+        for name in ("graph.json", "explanations.json", "investigations.json")
         if (root / name).is_file()
     }
     if len(raw_manifest) + sum(map(len, payloads.values())) > MAX_BYTES:

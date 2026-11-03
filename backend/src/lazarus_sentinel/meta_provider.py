@@ -5,6 +5,7 @@ from __future__ import annotations
 import http.client
 import multiprocessing
 import os
+import re
 import sys
 import time
 from multiprocessing.connection import Connection
@@ -174,3 +175,90 @@ def generate(payload: bytes, ledger_path: Path) -> dict[str, Any]:
     if not isinstance(response, dict):
         raise ValueError("META_INVALID_RESPONSE")  # noqa: TRY004 - allowlisted CLI diagnostic
     return response
+
+
+# Investigation turns use a separate ledger so the recorded explanation cap stays untouched.
+AGENT_MAX_REQUEST_BYTES = 32768
+AGENT_OUTPUT_TOKENS = 2048
+AGENT_MAX_ATTEMPTS = 20
+AGENT_MAX_BUDGET = 1_000_000
+
+
+def generate_turn(
+    payload: bytes, ledger_path: Path, tools: list[dict[str, Any]]
+) -> tuple[dict[str, str], dict[str, int]]:
+    """One bounded tool-calling turn. Returns exactly one validated tool call and usage."""
+    key = os.environ.get("MODEL_API_KEY")
+    if not key:
+        raise ValueError("META_KEY_MISSING")
+    request = parse_json(payload)
+    if (
+        len(payload) > AGENT_MAX_REQUEST_BYTES
+        or request.get("model") != "muse-spark-1.3"
+        or request.get("max_completion_tokens") != AGENT_OUTPUT_TOKENS
+        or request.get("reasoning_effort") != "low"
+        or request.get("tools") != tools
+        or request.get("parallel_tool_calls") is not False
+        or request.get("stream") is not False
+        or set(request)
+        != {
+            "model",
+            "messages",
+            "tools",
+            "parallel_tool_calls",
+            "max_completion_tokens",
+            "reasoning_effort",
+            "stream",
+        }
+    ):
+        raise ValueError("INVALID_META_REQUEST")
+    budget = Budget(
+        ledger_path,
+        max_attempts=AGENT_MAX_ATTEMPTS,
+        max_budget=AGENT_MAX_BUDGET,
+        output_tokens=AGENT_OUTPUT_TOKENS,
+        max_request_bytes=AGENT_MAX_REQUEST_BYTES,
+    )
+    attempt = budget.reserve(len(payload))
+    result = bounded_transport(payload, key)
+    usage = result.get("usage")
+    if not isinstance(usage, dict):
+        raise ValueError("UNVERIFIABLE_USAGE")  # noqa: TRY004 - allowlisted CLI diagnostic
+    input_tokens, output_tokens = usage.get("prompt_tokens"), usage.get("completion_tokens")
+    if type(input_tokens) is not int or type(output_tokens) is not int:
+        raise ValueError("UNVERIFIABLE_USAGE")
+    if "total_tokens" in usage and (
+        type(usage["total_tokens"]) is not int
+        or usage["total_tokens"] != input_tokens + output_tokens
+    ):
+        raise ValueError("UNVERIFIABLE_USAGE")
+    budget.settle(attempt, input_tokens, output_tokens)
+    choices = result.get("choices")
+    if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+        raise ValueError("META_INVALID_RESPONSE")
+    choice = choices[0]
+    message = choice.get("message")
+    if not isinstance(message, dict) or choice.get("finish_reason") == "length":
+        raise ValueError("META_INVALID_RESPONSE")
+    calls = message.get("tool_calls")
+    # Free text instead of a tool call ends the run; the final answer must be submit_investigation.
+    if not isinstance(calls, list) or not calls:
+        raise ValueError("META_NO_TOOL_CALL")
+    if len(calls) != 1 or not isinstance(calls[0], dict):
+        raise ValueError("META_INVALID_RESPONSE")
+    call = calls[0]
+    function = call.get("function")
+    if (
+        call.get("type") != "function"
+        or not isinstance(call.get("id"), str)
+        or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", call["id"])
+        or not isinstance(function, dict)
+        or not isinstance(function.get("name"), str)
+        or not isinstance(function.get("arguments"), str)
+        or len(function["arguments"].encode()) > 8192
+    ):
+        raise ValueError("META_INVALID_RESPONSE")
+    return (
+        {"id": call["id"], "name": function["name"], "arguments": function["arguments"]},
+        {"input_tokens": input_tokens, "output_tokens": output_tokens},
+    )

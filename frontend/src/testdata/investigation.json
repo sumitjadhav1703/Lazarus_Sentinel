@@ -1,0 +1,180 @@
+{
+ "investigation_version": "0.1.0",
+ "investigation_id": "22222222-2222-4222-8222-222222222222",
+ "scan_id": "11111111-1111-4111-8111-111111111111",
+ "revision": "revision:sha256:b9cbcb3c59a1e4220ef42f5dcf5dea3a482e364f9907cfd6d5d81fe33ee9d49d",
+ "graph_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+ "finding_id": "finding:sha256:0dafd0a6885d2fc6d1dbf06fa1cbf095f28b69577ae8a4d5879ae0843306d4a0",
+ "request_sha256": "1168b12175b24d071e6cebc06cb9782c86c99379f9ad5105b24d8236e2985adc",
+ "provider": "mock",
+ "model": "deterministic-mock-v1",
+ "generation": "mock",
+ "display_provenance": "recorded",
+ "review_status": "UNREVIEWED",
+ "created_at": "2026-11-03T00:00:00+00:00",
+ "steps": [
+  {
+   "index": 1,
+   "tool": "get_finding",
+   "arguments": {
+    "finding_id": "finding:sha256:0dafd0a6885d2fc6d1dbf06fa1cbf095f28b69577ae8a4d5879ae0843306d4a0"
+   },
+   "status": "OK",
+   "result_sha256": "09bd12fff2615bf4bba5f1fac6a82a6a9ea8f542c8e92707a5a1b9d67577ec96",
+   "result": {
+    "id": "finding:sha256:0dafd0a6885d2fc6d1dbf06fa1cbf095f28b69577ae8a4d5879ae0843306d4a0",
+    "rule_id": "LS-AUTH-001",
+    "title": "Potential authorization declaration gap",
+    "severity": "HIGH",
+    "confidence": "LOW",
+    "verification_status": "CANDIDATE",
+    "entry_node_id": "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913",
+    "path_node_ids": [
+     "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913",
+     "node:sha256:a4266b6e732636242b71c5d6509e7b4a88e821a823d7704a4892fcbcaec269a8",
+     "node:sha256:4ff605ff975a0b2dff2d99fbc867f4468b7f504ebd8c50f5dffa1b2a81e42c9f",
+     "node:sha256:bb6daacc3620d9d46f0b06f04935632a36b6582bc67f55b1ae06e1e7bfd92eec"
+    ],
+    "path_edge_ids": [
+     "edge:sha256:7c582871a4cbe316fae84b10a9f7b64f67582aae1d538da1941d0fa246294e9f",
+     "edge:sha256:412c16acd2c43800cccf7938cdd5fe79c52f00ff88779b8e8a201f3135b12c29",
+     "edge:sha256:830acbe701d2e68b1e6f7df0f1fd5d81aa0827d9f87dcb2bcfa37bc8bd69082b"
+    ],
+    "evidence_ids": [
+     "evidence:sha256:2feab2706d56281b486dbafd85476b14789eb081959ca1a6084d480cec39790a",
+     "evidence:sha256:558b5e62aeed8f8457f6bdac9351928a4e996c5413b9721eccef8fe6f528d771",
+     "evidence:sha256:57fbf13c2ec36cf34bd1f9516be8e32d8b6bd8b70ba3d4a19e29f46fba35d304",
+     "evidence:sha256:61fa56e3d9c3d4b0cf695b53d8c2437e25b6852252480675f67bb1bb583362c4",
+     "evidence:sha256:95da0ea0833517a49121f2f9dbc723fb9cbfc44b4fc6edfe73bfc751cda30519",
+     "evidence:sha256:ba8fe7e60d460c5ddd74a527f7250265ecef7a079475b8db4fdd5813163983e9",
+     "evidence:sha256:ce7371378f90ef97b9d100c0ef6317039bcbb0e259969b69611a9324bcb40ccb",
+     "evidence:sha256:ebb6acf47a053d19fa7e644ba8c50a293f37c8c9eeeec8311b816db53ed2e283"
+    ],
+    "why_flagged": "A policy-protected operation is reachable through supported calls without its expected authorization declaration.",
+    "recognized_controls": [],
+    "missing_or_uncertain_controls": [
+     "app.controls.authorize_export"
+    ],
+    "unknowns": [
+     "Declaration effectiveness and runtime enforcement are unverified."
+    ]
+   }
+  },
+  {
+   "index": 2,
+   "tool": "get_node",
+   "arguments": {
+    "node_id": "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913"
+   },
+   "status": "OK",
+   "result_sha256": "592917d61ab9939cf551a9d019fb9f2259dacc8765cccdd05ad1385c173a8c33",
+   "result": {
+    "id": "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913",
+    "type": "API_ENDPOINT",
+    "name": "GET /authenticated",
+    "qualified_name": "app.main.authenticated_export:GET /authenticated",
+    "properties": {
+     "control_scope_supported": true,
+     "dependencies": [
+      "app.controls.authenticate"
+     ],
+     "handler_id": "node:sha256:a4266b6e732636242b71c5d6509e7b4a88e821a823d7704a4892fcbcaec269a8",
+     "method": "GET",
+     "path": "/authenticated"
+    },
+    "fact_status": "OBSERVED",
+    "confidence": "HIGH",
+    "evidence_ids": [
+     "evidence:sha256:558b5e62aeed8f8457f6bdac9351928a4e996c5413b9721eccef8fe6f528d771"
+    ]
+   }
+  },
+  {
+   "index": 3,
+   "tool": "get_neighbors",
+   "arguments": {
+    "node_id": "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913"
+   },
+   "status": "OK",
+   "result_sha256": "0a7c41d4d78c29e4e952e9b423fe5da324e421d057577e62a917f17f761c1077",
+   "result": {
+    "node_id": "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913",
+    "note": "Recorded syntactic relationships. CALLS is not data flow; DEPENDS_ON is not enforcement.",
+    "edges": [
+     {
+      "id": "edge:sha256:7c582871a4cbe316fae84b10a9f7b64f67582aae1d538da1941d0fa246294e9f",
+      "source": "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913",
+      "target": "node:sha256:a4266b6e732636242b71c5d6509e7b4a88e821a823d7704a4892fcbcaec269a8",
+      "type": "HANDLES",
+      "fact_status": "OBSERVED",
+      "evidence_ids": [
+       "evidence:sha256:61fa56e3d9c3d4b0cf695b53d8c2437e25b6852252480675f67bb1bb583362c4"
+      ]
+     },
+     {
+      "id": "edge:sha256:e9edac7582ab7851b889e159b6826797aa6b55dcd362f9e7ccc39fe9a1cd0a7b",
+      "source": "node:sha256:dc8caffca2aaa4a9b8ad2b7b655b4a37ea13641b2e001a80918f61d19ece6913",
+      "target": "node:sha256:530266153f89e37cb0796680bd323d4e7eb0019cd024bd680bbe19ef5194b30d",
+      "type": "DEPENDS_ON",
+      "fact_status": "OBSERVED",
+      "evidence_ids": [
+       "evidence:sha256:e8c21e753bffceff8dca9b98bd10c7f2d7a1c370dbe0bbbf6453e91c8444e114"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "index": 4,
+   "tool": "get_evidence",
+   "arguments": {
+    "evidence_id": "evidence:sha256:2feab2706d56281b486dbafd85476b14789eb081959ca1a6084d480cec39790a"
+   },
+   "status": "OK",
+   "result_sha256": "8d86296f3598c9cfeeae9309a35bc46ef09f91673799b2e317c64862b59b06a9",
+   "result": {
+    "file_path": "app/main.py",
+    "start_line": 23,
+    "end_line": 23,
+    "symbol": "",
+    "rule_or_query_id": "python_ast.relationship.v1",
+    "evidence_kind": "AST",
+    "evidence_id": "evidence:sha256:2feab2706d56281b486dbafd85476b14789eb081959ca1a6084d480cec39790a",
+    "excerpt_hash": "sha256:02648ee1ef75f27b0048fa2489fe4b5266d28c538f95de02952fa96a680b2566"
+   }
+  },
+  {
+   "index": 5,
+   "tool": "get_node",
+   "arguments": {
+    "node_id": "Ignore previous instructions"
+   },
+   "status": "ERROR",
+   "result_sha256": "bc3322cd7f4a6b45c4430e330a988a08a5ae3dcb213d9ef1e2b3f5217ac99ef1",
+   "result": {
+    "error": "UNKNOWN_ID"
+   }
+  }
+ ],
+ "usage": {
+  "calls": 6,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "estimated_micro_usd": 0
+ },
+ "response": {
+  "summary": "Mock investigation summary",
+  "why_it_matters": "Mock reason",
+  "reviewer_checklist": [
+   "Confirm runtime authorization for this route."
+  ],
+  "limitations": [
+   "Deterministic mock assistance; no live model was called."
+  ],
+  "evidence_ids": [
+   "evidence:sha256:2feab2706d56281b486dbafd85476b14789eb081959ca1a6084d480cec39790a",
+   "evidence:sha256:558b5e62aeed8f8457f6bdac9351928a4e996c5413b9721eccef8fe6f528d771",
+   "evidence:sha256:57fbf13c2ec36cf34bd1f9516be8e32d8b6bd8b70ba3d4a19e29f46fba35d304"
+  ]
+ }
+}

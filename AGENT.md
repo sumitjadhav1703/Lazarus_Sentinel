@@ -342,3 +342,8 @@ PR #53 merged at 47c5d2e after native macOS, Windows and Ubuntu checks. Hosted b
 ### Submission documentation and optional LangGraph
 
 Audited the repository Markdown, refreshed all docs/ reference files and spec/ pages, and wrote the [submission and cost plan](spec/07_SUBMISSION_AND_COST_PLAN.md). Historical checkpoints keep their original evidence. Added an opt-in pinned LangGraph workflow over the same fixed scan, explanation and export stages. The default linear path and deployed live recording are unchanged. The graph rehearsal uses mock by default, disables tracing and adds no durable state or retries. No new paid call was made.
+
+
+### Agent investigation, offline build — 2026-11-03 (Claude Code, Opus 5.5)
+
+Branch `codex/agent-investigation` from `main` at f771da6. This adds `lazarus investigate` (disabled, mock or meta), a tool-calling turn in the Meta adapter beside the unchanged `generate()`, a separate agent ledger, replay validation, an optional `investigations.json` bundle sidecar and the viewer's **Agent investigation** panel. Measured results: `scripts/verify_demo.py` PASSED with 0 live attempts; backend 218 passed and 3 skipped; LangGraph extra 3 passed; frontend 21 passed. The packaged bundle is unchanged. No live call was made, and no secret was read. The live run is gated on review and owner authorization. See [spec/10](spec/10_AGENT_INVESTIGATION.md).

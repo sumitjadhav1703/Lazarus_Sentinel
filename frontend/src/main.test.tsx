@@ -9,7 +9,7 @@ import {loadDemo, type Demo} from './validation';
 vi.mock('./validation',()=>({loadDemo:vi.fn()}));
 vi.mock('./Network',()=>({default:()=> <div data-testid="network"/>}));
 afterEach(()=>{cleanup();vi.clearAllMocks();});
-const demo = (data=graph) => ({manifest:{scan:{status:'PARTIAL',profile:'reduced-static-auth',revision:data.repository.revision}},graph:data,annotations:[{finding_id:data.findings[0].id,generation:'mock',provider:'mock',model:'deterministic-mock-v1',response:{summary:'Mock explanation',why_it_matters:'Fixture',limitations:[]}}]} as unknown as Demo);
+const demo = (data=graph) => ({manifest:{scan:{status:'PARTIAL',profile:'reduced-static-auth',revision:data.repository.revision}},graph:data,annotations:[{finding_id:data.findings[0].id,generation:'mock',provider:'mock',model:'deterministic-mock-v1',response:{summary:'Mock explanation',why_it_matters:'Fixture',limitations:[]}}],investigations:[]} as unknown as Demo);
 
 it('guides selection and clears candidate details for an endpoint without a finding',async()=>{
   vi.mocked(loadDemo).mockResolvedValue(demo());

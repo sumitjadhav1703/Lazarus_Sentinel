@@ -4,14 +4,15 @@ import Ajv2020 from 'ajv/dist/2020';
 import bundleSchema from './schemas/bundle.schema.json';
 import graphSchema from './schemas/graph.schema.json';
 import explanationSchema from './schemas/explanations.schema.json';
+import investigationSchema from './schemas/investigations.schema.json';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Item = { id:string; [key:string]: any }; // Graph properties are analyzer-defined.
 export type Graph = { repository:{revision:string}; nodes:Item[]; edges:Item[]; evidence:Item[]; findings:Item[]; coverage:Item[]; diagnostics:Item[] };
 export type Manifest = { scan:{scan_id:string; revision:string; status:string; profile:string}; artifacts:Record<string,{size:number; sha256:string}> };
-export type Demo = {manifest:Manifest; graph:Graph; annotations:Item[]};
+export type Demo = {manifest:Manifest; graph:Graph; annotations:Item[]; investigations:Item[]};
 const ajv = new Ajv2020({strict:false});
-const bundleCheck = ajv.compile(bundleSchema), graphCheck = ajv.compile(graphSchema), explanationCheck = ajv.compile(explanationSchema);
+const bundleCheck = ajv.compile(bundleSchema), graphCheck = ajv.compile(graphSchema), explanationCheck = ajv.compile(explanationSchema), investigationCheck = ajv.compile(investigationSchema);
 const fail = (message:string):never => { throw new Error(message); };
 const unique = (items:Item[], name:string) => {
   const ids = new Set(items.map(x => x.id));
@@ -45,12 +46,15 @@ async function readBounded(name:string, limit:number) {
 const parse = (bytes:Uint8Array) => JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
 const sha = async (bytes:Uint8Array) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes as BufferSource))).map(x=>x.toString(16).padStart(2,'0')).join('');
 const uuid = (x:string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(x);
+// Mirrors backend canonical_bytes: sorted keys, compact separators, ASCII escapes.
+const canonical=(value:unknown):string=> { if(Array.isArray(value)) return '['+value.map(canonical).join(',')+']'; if(value && typeof value==='object') return '{'+Object.entries(value).sort(([a],[b])=>a<b?-1:a>b?1:0).map(([k,v])=>canonical(k)+':'+canonical(v)).join(',')+'}'; return JSON.stringify(value).replace(/[\u007f-\uffff]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')); };
+const provenance=(x:Item)=>[['mock','deterministic-mock-v1','mock'],['meta','muse-spark-1.3','live']].some(p=>p.join('|')===[x.provider,x.model,x.generation].join('|'));
 export async function loadDemo():Promise<Demo> {
   const manifestBytes=await readBounded('bundle.json',1048576), raw=parse(manifestBytes);
   if (!bundleCheck(raw)) fail('Invalid bundle manifest');
   const manifest=raw as unknown as Manifest & {bundle_id:string};
   if (!uuid(manifest.bundle_id) || !uuid(manifest.scan.scan_id)) fail('Invalid bundle identity'); const names=Object.keys(manifest.artifacts).sort();
-  if(names.join(',') !== 'graph.json' && names.join(',') !== 'explanations.json,graph.json') fail('Unexpected bundle artifacts');
+  if(!names.includes('graph.json') || names.some(n=>!['graph.json','explanations.json','investigations.json'].includes(n))) fail('Unexpected bundle artifacts');
   let size=manifestBytes.length; const payloads:Record<string,Uint8Array>={};
   for (const name of names) { const bytes=await readBounded(name,1048576-size); size+=bytes.length; const expected=manifest.artifacts[name]; if(bytes.length!==expected.size || await sha(bytes)!==expected.sha256) fail(`Integrity check failed for ${name}`); payloads[name]=bytes; }
   const graph=parse(payloads['graph.json']); if(!graphCheck(graph)) fail('Invalid graph schema'); validateGraph(graph,manifest.scan.revision);
@@ -58,15 +62,20 @@ export async function loadDemo():Promise<Demo> {
   if(manifest.scan.status!==(partial?'PARTIAL':'COMPLETED')) fail('Invalid scan coverage status');
   let annotations:Item[]=[];
   if(payloads['explanations.json']) { const envelope=parse(payloads['explanations.json']); if(!explanationCheck(envelope)) fail('Invalid explanation schema'); annotations=envelope.annotations;
-    for(const a of annotations) { if(!a.response.summary.trim() || !a.response.why_it_matters.trim() || a.response.limitations.some((x:string)=>!x.trim())) fail('Invalid explanation text'); const f=graph.findings.find((x:Item)=>x.id===a.finding_id); if(!uuid(a.annotation_id) || a.scan_id!==manifest.scan.scan_id || a.revision!==manifest.scan.revision || a.graph_sha256!==manifest.artifacts['graph.json'].sha256 || !f || !references(a.response.evidence_ids,new Set(f.evidence_ids)) || new Set(a.response.evidence_ids).size!==a.response.evidence_ids.length || ![['mock','deterministic-mock-v1','mock'],['meta','muse-spark-1.3','live']].some(x=>x.join('|')===[a.provider,a.model,a.generation].join('|')) || !Number.isFinite(Date.parse(a.created_at)) || !/(Z|[+-]\d\d:\d\d)$/.test(a.created_at)) fail('Invalid explanation binding'); }
+    for(const a of annotations) { if(!a.response.summary.trim() || !a.response.why_it_matters.trim() || a.response.limitations.some((x:string)=>!x.trim())) fail('Invalid explanation text'); const f=graph.findings.find((x:Item)=>x.id===a.finding_id); if(!uuid(a.annotation_id) || a.scan_id!==manifest.scan.scan_id || a.revision!==manifest.scan.revision || a.graph_sha256!==manifest.artifacts['graph.json'].sha256 || !f || !references(a.response.evidence_ids,new Set(f.evidence_ids)) || new Set(a.response.evidence_ids).size!==a.response.evidence_ids.length || !provenance(a) || !Number.isFinite(Date.parse(a.created_at)) || !/(Z|[+-]\d\d:\d\d)$/.test(a.created_at)) fail('Invalid explanation binding'); }
   }
   for (const a of annotations) {
     const f=graph.findings.find((x:Item)=>x.id===a.finding_id)!;
     const pick=(x:Item, keys:string[])=>Object.fromEntries(keys.map(k=>[k,x[k]]));
     const context={finding_id:f.id,rule_id:f.rule_id,path_nodes:f.path_node_ids.map((id:string)=>pick(graph.nodes.find((n:Item)=>n.id===id)!,['id','name','type','qualified_name'])),path_edges:f.path_edge_ids.map((id:string)=>pick(graph.edges.find((e:Item)=>e.id===id)!,['id','source','target','type'])),evidence:graph.evidence.filter((e:Item)=>f.evidence_ids.includes(e.id)).sort((x:Item,y:Item)=>x.id.localeCompare(y.id)).map((e:Item)=>pick(e,['id','repository_revision','file_path','start_line','end_line','excerpt_hash'])),assumptions:f.assumptions,unknowns:f.unknowns};
-    const canonical=(value:unknown):string=> { if(Array.isArray(value)) return '['+value.map(canonical).join(',')+']'; if(value && typeof value==='object') return '{'+Object.entries(value).sort(([a],[b])=>a<b?-1:a>b?1:0).map(([k,v])=>canonical(k)+':'+canonical(v)).join(',')+'}'; return JSON.stringify(value).replace(/[\u007f-\uffff]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')); };
     const request={context,prompt_version:'evidence-explanation-v1',provider:a.provider,model:a.model};
     if(await sha(new TextEncoder().encode(canonical(request)))!==a.request_sha256) fail('Invalid explanation request binding');
   }
-  return {manifest,graph,annotations};
+  let investigations:Item[]=[];
+  if(payloads['investigations.json']) { const envelope=parse(payloads['investigations.json']); if(!investigationCheck(envelope)) fail('Invalid investigation schema'); investigations=envelope.investigations;
+    // Full tool replay and request hashing run in the backend verifier; the viewer checks bindings and record integrity.
+    for(const v of investigations) { const f=graph.findings.find((x:Item)=>x.id===v.finding_id); if(!uuid(v.investigation_id) || v.scan_id!==manifest.scan.scan_id || v.revision!==manifest.scan.revision || v.graph_sha256!==manifest.artifacts['graph.json'].sha256 || !f || !provenance(v) || !references(v.response.evidence_ids,new Set(f.evidence_ids)) || v.steps.some((s:Item,i:number)=>s.index!==i+1) || v.usage.calls!==v.steps.length+1 || !Number.isFinite(Date.parse(v.created_at))) fail('Invalid investigation binding');
+      for(const s of v.steps) if(await sha(new TextEncoder().encode(canonical(s.result)))!==s.result_sha256) fail('Invalid investigation step'); }
+  }
+  return {manifest,graph,annotations,investigations};
 }

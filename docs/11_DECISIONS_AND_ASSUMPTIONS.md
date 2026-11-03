@@ -99,3 +99,8 @@ Use a standalone standard-library AST experiment to test local assignment proven
 ### D-029 — Opt-in LangGraph demo orchestration (2026-11-03)
 
 Keep the default linear scanner and published recording. Add a pinned optional LangGraph extra for the fixed rehearsal stages, with tracing disabled and the existing Meta ledger unchanged. Durable review and pause/resume require a separate design and replay checks. The live competition recording predates this optional integration.
+
+
+### D-030 — Read-only agent investigation with a separate ledger (2026-11-03)
+
+The owner approved building an offline Muse Spark investigation loop over the committed graph. It uses a separate agent ledger capped at 20 calls and USD 1. The shared USD 3 / five-attempt explanation ledger is unchanged. The tools are pure graph lookups. No source text is sent. Every recorded step is replayed on bundle validation. Citations must come from tool results for the investigated finding. Any malformed turn fails the run with no retry and no partial record. The output is UNREVIEWED notes, never a verdict. The live run waits for owner-approved Astra or a fallback review and explicit owner authorization. See [agent investigation](../spec/10_AGENT_INVESTIGATION.md).

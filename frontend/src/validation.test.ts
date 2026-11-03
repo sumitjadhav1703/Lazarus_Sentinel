@@ -52,6 +52,22 @@ it('checks recorded annotation request and citation bindings',async()=>{
   sidecar.annotations[0].request_sha256=annotation.request_sha256; sidecar.annotations[0].response.evidence_ids=['not-an-evidence-id']; await seal();
   await expect(loadDemo()).rejects.toThrow('explanation binding');
 });
+
+import investigation from './testdata/investigation.json';
+it('checks investigation binding and step integrity',async()=>{
+  vi.stubGlobal('crypto',webcrypto);
+  const hash=hex(await webcrypto.subtle.digest('SHA-256',bytes));
+  const record=structuredClone({...investigation,graph_sha256:hash});
+  const manifest={bundle_version:'0.1.0',bundle_id:'11111111-1111-4111-8111-111111111111',origin:'controlled-synthetic-fixture',generator_version:'0.1.0',scan:{scan_id:'11111111-1111-4111-8111-111111111111',revision:graph.repository.revision,status:'PARTIAL',profile:'reduced-static-auth'},artifacts:{'graph.json':{sha256:hash,size:bytes.length},'investigations.json':{sha256:'',size:0}}};
+  let sideBytes=new Uint8Array();
+  const seal=async()=>{sideBytes=encoder.encode(JSON.stringify({investigation_version:'0.1.0',investigations:[record]}));manifest.artifacts['investigations.json']={sha256:hex(await webcrypto.subtle.digest('SHA-256',sideBytes)),size:sideBytes.length};};
+  vi.stubGlobal('fetch',async (url:string)=>new Response(url.endsWith('bundle.json')?JSON.stringify(manifest):url.endsWith('graph.json')?bytes:sideBytes));
+  await seal(); expect((await loadDemo()).investigations).toHaveLength(1);
+  (record.steps[1].result as {name:string}).name='forged'; await seal();
+  await expect(loadDemo()).rejects.toThrow('investigation step');
+  record.steps=structuredClone(investigation.steps); record.response.evidence_ids=['not-an-evidence-id']; await seal();
+  await expect(loadDemo()).rejects.toThrow('investigation binding');
+});
 it('rejects incomplete path evidence and wrong edge semantics',()=>{
   const copy=structuredClone(graph);
   copy.findings[0].evidence_ids=[];

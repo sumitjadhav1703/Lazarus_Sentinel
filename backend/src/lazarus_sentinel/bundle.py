@@ -17,6 +17,7 @@ from .demo_models import (
     BundleManifest,
     DemoScan,
     ExplanationEnvelope,
+    InvestigationEnvelope,
     export_json_schemas,
 )
 from .models import Graph
@@ -182,12 +183,45 @@ def validate_bundle(manifest: dict[str, Any], payloads: dict[str, bytes]) -> Gra
         )
         for annotation in envelope.annotations:
             validate_annotation(annotation, loaded)
+    if "investigations.json" in payloads:
+        from .investigation import validate_investigation
+
+        investigations = InvestigationEnvelope.model_validate(
+            parse_json(payloads["investigations.json"])
+        )
+        loaded = LoadedScan(
+            parsed.scan.model_dump(), graph, payloads["graph.json"], digest(payloads["graph.json"])
+        )
+        for investigation in investigations.investigations:
+            validate_investigation(investigation, loaded)
     return graph
 
 
-def export_demo_bundle(scan_id: str, annotation_id: str | None = None) -> dict[str, Any]:
+def export_demo_bundle(
+    scan_id: str, annotation_id: str | None = None, investigation_id: str | None = None
+) -> dict[str, Any]:
     loaded = load_committed_graph(scan_id)
     payloads = {"graph.json": loaded.graph_bytes}
+    if investigation_id is not None:
+        from .investigation import MAX_INVESTIGATION_BYTES, validate_investigation
+
+        checked_uuid(investigation_id)
+        investigation = validate_investigation(
+            parse_json(
+                read_bounded(
+                    WORKSPACE / "artifacts" / "investigations" / f"{investigation_id}.json",
+                    MAX_INVESTIGATION_BYTES,
+                )
+            ),
+            loaded,
+        )
+        if investigation.investigation_id != investigation_id:
+            raise ValueError("INVESTIGATION_ID_MISMATCH")
+        payloads["investigations.json"] = canonical_bytes(
+            InvestigationEnvelope(
+                investigation_version="0.1.0", investigations=[investigation]
+            ).model_dump(mode="json")
+        )
     if annotation_id is not None:
         from .explanations import validate_annotation
 

@@ -21,7 +21,7 @@ def test_export_dispatch(capsys, monkeypatch):
         lambda *args: calls.append(args) or {"status": "EXPORTED"},
     )
     assert main(["demo", "export", "--scan-id", "scan", "--annotation-id", "annotation"]) == 0
-    assert calls == [("scan", "annotation")]
+    assert calls == [("scan", "annotation", None)]
     assert json.loads(capsys.readouterr().out)["status"] == "EXPORTED"
 
 

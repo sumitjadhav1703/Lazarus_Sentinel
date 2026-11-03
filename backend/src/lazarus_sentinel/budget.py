@@ -19,8 +19,20 @@ OUTPUT_TOKENS = 1024
 
 
 class Budget:
-    def __init__(self, path: Path):
+    def __init__(
+        self,
+        path: Path,
+        *,
+        max_attempts: int = MAX_ATTEMPTS,
+        max_budget: int = MAX_BUDGET,
+        output_tokens: int = OUTPUT_TOKENS,
+        max_request_bytes: int = 16384,
+    ):
         self.path = path
+        self.max_attempts = max_attempts
+        self.max_budget = max_budget
+        self.output_tokens = output_tokens
+        self.max_request_bytes = max_request_bytes
         for suffix in ("", "-journal", "-wal", "-shm"):
             reject_symlink_components(Path(str(path) + suffix))
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -31,7 +43,7 @@ class Budget:
             )
 
     def reserve(self, request_bytes: int) -> str:
-        if type(request_bytes) is not int or not 0 < request_bytes <= 16384:
+        if type(request_bytes) is not int or not 0 < request_bytes <= self.max_request_bytes:
             raise ValueError("UNBOUNDED_REQUEST")
         # One token per request UTF-8 byte, plus 4096 framing tokens and 2x margin.
         reservation = max(
@@ -40,7 +52,7 @@ class Budget:
                 2
                 * (
                     (request_bytes + 4096) * INPUT_MICRO_USD_PER_TOKEN
-                    + OUTPUT_TOKENS * OUTPUT_MICRO_USD_PER_TOKEN
+                    + self.output_tokens * OUTPUT_MICRO_USD_PER_TOKEN
                 )
             ),
         )
@@ -50,14 +62,17 @@ class Budget:
             rows = db.execute("SELECT reserved,actual,state FROM attempts").fetchall()
             if any(
                 type(row[0]) is not int
-                or not 100_000 <= row[0] <= MAX_BUDGET
+                or not 100_000 <= row[0] <= self.max_budget
                 or (row[2] == "SETTLED" and (type(row[1]) is not int or not 0 <= row[1] <= row[0]))
                 for row in rows
             ):
                 raise ValueError("INVALID_BUDGET_LEDGER")
             if any(row[2] != "SETTLED" for row in rows):
                 raise ValueError("BUDGET_RECONCILIATION_REQUIRED")
-            if len(rows) >= MAX_ATTEMPTS or sum(row[1] for row in rows) + reservation > MAX_BUDGET:
+            if (
+                len(rows) >= self.max_attempts
+                or sum(row[1] for row in rows) + reservation > self.max_budget
+            ):
                 raise ValueError("BUDGET_EXHAUSTED")
             identity = str(uuid4())
             db.execute("INSERT INTO attempts VALUES(?,?,NULL,'RESERVED')", (identity, reservation))
@@ -68,7 +83,7 @@ class Budget:
             type(input_tokens) is not int
             or type(output_tokens) is not int
             or input_tokens < 1
-            or not 0 <= output_tokens <= OUTPUT_TOKENS
+            or not 0 <= output_tokens <= self.output_tokens
         ):
             raise ValueError("UNVERIFIABLE_USAGE")
         actual = math.ceil(

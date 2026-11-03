@@ -98,3 +98,8 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 - [x] Reconcile project docs against the public Meta recording and controlled assessment evidence.
 - [x] Add the opt-in LangGraph workflow for credential-free rehearsal.
 - [ ] Confirm portal fields and keep the submission receipt. Use the [submission and cost plan](spec/07_SUBMISSION_AND_COST_PLAN.md).
+
+### Agent investigation — 2026-11-03
+
+- [x] Offline investigation loop, replay validation, separate ledger, bundle sidecar and viewer panel. See [spec/10](spec/10_AGENT_INVESTIGATION.md).
+- [ ] Get Astra or an approved fallback review of the tool-calling boundary, then one owner-authorized live run, then packaging and the manual Pages deploy.
