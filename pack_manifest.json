@@ -39,6 +39,7 @@
     "spec/03_MASTER_CHECKLIST.md",
     "spec/04_CONTROLLED_SEMANTIC_EXPERIMENT.md",
     "spec/05_DEMO_CLOSEOUT.md",
+    "spec/06_COMPETITION_VERIFICATION.md",
     "spec/README.md"
   ],
   "entrypoint": "CODEX_BOOTSTRAP_PROMPT.md",

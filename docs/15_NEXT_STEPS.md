@@ -5,6 +5,8 @@
 
 Updated **2026-11-02**. This is the recommended roadmap after the completed first slice, not authorization to implement every item. Document 13 remains the approved implemented scope; document 14 contains verification evidence. Task IDs below are mirrored in TASK_BOARD.md.
 
+See [competition verification](../spec/06_COMPETITION_VERIFICATION.md) for the newer live run and controlled assessments. The dated dispositions below preserve the original demo checkpoint.
+
 ## Integrated demo status — 2026-11-02
 
 The approved [demo contract](16_DEMO_DELIVERY_CONTRACT.md) is implemented alongside the preserved first-slice analyzer: immutable hash-verified bundles, disabled/mock explanations with a gated Meta adapter, and a fixed React/Vite/TypeScript/Cytoscape viewer. See [capability gates](17_CAPABILITY_AND_RESEARCH_REPORT.md), [finite evaluation](18_DEMO_EVALUATION.md), and [integrated verification](19_INTEGRATED_DEMO_REVIEW.md) for current checks and review disposition. Document 14 remains historical first-slice evidence; its 73-test count is not the integrated total.

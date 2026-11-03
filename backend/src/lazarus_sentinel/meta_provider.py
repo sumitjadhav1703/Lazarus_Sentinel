@@ -22,6 +22,25 @@ from .bundle import canonical_bytes, parse_json
 
 DEADLINE_SECONDS = 20.0
 MAX_RESPONSE_BYTES = 32768
+# Provider-side shape constraint. Local validation still enforces length and citation rules.
+RESPONSE_FORMAT = {
+    "type": "json_schema",
+    "json_schema": {
+        "name": "evidence_explanation",
+        "strict": True,
+        "schema": {
+            "type": "object",
+            "properties": {
+                "summary": {"type": "string"},
+                "why_it_matters": {"type": "string"},
+                "limitations": {"type": "array", "items": {"type": "string"}},
+                "evidence_ids": {"type": "array", "items": {"type": "string"}},
+            },
+            "required": ["summary", "why_it_matters", "limitations", "evidence_ids"],
+            "additionalProperties": False,
+        },
+    },
+}
 
 
 def _transport(payload: bytes, key: str) -> dict[str, Any]:
@@ -100,9 +119,18 @@ def generate(payload: bytes, ledger_path: Path) -> dict[str, Any]:
         len(payload) > 16384
         or request.get("model") != "muse-spark-1.3"
         or request.get("max_completion_tokens") != 1024
+        or request.get("reasoning_effort") != "minimal"
+        or request.get("response_format") != RESPONSE_FORMAT
         or request.get("stream") is not False
         or set(request)
-        != {"model", "messages", "max_completion_tokens", "response_format", "stream"}
+        != {
+            "model",
+            "messages",
+            "max_completion_tokens",
+            "reasoning_effort",
+            "response_format",
+            "stream",
+        }
     ):
         raise ValueError("INVALID_META_REQUEST")
     budget = Budget(ledger_path)

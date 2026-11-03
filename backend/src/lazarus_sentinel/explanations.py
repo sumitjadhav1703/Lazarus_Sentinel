@@ -79,6 +79,8 @@ def build_request(loaded: LoadedScan, finding_id: str, provider: str) -> dict[st
 
 
 def transport_payload(request: dict[str, Any]) -> bytes:
+    from .meta_provider import RESPONSE_FORMAT
+
     return canonical_bytes(
         {
             "model": request["model"],
@@ -87,7 +89,8 @@ def transport_payload(request: dict[str, Any]) -> bytes:
                 {"role": "user", "content": canonical_bytes(request).decode("ascii")},
             ],
             "max_completion_tokens": 1024,
-            "response_format": {"type": "json_object"},
+            "reasoning_effort": "minimal",
+            "response_format": RESPONSE_FORMAT,
             "stream": False,
         }
     )

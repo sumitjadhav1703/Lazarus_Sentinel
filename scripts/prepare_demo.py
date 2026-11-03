@@ -1,4 +1,4 @@
-"""Prepare one verified fixed-fixture demo. No live calls or arbitrary target paths."""
+"""Run the evidence assistant on one fixed synthetic fixture and verify its bundle."""
 
 import argparse
 import json
@@ -16,6 +16,7 @@ from lazarus_sentinel.bundle import (
     read_bounded,
     validate_bundle,
 )
+from lazarus_sentinel.cli import SAFE_CODES
 
 
 def cli(*args: str, expected: int = 0) -> dict:
@@ -27,13 +28,33 @@ def cli(*args: str, expected: int = 0) -> dict:
         check=False,
     )
     if result.returncode != expected:
+        try:
+            codes = json.loads(result.stdout)["diagnostic_codes"]
+            if (
+                isinstance(codes, list)
+                and codes
+                and all(type(code) is str and code in SAFE_CODES for code in codes)
+            ):
+                raise DemoCommandError(codes)
+        except (KeyError, TypeError, ValueError):
+            pass
         raise ValueError("DEMO_COMMAND_FAILED")
     return json.loads(result.stdout)
 
 
-def prepare(*, verify_only: bool = False) -> dict:
+class DemoCommandError(Exception):
+    def __init__(self, codes: list[str]):
+        super().__init__("DEMO_COMMAND_FAILED")
+        self.codes = codes
+
+
+def prepare(*, verify_only: bool = False, provider: str = "mock") -> dict:
+    if provider not in {"mock", "meta"} or (provider == "meta" and not verify_only):
+        raise ValueError("INVALID_PROVIDER")
     budget = ROOT / "artifacts" / "model-budget.sqlite3"
-    budget_before = budget.read_bytes() if budget.exists() else None
+    budget_before = (
+        budget.read_bytes() if provider == "mock" and budget.exists() else None
+    )
     scan = cli("scan", "--target", "fixture:fastapi-demo", expected=2)
     loaded = load_committed_graph(scan["scan_id"])
     finding = next(f for f in loaded.graph.findings if f.confidence == "LOW")
@@ -47,7 +68,7 @@ def prepare(*, verify_only: bool = False) -> dict:
         "--finding-id",
         finding.id,
         "--provider",
-        "mock",
+        provider,
     )
     exported = cli(
         "demo",
@@ -57,8 +78,10 @@ def prepare(*, verify_only: bool = False) -> dict:
         "--annotation-id",
         annotation["annotation_id"],
     )
-    budget_after = budget.read_bytes() if budget.exists() else None
-    if budget_after != budget_before:
+    if (
+        provider == "mock"
+        and (budget.read_bytes() if budget.exists() else None) != budget_before
+    ):
         raise ValueError("MOCK_MODIFIED_LIVE_BUDGET")
     if load_committed_graph(scan["scan_id"]).graph_bytes != loaded.graph_bytes:
         raise ValueError("CANONICAL_GRAPH_CHANGED")
@@ -69,11 +92,20 @@ def prepare(*, verify_only: bool = False) -> dict:
     validate_bundle(manifest, payloads)
     if payloads["graph.json"] != loaded.graph_bytes:
         raise ValueError("GRAPH_BYTES_CHANGED")
+    recorded = parse_json(payloads["explanations.json"])["annotations"][0]
+    if (
+        recorded["annotation_id"] != annotation["annotation_id"]
+        or recorded["provider"] != provider
+    ):
+        raise ValueError("ANNOTATION_BINDING_MISMATCH")
     result = {
         **exported,
         "annotation_id": annotation["annotation_id"],
         "finding_id": finding.id,
-        "provider": "mock",
+        "provider": provider,
+        "model": recorded["model"],
+        "generation": recorded["generation"],
+        "review_status": recorded["review_status"],
     }
     if verify_only:
         return result
@@ -95,11 +127,22 @@ if __name__ == "__main__":
     parser.add_argument(
         "--verify-only",
         action="store_true",
-        help="Create and validate a mock demo bundle under artifacts/ without updating the viewer.",
+        help="Create and validate a demo bundle under artifacts/ without updating the viewer.",
     )
+    parser.add_argument("--provider", choices=("mock", "meta"), default="mock")
     args = parser.parse_args()
+    if args.provider == "meta" and not args.verify_only:
+        parser.error("--provider meta requires --verify-only")
     try:
-        print(json.dumps(prepare(verify_only=args.verify_only), sort_keys=True))
+        print(
+            json.dumps(
+                prepare(verify_only=args.verify_only, provider=args.provider),
+                sort_keys=True,
+            )
+        )
+    except DemoCommandError as error:
+        print(json.dumps({"status": "FAILED", "diagnostic_codes": error.codes}))
+        raise SystemExit(1) from None
     except Exception:  # noqa: BLE001 - preparation must not echo target/provider exception text.
         print(
             json.dumps(

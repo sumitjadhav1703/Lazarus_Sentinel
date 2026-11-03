@@ -180,3 +180,80 @@ def test_meta_cli_response_and_accounting(committed_scan, monkeypatch, capsys, c
         assert db.execute("select state, actual from attempts").fetchall() == [
             (state, 210 if state == "SETTLED" else None)
         ]
+
+
+@pytest.mark.parametrize("reject", [False, True])
+def test_demo_agent_live_selection_has_one_attempt_and_no_fallback(
+    committed_scan, monkeypatch, reject
+):
+    import importlib.util
+    import io
+    from contextlib import redirect_stdout
+    from pathlib import Path
+
+    from lazarus_sentinel import meta_provider
+    from lazarus_sentinel.cli import main
+
+    root, scan_id = committed_scan
+    script = Path(__file__).resolve().parents[2] / "scripts" / "prepare_demo.py"
+    spec = importlib.util.spec_from_file_location("prepare_demo", script)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setattr(module, "ROOT", root)
+    calls = []
+
+    def run_cli(*args, expected=0):
+        if args[0] == "scan":
+            assert args == ("scan", "--target", "fixture:fastapi-demo")
+            assert expected == 2
+            return {"scan_id": scan_id}
+        output = io.StringIO()
+        with redirect_stdout(output):
+            code = main(args)
+        result = json.loads(output.getvalue())
+        if code != expected:
+            raise module.DemoCommandError(result["diagnostic_codes"])
+        return result
+
+    prose_fields = ("summary", "why_it_matters", "limitations", "evidence_ids")
+
+    def transport(payload, _key):
+        calls.append(1)
+        envelope = json.loads(payload)
+        assert envelope["reasoning_effort"] == "minimal"
+        assert envelope["max_completion_tokens"] == 1024
+        structured = envelope["response_format"]["json_schema"]
+        assert structured["strict"] is True
+        assert set(structured["schema"]["required"]) == set(prose_fields)
+        request = json.loads(envelope["messages"][1]["content"])
+        evidence = request["context"]["evidence"][0]["id"]
+        content = {
+            "summary": "One fixed-fixture candidate.",
+            "why_it_matters": "The recorded policy protects this operation.",
+            "limitations": ["The static path does not prove runtime enforcement."],
+            "evidence_ids": ["invented" if reject else evidence],
+        }
+        return {
+            "usage": {"prompt_tokens": 100, "completion_tokens": 20},
+            "choices": [{"message": {"content": json.dumps(content)}}],
+        }
+
+    monkeypatch.setattr(module, "cli", run_cli)
+    monkeypatch.setattr(meta_provider, "bounded_transport", transport)
+    monkeypatch.setenv("MODEL_API_KEY", "test-only")
+    if reject:
+        with pytest.raises(module.DemoCommandError) as exc:
+            module.prepare(verify_only=True, provider="meta")
+        assert exc.value.codes == ["INVALID_CITATIONS"]
+        assert not (root / "artifacts" / "demo-bundles").exists()
+    else:
+        result = module.prepare(verify_only=True, provider="meta")
+        assert (result["provider"], result["model"], result["generation"]) == (
+            "meta",
+            "muse-spark-1.3",
+            "live",
+        )
+        assert result["review_status"] == "UNREVIEWED"
+        assert (root / result["artifact_dir"] / "explanations.json").is_file()
+    assert calls == [1]
+    assert not (root / "frontend").exists()

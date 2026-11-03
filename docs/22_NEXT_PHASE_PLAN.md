@@ -16,6 +16,8 @@ For product capability expansion, use the [original-blueprint audit and semantic
 | P08 | Security/Astra + infrastructure; before N15 | Resolve N14 with a reviewed runtime. Prove filesystem/network/credential denial, resource/deadline limits, cleanup and no host socket/agent exposure using controlled probes. A process limit or Windows Job Object is not filesystem/network sandbox evidence. Owner approves platform/runner before installation. Broader intake stays blocked until measured review passes. |
 | P09 | Backend + research/Astra; P08 | Freeze one explicitly authorized, bounded next intake contract with provenance, caps, threat model, unknowns and predeclared fixture oracle. Implement only that contract. Joern spike remains optional/time-bounded; DATA/TRUST require real data-flow/policy evidence, never relabel CALLS. |
 
+P07 has a verified recorded live explanation. The [competition checkpoint](../spec/06_COMPETITION_VERIFICATION.md) records that run and the later controlled assessments.
+
 ## Step-by-step execution rule
 
 1. Coordinator selects one ready task, names its owner/files and freezes acceptance criteria. P06 owner work and P04 research can proceed independently.

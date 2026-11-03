@@ -4,6 +4,8 @@ Reviewed **2026-11-02** against the original **33-page, version 1.0 blueprint pr
 
 For release rehearsal and remaining gates, see [demo closeout](05_DEMO_CLOSEOUT.md).
 
+See [competition verification](06_COMPETITION_VERIFICATION.md) for the recorded live Meta run and controlled assessment results.
+
 ## Read in this order
 
 1. [Implementation audit](01_BLUEPRINT_IMPLEMENTATION_AUDIT.md): source-page references, current evidence, implemented/partial/missing capabilities, approved substitutions and every Appendix B checklist item.

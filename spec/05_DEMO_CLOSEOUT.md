@@ -20,13 +20,35 @@ The verifier checks the shipped viewer and backend. The rehearsal creates a new 
 
 1. **Evidence path.** Show the expected PARTIAL scan with 6 endpoints, 23 nodes, 36 relationships and 2 low-confidence candidates. Select GET /weak. Follow the handler and recorded calls to the protected operation. Open the source-location evidence.
 2. **Control and uncertainty.** Select GET /protected and show the recorded authorization declaration. Open coverage and show the unsupported dynamic route registration. Explain that source declarations leave runtime enforcement unverified.
-3. **Explanation.** Return to the finding with the recorded mock annotation. Show its provenance and evidence links. Explain that the application validates citations and preserves the original finding. The demo uses the deterministic mock.
+3. **Explanation.** Select GET /authenticated and expand the recorded live Meta explanation. Show its provenance and evidence links. The application validates citations and preserves the original finding.
 4. **Reproduction.** Show the verifier result and fresh artifact identity. Give the teammate the release commit and ask them to repeat the locked setup on their machine. Record OS, tool versions, verifier output, expected scan exit 2, one screenshot, and any failure.
+
+## Meta evidence review workflow
+
+[Competition verification](06_COMPETITION_VERIFICATION.md) records the successful live run.
+
+The demo orchestrator scans the fixed synthetic fixture, selects one low-confidence candidate, sends the selected evidence metadata to Standard Muse Spark 1.3, validates the response and its citations, and exports a verified bundle. The model supplies review assistance. The deterministic analyzer owns the graph and finding. The same command defaults to mock mode for offline rehearsal.
+
+For an authorized and reviewed live run, load your local credential only in the backend process:
+
+```sh
+uv run --env-file .env --project backend --locked python scripts/prepare_demo.py --verify-only --provider meta
+```
+
+Keep the returned scan, annotation and bundle IDs. A successful live export reports `provider=meta`, `model=muse-spark-1.3`, and `generation=live`. The saved annotation is labeled `UNREVIEWED`. Check its narrative against the evidence before presenting it. A failed attempt produces a diagnostic and does not fall back to mock. Check the shared ledger before another authorized attempt.
+
+To show the recorded annotation, build the viewer with `npm run build --prefix frontend -- --base /`. Copy the exported `bundle.json`, `graph.json`, and `explanations.json` from the returned artifact directory into `frontend/dist/demo/v1/`. Serve the ignored build locally:
+
+```sh
+uv run --project backend --locked --no-env-file python -m http.server 4173 --bind 127.0.0.1 --directory frontend/dist
+```
+
+Open `http://127.0.0.1:4173/`, choose the candidate identified by the annotation, and expand **Recorded live explanation**. Keep that build local until the generated narrative has passed publication review. The packaged viewer replays the independently reviewed live bundle. Offline rehearsal still exports mock bundles.
 
 ## External completion gates
 
 - Second-person reproduction, real screen reader output, native 200% zoom, and audience feedback remain separate from local browser and CI results.
-- The Meta key authenticated previously. One settled request cost USD 0.007014 at ledger rates and did not produce a saved explanation. A new synthetic attempt requires the current provider review. Use the mock for offline rehearsal.
+- A recorded live Meta annotation is available for the competition demo. Offline rehearsal defaults to mock and requires no credential.
 - Pages has a manual, opt-in workflow. Publication requires the release review and a successful URL smoke check before adding the repository Website.
 - Owner verifies the actual portal requirements, records the license choice, and retains a submission receipt if submitting.
 

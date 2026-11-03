@@ -1,0 +1,10 @@
+{
+  "policy_version": "1",
+  "scope": "fixture:auth-context-assessment",
+  "rule_id": "LS-AUTH-CONTEXT-001",
+  "actor_parameter": "actor",
+  "resource_parameter": "resource",
+  "action": "export",
+  "protected_sink": "export",
+  "authorization_marker": "authorize"
+}

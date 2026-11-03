@@ -55,10 +55,13 @@ Correlate program structure with endpoints, permissions and trust boundaries, an
 | Persistence / report | SQLite committed references; graph, findings and coverage JSON; escaped Markdown |
 | Measured demo | 6 endpoints, 23 nodes, 36 edges, 2 candidates, 3 matching declarations with effectiveness unverified |
 | Quality | [Native Windows, macOS and Linux CI passed](docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md); 139 backend tests plus 1 Windows-only skip, 16 frontend tests at last verification |
-| Demo | Hash-verified immutable bundle, disabled/mock explanation sidecars, fixed React + Cytoscape viewer; Meta adapter tested offline |
-| Blocked / deferred | Live Meta access, Joern, data/trust rules, HTTP API, LangGraph, arbitrary repositories, OS isolation |
+| Demo | Hash-verified immutable bundle, disabled/mock explanation sidecars, fixed React + Cytoscape viewer with a recorded live Muse Spark explanation |
+| Controlled assessments | Separate fixed-fixture DATA, TRUST, and actor/action/resource reports |
+| Blocked / deferred | Joern, canonical DATA/TRUST graph integration, HTTP API, LangGraph, arbitrary repositories, OS isolation |
 
 The fixture intentionally contains unsupported dynamic registration, so its normal outcome is **PARTIAL / exit 2**. A matching authorization declaration is syntax evidence, not proof of enforcement.
+
+See [competition verification](spec/06_COMPETITION_VERIFICATION.md) for the live annotation, the bounded assessment results, and the demo limitations. The static viewer replays the recorded Meta result.
 
 ## Quickstart
 
@@ -127,7 +130,7 @@ uv run --project backend --locked lazarus explain --scan-id <SCAN_UUID> --findin
 uv run --project backend --locked lazarus demo export --scan-id <SCAN_UUID> --annotation-id <ANNOTATION_UUID>
 ```
 
-Substitute IDs returned by your own scan (finding IDs are in its `findings.json`). Explanation defaults to **DISABLED**. Mock output is offline, unreviewed assistance and never changes canonical findings. The Meta adapter needs explicit selection and reviewed access/privacy/budget gates; live verification is BLOCKED with zero paid calls, under a USD 3 / five-attempt cap and no retries.
+Substitute IDs returned by your own scan (finding IDs are in its `findings.json`). Explanation defaults to **DISABLED**. Mock output is offline, unreviewed assistance and never changes canonical findings. The Meta adapter needs explicit selection and reviewed access/privacy/budget gates; the recorded live result passed local validation under the USD 3 and five-attempt cap.
 
 ## Viewer
 
@@ -138,7 +141,7 @@ npm run dev --prefix frontend
 
 Open the loopback URL Vite prints. The viewer loads only the reviewed synthetic bundle in `frontend/public/demo/v1/`: search an endpoint, inspect a focused path, switch to the full graph, and select a node to see its source evidence. Fit/zoom/reset, keyboard step controls and expandable identity tables support deeper review. No upload, source path input or HTTP backend is involved. Details: [viewer design and verification](docs/20_VIEWER_CLARITY_AND_DESIGN.md).
 
-The shipped dataset uses scan `d4788c12-b956-4535-b897-13744439093e` and bundle `f85376c4-9ec1-4b8f-aea2-1c0f89abae3e`, with a recorded mock annotation. Generated reports are historical evidence: create new scan identities instead of editing old ones.
+The shipped dataset uses scan `8f48abe7-df1b-44fa-b821-0bc3075c882f` and bundle `86700a21-649c-43da-bfc0-6253d5dfaa1d`, with a recorded live Meta annotation. Generated reports are historical evidence: create new scan identities instead of editing old ones.
 
 ## Optional API credential
 
@@ -163,7 +166,7 @@ Planned work is tracked as [GitHub issues](https://github.com/sumitjadhav1703/La
 - [ ] P03 fresh-clone reproduction on a second machine
 - [ ] P04 accessibility feedback round
 - [ ] P05 measure and, if justified, split the viewer chunk
-- [ ] P07 one bounded, authorised live Meta explanation call
+- [x] P07 one validated, authorised live Meta explanation export
 - [ ] P08 reviewed sandbox runtime with denial probes
 - [ ] P09 bounded next-intake contract, optional Joern spike, `LS-DATA-001` / `LS-TRUST-001`
 - [ ] P10 public demo on GitHub Pages
@@ -184,7 +187,7 @@ New here? Start with issues labelled [`good first issue`](https://github.com/sum
 
 ## Boundaries and safety
 
-Only the fixed owned fixture is accepted. Intake caps are 100 Python files, 256 KiB per file, 5 MiB total; a credential-free parser child has a 30-second deadline. These are process and input limits, **not an OS filesystem/network sandbox**. Hostile concurrent filesystem replacement is out of scope. No target code is executed, no runtime security is established, and no live source or model request has been made. Joern is NOT_ATTEMPTED; `LS-DATA-001` and `LS-TRUST-001` are NOT_IMPLEMENTED. Only analyse code you own or are authorised to assess.
+Only the fixed owned fixture is accepted. Intake caps are 100 Python files, 256 KiB per file, 5 MiB total; a credential-free parser child has a 30-second deadline. These are process and input limits, **not an OS filesystem/network sandbox**. Hostile concurrent filesystem replacement is out of scope. The parser reads source without executing target code. Runtime security remains unverified. The live Meta workflow sends selected synthetic evidence metadata. Joern remains NOT_ATTEMPTED, and DATA/TRUST run as separate controlled assessments. Only analyse code you own or are authorised to assess.
 
 ## License
 

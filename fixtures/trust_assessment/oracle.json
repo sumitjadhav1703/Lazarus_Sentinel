@@ -1,0 +1,8 @@
+{
+  "candidate": "CANDIDATE",
+  "handled": "NO_CANDIDATE_IN_SUBSET",
+  "same_zone": "NO_CANDIDATE_IN_SUBSET",
+  "wrong_scope": "CANDIDATE",
+  "dynamic": "NEEDS_CONTEXT",
+  "branch": "NEEDS_CONTEXT"
+}
