@@ -9,13 +9,17 @@ import {loadDemo, type Demo} from './validation';
 vi.mock('./validation',()=>({loadDemo:vi.fn()}));
 vi.mock('./Network',()=>({default:()=> <div data-testid="network"/>}));
 afterEach(()=>{cleanup();vi.clearAllMocks();});
-const demo = (data=graph) => ({manifest:{scan:{status:'PARTIAL',profile:'reduced-static-auth',revision:data.repository.revision}},graph:data,annotations:[{finding_id:data.findings[0].id,generation:'mock',provider:'mock',model:'deterministic-mock-v1',response:{summary:'Mock explanation',why_it_matters:'Fixture',limitations:[]}}],investigations:[]} as unknown as Demo);
+const demo = (data=graph) => ({manifest:{scan:{status:'PARTIAL',profile:'reduced-static-auth',revision:data.repository.revision}},graph:data,annotations:[{finding_id:data.findings[0].id,generation:'mock',provider:'mock',model:'deterministic-mock-v1',response:{summary:'Mock explanation',why_it_matters:'Fixture',limitations:[]}}],investigations:[],references:[]} as unknown as Demo);
 
 it('guides selection and clears candidate details for an endpoint without a finding',async()=>{
   vi.mocked(loadDemo).mockResolvedValue(demo());
   render(<App/>);
   expect(await screen.findByText('Trace authorization questions back to code')).toBeTruthy();
   expect(screen.getByText('Mock explanation')).toBeTruthy();
+  expect(screen.getByText(/CWE-862, part of OWASP's #1 risk/)).toBeTruthy();
+  const cwe=screen.getByRole('link',{name:'CWE-862: Missing Authorization'});
+  expect(cwe.getAttribute('href')).toBe('https://cwe.mitre.org/data/definitions/862.html');
+  expect(cwe.getAttribute('rel')).toBe('noopener noreferrer');
   const endpoint=graph.nodes.find(n=>n.type==='API_ENDPOINT' && !graph.findings.some(f=>f.entry_node_id===n.id))!;
   fireEvent.change(screen.getByLabelText('Search endpoints'),{target:{value:endpoint.name}});
   fireEvent.click(screen.getByRole('button',{name:new RegExp(endpoint.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))}));

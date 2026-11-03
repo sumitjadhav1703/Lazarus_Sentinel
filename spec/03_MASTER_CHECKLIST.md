@@ -125,7 +125,7 @@ Checked means `IMPLEMENTED` for its stated scope or `NOT_APPLICABLE` because it 
 - [ ] **BP-101** `NOT_IMPLEMENTED` / `FUTURE` — Enterprise/multi-user collaboration/storage scale.
 
 - [ ] **BP-102** `BLOCKED` / `EVENT` — Event eligibility/track/portal deliverable confirmation.
-- [ ] **BP-103** `BLOCKED` / `EVENT` — License and submission receipt.
+- [ ] **BP-103** `BLOCKED` / `EVENT` — License and submission receipt. The license is done (Apache-2.0, 2026-11-03); the receipt is pending.
 - [ ] **BP-104** `PARTIAL` / `EVENT` — Demo technical docs/screenshots/recording package.
 
 - [x] **BP-105** `IMPLEMENTED` / `BOUNDARY` — No complete-graph/exhaustive-security/novel-CPG claims.

@@ -78,15 +78,19 @@ class Budget:
             db.execute("INSERT INTO attempts VALUES(?,?,NULL,'RESERVED')", (identity, reservation))
         return identity
 
-    def settle(self, identity: str, input_tokens: int, output_tokens: int) -> None:
+    def settle(
+        self, identity: str, input_tokens: int, output_tokens: int, extra_micro_usd: int = 0
+    ) -> None:
         if (
             type(input_tokens) is not int
             or type(output_tokens) is not int
+            or type(extra_micro_usd) is not int
             or input_tokens < 1
             or not 0 <= output_tokens <= self.output_tokens
+            or extra_micro_usd < 0
         ):
             raise ValueError("UNVERIFIABLE_USAGE")
-        actual = math.ceil(
+        actual = extra_micro_usd + math.ceil(
             input_tokens * INPUT_MICRO_USD_PER_TOKEN + output_tokens * OUTPUT_MICRO_USD_PER_TOKEN
         )
         reject_symlink_components(self.path)

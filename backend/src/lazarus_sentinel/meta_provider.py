@@ -44,12 +44,18 @@ RESPONSE_FORMAT = {
 }
 
 
-def _transport(payload: bytes, key: str) -> dict[str, Any]:
+CHAT_PATH = "/v1/chat/completions"
+RESPONSES_PATH = "/v1/responses"
+
+
+def _transport(payload: bytes, key: str, path: str = CHAT_PATH) -> dict[str, Any]:
+    if path not in (CHAT_PATH, RESPONSES_PATH):
+        raise ValueError("META_TRANSPORT_FAILED")
     connection = http.client.HTTPSConnection("api.meta.ai", timeout=DEADLINE_SECONDS)
     try:
         connection.request(
             "POST",
-            "/v1/chat/completions",
+            path,
             body=payload,
             headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"},
         )
@@ -67,9 +73,9 @@ def _transport(payload: bytes, key: str) -> dict[str, Any]:
         connection.close()
 
 
-def _child(pipe: Connection, payload: bytes, key: str) -> None:
+def _child(pipe: Connection, payload: bytes, key: str, path: str = CHAT_PATH) -> None:
     try:
-        result = canonical_bytes(_transport(payload, key))
+        result = canonical_bytes(_transport(payload, key, path))
         if len(result) > MAX_RESPONSE_BYTES:
             raise ValueError("META_RESPONSE_LIMIT")
         pipe.send_bytes(b"O" + result)
@@ -80,13 +86,15 @@ def _child(pipe: Connection, payload: bytes, key: str) -> None:
         pipe.close()
 
 
-def bounded_transport(payload: bytes, key: str) -> dict[str, Any]:
+def bounded_transport(payload: bytes, key: str, path: str = CHAT_PATH) -> dict[str, Any]:
     context = cast(
         "TransportContext",
         multiprocessing.get_context("spawn" if sys.platform == "win32" else "fork"),
     )
     reader, writer = context.Pipe(duplex=False)
-    process = context.Process(target=_child, args=(writer, payload, key), daemon=True)
+    # The default path keeps the original child call shape.
+    args = (writer, payload, key) if path == CHAT_PATH else (writer, payload, key, path)
+    process = context.Process(target=_child, args=args, daemon=True)
     deadline = time.monotonic() + DEADLINE_SECONDS
     process.start()
     writer.close()
@@ -261,4 +269,80 @@ def generate_turn(
     return (
         {"id": call["id"], "name": function["name"], "arguments": function["arguments"]},
         {"input_tokens": input_tokens, "output_tokens": output_tokens},
+    )
+
+
+# Verified 2026-11-03: https://dev.meta.ai/docs/pricing-rate-limits lists web_search at
+# USD 2.50 per 1,000 queries on top of token cost. Integer micro-USD.
+WEB_SEARCH_MICRO_USD = 2500
+SEARCH_OUTPUT_TOKENS = 1024
+SEARCH_MAX_QUERIES = 3
+SEARCH_TOOLS = [{"type": "web_search", "search_context_size": "low"}]
+
+
+def generate_search(payload: bytes, ledger_path: Path) -> tuple[dict[str, Any], dict[str, int]]:
+    """One bounded Responses call with Meta's built-in web search. The input carries no code."""
+    key = os.environ.get("MODEL_API_KEY")
+    if not key:
+        raise ValueError("META_KEY_MISSING")
+    request = parse_json(payload)
+    if (
+        len(payload) > 4096
+        or request.get("model") != "muse-spark-1.3"
+        or not isinstance(request.get("input"), str)
+        or request.get("tools") != SEARCH_TOOLS
+        or request.get("max_output_tokens") != SEARCH_OUTPUT_TOKENS
+        or request.get("reasoning") != {"effort": "low"}
+        or request.get("store") is not False
+        or request.get("stream") is not False
+        or set(request)
+        != {"model", "input", "tools", "max_output_tokens", "reasoning", "store", "stream"}
+    ):
+        raise ValueError("INVALID_META_REQUEST")
+    budget = Budget(
+        ledger_path,
+        max_attempts=AGENT_MAX_ATTEMPTS,
+        max_budget=AGENT_MAX_BUDGET,
+        output_tokens=AGENT_OUTPUT_TOKENS,
+        max_request_bytes=AGENT_MAX_REQUEST_BYTES,
+    )
+    attempt = budget.reserve(len(payload))
+    result = bounded_transport(payload, key, RESPONSES_PATH)
+    usage, output = result.get("usage"), result.get("output")
+    if not isinstance(usage, dict) or not isinstance(output, list):
+        raise ValueError("UNVERIFIABLE_USAGE")  # noqa: TRY004 - allowlisted CLI diagnostic
+    input_tokens, output_tokens = usage.get("input_tokens"), usage.get("output_tokens")
+    if type(input_tokens) is not int or type(output_tokens) is not int:
+        raise ValueError("UNVERIFIABLE_USAGE")
+    if "total_tokens" in usage and usage["total_tokens"] != input_tokens + output_tokens:
+        raise ValueError("UNVERIFIABLE_USAGE")
+    searches = sum(isinstance(i, dict) and i.get("type") == "web_search_call" for i in output)
+    # Settle before validating content so every billed search is recorded.
+    budget.settle(attempt, input_tokens, output_tokens, searches * WEB_SEARCH_MICRO_USD)
+    if result.get("status") != "completed" or searches > SEARCH_MAX_QUERIES:
+        raise ValueError("META_INVALID_RESPONSE")
+    texts: list[str] = []
+    citations: list[dict[str, str]] = []
+    for item in output:
+        if not isinstance(item, dict) or item.get("type") != "message":
+            continue
+        content = item.get("content")
+        if not isinstance(content, list):
+            raise ValueError("META_INVALID_RESPONSE")  # noqa: TRY004 - allowlisted CLI diagnostic
+        for block in content:
+            if not isinstance(block, dict) or block.get("type") != "output_text":
+                continue
+            text, annotations = block.get("text"), block.get("annotations", [])
+            if not isinstance(text, str) or not isinstance(annotations, list):
+                raise ValueError("META_INVALID_RESPONSE")  # noqa: TRY004 - allowlisted CLI diagnostic
+            texts.append(text)
+            for note in annotations:
+                if isinstance(note, dict) and note.get("type") == "url_citation":
+                    url, title = note.get("url"), note.get("title")
+                    if not isinstance(url, str) or not isinstance(title, str):
+                        raise ValueError("META_INVALID_RESPONSE")
+                    citations.append({"url": url, "title": title})
+    return (
+        {"text": "\n".join(texts).strip(), "citations": citations},
+        {"input_tokens": input_tokens, "output_tokens": output_tokens, "searches": searches},
     )

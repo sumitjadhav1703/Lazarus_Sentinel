@@ -89,3 +89,19 @@ it('rejects a completed manifest for partial graph coverage',async()=>{
   vi.stubGlobal('fetch',async(url:string)=>new Response(url.endsWith('bundle.json')?JSON.stringify(manifest):bytes));
   await expect(loadDemo()).rejects.toThrow('coverage status');
 });
+
+import {referenceUrl} from './validation';
+it('checks recorded reference links stay on allowlisted https hosts',async()=>{
+  expect(referenceUrl('https://cwe.mitre.org/data/definitions/862.html')).toBe(true);
+  for(const url of ['http://cwe.mitre.org/x','https://evil.example/cwe.mitre.org','https://cwe.mitre.org.evil.example/','https://user@owasp.org/','javascript:alert(1)','https://owasp.org:8443/']) expect(referenceUrl(url)).toBe(false);
+  vi.stubGlobal('crypto',webcrypto);
+  const hash=hex(await webcrypto.subtle.digest('SHA-256',bytes));
+  const record={references_version:'0.1.0',reference_id:'33333333-3333-4333-8333-333333333333',rule_id:graph.findings[0].rule_id,request_sha256:'0'.repeat(64),provider:'mock',model:'deterministic-mock-v1',generation:'mock',display_provenance:'recorded',review_status:'UNREVIEWED',created_at:'2026-11-03T00:00:00+00:00',summary:'Mock',citations:[{url:'https://cwe.mitre.org/data/definitions/862.html',title:'CWE-862'}],usage:{calls:1,input_tokens:0,output_tokens:0,searches:0,estimated_micro_usd:0}};
+  const manifest={bundle_version:'0.1.0',bundle_id:'11111111-1111-4111-8111-111111111111',origin:'controlled-synthetic-fixture',generator_version:'0.1.0',scan:{scan_id:'11111111-1111-4111-8111-111111111111',revision:graph.repository.revision,status:'PARTIAL',profile:'reduced-static-auth'},artifacts:{'graph.json':{sha256:hash,size:bytes.length},'references.json':{sha256:'',size:0}}};
+  let sideBytes=new Uint8Array();
+  const seal=async()=>{sideBytes=encoder.encode(JSON.stringify({references_version:'0.1.0',references:[record]}));manifest.artifacts['references.json']={sha256:hex(await webcrypto.subtle.digest('SHA-256',sideBytes)),size:sideBytes.length};};
+  vi.stubGlobal('fetch',async (url:string)=>new Response(url.endsWith('bundle.json')?JSON.stringify(manifest):url.endsWith('graph.json')?bytes:sideBytes));
+  await seal(); expect((await loadDemo()).references).toHaveLength(1);
+  record.citations[0].url='https://evil.example/862'; await seal();
+  await expect(loadDemo()).rejects.toThrow('references binding');
+});

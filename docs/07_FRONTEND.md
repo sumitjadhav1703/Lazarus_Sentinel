@@ -41,3 +41,12 @@ The graph should support investigation, with a table/report alternative, keyboar
 Use “candidate,” “no matching declaration was recognized,” and “partially analyzed.” Avoid “confirmed vulnerability,” “no authorization exists,” “secure comparison path,” or qualitative confidence presented as a calibrated probability. Demonstrations should use reproducible fixture output, not fabricated findings or a required live model response.
 
 Cytoscape.js reference for future evaluation: https://js.cytoscape.org/
+
+## Problem-first intro, weakness references and agent timeline — 2026-11-03
+
+- **Intro:** the first screen now states the problem (CWE-862 and Broken Access Control across routes, dependencies and handlers) and the product's honesty before the coverage banner. The PARTIAL status pill and the "Static analysis only" banner remain visible above the workspace.
+- **Weakness references:** the endpoint context lists the rule's reviewed CWE and OWASP links, labelled as a category reference rather than proof.
+- **Recorded web search:** when the bundle includes `references.json`, a recorded web-search record is shown. Its links must be https URLs on `cwe.mitre.org` or `owasp.org`.
+- **Agent investigation:** when the bundle includes `investigations.json`, an **Agent investigation** panel shows the numbered tool steps. Selecting a step highlights the node it looked at. A mock record is labelled "offline mock rehearsal".
+
+Tests: `Investigation.test.tsx`, `main.test.tsx` and `validation.test.ts`. The packaged public bundle has neither sidecar yet.

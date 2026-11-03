@@ -39,3 +39,7 @@ Dependency advisory correlation, configuration/secrets analysis, access-control 
 ## Model interpretation guardrails
 
 The optional explanation provider may explain supplied evidence or identify missing context. It may not invent graph/source facts, establish absent controls from missing extraction, confirm vulnerabilities, execute payloads or modify targets. Schema/evidence-reference validation and minimized synthetic context are implemented under document 16; the competition checkpoint records the validated live result and the separately reviewed narrative. Threat-category/ASVS mappings require verified source identifiers; none should be guessed.
+
+## Weakness references — 2026-11-03
+
+`LS-AUTH-001` maps to [CWE-862 Missing Authorization](https://cwe.mitre.org/data/definitions/862.html) and [OWASP Top 10:2025 A01 Broken Access Control](https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/). This is a reviewed, static category mapping in `references.py`, mirrored to the viewer as `frontend/src/rule-references.json`. A test keeps the two copies in sync. It labels the *kind* of weakness a candidate may represent and is not evidence that the weakness exists. The optional web-search refresh is described in [spec/10](../spec/10_AGENT_INVESTIGATION.md).

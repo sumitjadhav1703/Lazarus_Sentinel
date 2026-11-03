@@ -52,6 +52,7 @@ class BundleManifest(StrictModel):
             "graph.json",
             "explanations.json",
             "investigations.json",
+            "references.json",
         }:
             raise ValueError("INVALID_BUNDLE_FILES")
         return self
@@ -184,6 +185,59 @@ class InvestigationEnvelope(StrictModel):
     investigations: list[Investigation] = Field(min_length=1, max_length=1)
 
 
+Url = Annotated[str, StringConstraints(pattern=r"^https://[^\s]{1,500}$")]
+Title = Annotated[str, StringConstraints(min_length=1, max_length=300, strip_whitespace=True)]
+
+
+class WeaknessCitation(StrictModel):
+    url: Url
+    title: Title
+
+
+class ReferenceUsage(StrictModel):
+    calls: Literal[1]
+    input_tokens: int = Field(ge=0)
+    output_tokens: int = Field(ge=0)
+    searches: int = Field(ge=0, le=3)
+    estimated_micro_usd: int = Field(ge=0)
+
+
+class WeaknessReferences(StrictModel):
+    references_version: Literal["0.1.0"]
+    reference_id: str
+    rule_id: str
+    request_sha256: Hex
+    provider: Literal["mock", "meta"]
+    model: Literal["deterministic-mock-v1", "muse-spark-1.3"]
+    generation: Literal["mock", "live"]
+    display_provenance: Literal["recorded"]
+    review_status: Literal["UNREVIEWED"]
+    created_at: str
+    summary: Text
+    citations: list[WeaknessCitation] = Field(min_length=1, max_length=8)
+    usage: ReferenceUsage
+
+    @model_validator(mode="after")
+    def identities(self) -> WeaknessReferences:
+        if str(UUID(self.reference_id)) != self.reference_id:
+            raise ValueError("INVALID_UUID")
+        if (self.provider, self.model, self.generation) not in (
+            ("mock", "deterministic-mock-v1", "mock"),
+            ("meta", "muse-spark-1.3", "live"),
+        ):
+            raise ValueError("PROVENANCE_MISMATCH")
+        if datetime.fromisoformat(self.created_at).utcoffset() != timedelta(0):
+            raise ValueError("INVALID_TIMESTAMP")
+        if len({c.url for c in self.citations}) != len(self.citations):
+            raise ValueError("DUPLICATE_CITATIONS")
+        return self
+
+
+class ReferencesEnvelope(StrictModel):
+    references_version: Literal["0.1.0"]
+    references: list[WeaknessReferences] = Field(min_length=1, max_length=1)
+
+
 def export_json_schemas() -> dict[str, dict[str, Any]]:
     from .models import Graph
 
@@ -192,4 +246,5 @@ def export_json_schemas() -> dict[str, dict[str, Any]]:
         "graph.schema.json": Graph.model_json_schema(),
         "explanations.schema.json": ExplanationEnvelope.model_json_schema(),
         "investigations.schema.json": InvestigationEnvelope.model_json_schema(),
+        "references.schema.json": ReferencesEnvelope.model_json_schema(),
     }

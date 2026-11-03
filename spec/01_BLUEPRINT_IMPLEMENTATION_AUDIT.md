@@ -148,7 +148,7 @@ Evidence codes resolve in the table above. Every BP ID has exactly one matching 
 | BP-100 | Continuous/historical graph and advanced slicing | FUTURE | NOT_IMPLEMENTED | 24 | No update/history/slicing implementation [E10]. |
 | BP-101 | Enterprise/multi-user collaboration/storage scale | FUTURE | NOT_IMPLEMENTED | 20,24 | Small local modular system; no distributed service [E10]. |
 | BP-102 | Event eligibility/track/portal deliverable confirmation | EVENT | BLOCKED | 7–8,25 | Owner/portal gate; public event descriptions do not prove acceptance [E12]. |
-| BP-103 | License and submission receipt | EVENT | BLOCKED | 25,32 | Source published; license choice and actual submission still pending [E12]. |
+| BP-103 | License and submission receipt | EVENT | BLOCKED | 25,32 | Source published; Apache-2.0 license chosen 2026-11-03. The actual submission receipt is still pending [E12]. |
 | BP-104 | Demo technical docs/screenshots/recording package | EVENT | PARTIAL | 25 | Docs/browser evidence exist; event-complete video/package/portal acceptance unverified [E5,E12]. |
 | BP-105 | No complete-graph/exhaustive-security/novel-CPG claims | BOUNDARY | IMPLEMENTED | 4–7,22,26,29 | Maintained reports explicitly bound coverage, uncertainty and prior-art claims [E9,E10,E11]. |
 | BP-106 | Autonomous exploitation/remediation/arbitrary network attacks | NON_GOAL | NOT_APPLICABLE | 4,21,29 | Explicitly excluded defensive product boundary; never planned as checklist feature [E9]. |

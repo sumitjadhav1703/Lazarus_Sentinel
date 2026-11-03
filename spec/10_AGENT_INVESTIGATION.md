@@ -31,13 +31,26 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 ## Evidence (measured 2026-11-03 on branch `codex/agent-investigation`)
 
 - `scripts/verify_demo.py` reported PASSED with `live_provider_attempts: 0` on the unchanged packaged bundle (6 endpoints, 23 nodes, 36 edges, 2 findings).
-- Backend: 218 passed and 3 skipped. 32 of the passing tests are new investigation tests covering hostile model output, tampered records, request shape, a separate ledger and the attempt cap. The optional LangGraph tests passed (3). Frontend: 21 tests passed, and typecheck, lint and build passed.
+- After the weakness references were added (2026-11-04): with the default install, backend 236 passed and 3 skipped, frontend 22 passed, and `verify_demo.py` PASSED with 0 live attempts.
+- Backend at the first checkpoint: 218 passed and 3 skipped. 32 of the passing tests are new investigation tests covering hostile model output, tampered records, request shape, a separate ledger and the attempt cap. The optional LangGraph tests passed (3). Frontend: 21 tests passed, and typecheck, lint and build passed.
 - An end-to-end CLI rehearsal on a fresh scan recorded a 6-call mock investigation and exported a bundle with graph, explanation and investigation sidecars. The viewer rendered it on loopback. The record is about 7.9 KB, and the largest tool result was 1939 bytes.
 
 ## Not verified
 
 - No live call has been made. It is not yet known whether `muse-spark-1.3` accepts these function tools with `parallel_tool_calls: false` and the reconstructed assistant message (`content: null` plus `tool_calls`). The first live run will show this.
 - The viewer does not recompute `request_sha256` and does not replay tools. The backend verifier does both.
+
+## Weakness references and Meta web search
+
+`lazarus references --rule-id LS-AUTH-001 --provider disabled|mock|meta` records which public weaknesses a rule's candidates may represent.
+
+| Item | Rule |
+|---|---|
+| Static mapping | `references.RULE_REFERENCES`: CWE-862 and OWASP Top 10:2025 A01, with links verified 2026-11-03. The viewer always shows this mapping, from its mirror `frontend/src/rule-references.json`. A backend test checks that the two match. |
+| Live refresh | One `POST /v1/responses` with `tools: [{"type": "web_search", "search_context_size": "low"}]`, `reasoning.effort: "low"`, `max_output_tokens: 1024`, `store: false`. The input is a fixed per-rule question. **No code, graph or finding text is sent.** |
+| Citations | Only `url_citation` entries with https URLs on `cwe.mitre.org`, `owasp.org` or `top10.owasp.org` are kept, deduplicated by URL. If none qualify, the run fails with `NO_TRUSTED_CITATIONS`. More than 3 searches, or any status other than `completed`, fails the run. |
+| Cost | The call is settled on the agent ledger as token cost plus USD 2.50 per 1,000 searches (Meta pricing page, checked 2026-11-03). Settlement happens before content validation, so every billed search is recorded. |
+| Bundle | The optional `references.json` sidecar is valid only when its rule matches a finding in the graph. The viewer shows it as **Recorded live web search**. |
 
 ## Gates before a live run
 

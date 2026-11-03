@@ -18,6 +18,7 @@ from .demo_models import (
     DemoScan,
     ExplanationEnvelope,
     InvestigationEnvelope,
+    ReferencesEnvelope,
     export_json_schemas,
 )
 from .models import Graph
@@ -194,14 +195,42 @@ def validate_bundle(manifest: dict[str, Any], payloads: dict[str, bytes]) -> Gra
         )
         for investigation in investigations.investigations:
             validate_investigation(investigation, loaded)
+    if "references.json" in payloads:
+        from .references import validate_references
+
+        references = ReferencesEnvelope.model_validate(parse_json(payloads["references.json"]))
+        for entry in references.references:
+            if validate_references(entry).rule_id not in {f.rule_id for f in graph.findings}:
+                raise ValueError("REFERENCES_RULE_MISMATCH")
     return graph
 
 
 def export_demo_bundle(
-    scan_id: str, annotation_id: str | None = None, investigation_id: str | None = None
+    scan_id: str,
+    annotation_id: str | None = None,
+    investigation_id: str | None = None,
+    references_id: str | None = None,
 ) -> dict[str, Any]:
     loaded = load_committed_graph(scan_id)
     payloads = {"graph.json": loaded.graph_bytes}
+    if references_id is not None:
+        from .references import validate_references
+
+        checked_uuid(references_id)
+        references = validate_references(
+            parse_json(
+                read_bounded(
+                    WORKSPACE / "artifacts" / "references" / f"{references_id}.json", 32768
+                )
+            )
+        )
+        if references.reference_id != references_id:
+            raise ValueError("REFERENCES_ID_MISMATCH")
+        payloads["references.json"] = canonical_bytes(
+            ReferencesEnvelope(references_version="0.1.0", references=[references]).model_dump(
+                mode="json"
+            )
+        )
     if investigation_id is not None:
         from .investigation import MAX_INVESTIGATION_BYTES, validate_investigation
 
