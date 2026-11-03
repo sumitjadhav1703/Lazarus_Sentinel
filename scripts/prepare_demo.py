@@ -1,5 +1,6 @@
 """Prepare one verified fixed-fixture demo. No live calls or arbitrary target paths."""
 
+import argparse
 import json
 import subprocess
 import sys
@@ -30,7 +31,7 @@ def cli(*args: str, expected: int = 0) -> dict:
     return json.loads(result.stdout)
 
 
-def prepare() -> dict:
+def prepare(*, verify_only: bool = False) -> dict:
     budget = ROOT / "artifacts" / "model-budget.sqlite3"
     budget_before = budget.read_bytes() if budget.exists() else None
     scan = cli("scan", "--target", "fixture:fastapi-demo", expected=2)
@@ -68,6 +69,15 @@ def prepare() -> dict:
     validate_bundle(manifest, payloads)
     if payloads["graph.json"] != loaded.graph_bytes:
         raise ValueError("GRAPH_BYTES_CHANGED")
+    result = {
+        **exported,
+        "annotation_id": annotation["annotation_id"],
+        "finding_id": finding.id,
+        "provider": "mock",
+    }
+    if verify_only:
+        return result
+
     destination = ROOT / "frontend" / "public" / "demo" / "v1"
     destination.mkdir(parents=True, exist_ok=True)
     # Only fixed reviewed bundle filenames are ever copied into the viewer.
@@ -77,18 +87,19 @@ def prepare() -> dict:
     schemas.mkdir(parents=True, exist_ok=True)
     for name, schema in export_json_schemas().items():
         (schemas / name).write_text(json.dumps(schema, sort_keys=True, indent=2) + "\n")
-    return {
-        **exported,
-        "annotation_id": annotation["annotation_id"],
-        "finding_id": finding.id,
-        "viewer_bundle": str(destination),
-        "provider": "mock",
-    }
+    return {**result, "viewer_bundle": str(destination)}
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--verify-only",
+        action="store_true",
+        help="Create and validate a mock demo bundle under artifacts/ without updating the viewer.",
+    )
+    args = parser.parse_args()
     try:
-        print(json.dumps(prepare(), sort_keys=True))
+        print(json.dumps(prepare(verify_only=args.verify_only), sort_keys=True))
     except Exception:  # noqa: BLE001 - preparation must not echo target/provider exception text.
         print(
             json.dumps(
