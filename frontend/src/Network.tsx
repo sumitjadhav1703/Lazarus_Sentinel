@@ -12,7 +12,7 @@ export default function Network({demo,selected,mode,focusedEndpointId,selectedNo
     const container=ref.current;
     const view=projectGraph(demo.graph,selected,mode,focusedEndpointId,container.clientWidth<=620);
     const pathNodes=new Set<string>(selected?.path_node_ids??[]), pathEdges=new Set<string>(selected?.path_edge_ids??[]);
-    const c=cytoscape({container,elements:[...view.nodes.map(n=>({data:{id:n.id,label:`${n.type}\n${n.name}`,type:n.type},position:view.positions[n.id],classes:pathNodes.has(n.id)?'path':''})),...view.edges.map(e=>({data:{id:e.id,source:e.source,target:e.target,type:e.type,label:e.type},classes:pathEdges.has(e.id)?'path':''}))],layout:{name:'preset',fit:true,padding:35},minZoom:0.25,maxZoom:2.5,style:[
+    const c=cytoscape({container,elements:[...view.nodes.map(n=>({data:{id:n.id,label:`${n.type}\n${n.name}`,type:n.type},position:view.positions[n.id],classes:pathNodes.has(n.id)?'path':''})),...view.edges.map(e=>({data:{id:e.id,source:e.source,target:e.target,type:e.type,label:e.fact_status!=='OBSERVED'?`${e.type} · ${e.fact_status}`:e.type==='DEPENDS_ON'?'DEPENDS_ON\n(syntactic)':e.type},classes:pathEdges.has(e.id)?'path':''}))],layout:{name:'preset',fit:true,padding:35},minZoom:0.25,maxZoom:2.5,style:[
       {selector:'node',style:{label:'data(label)','font-size':14,'text-wrap':'wrap','text-max-width':'160px','text-valign':'center','text-halign':'center','background-color':'#e4edf8',color:'#142b45',shape:'round-rectangle',width:180,height:65,'border-width':1,'border-color':'#94acc5'}},
       {selector:'node[type = "API_ENDPOINT"]',style:{shape:'round-tag','background-color':'#dbeafe','border-color':'#2563eb'}},
       {selector:'node[type = "MODULE"]',style:{shape:'rectangle','background-color':'#eef0f3','border-style':'dashed'}},
@@ -21,7 +21,7 @@ export default function Network({demo,selected,mode,focusedEndpointId,selectedNo
       {selector:'edge',style:{label:'data(label)',width:1.5,'font-size':12,color:'#445b72','text-background-color':'#fff','text-background-opacity':0.95,'text-background-padding':'3px','line-color':'#91a5ba','target-arrow-color':'#91a5ba','target-arrow-shape':'triangle','curve-style':'bezier','control-point-step-size':38}},
       {selector:'edge[type = "CALLS"], edge[type = "HANDLES"]',style:{'line-color':'#8194aa','target-arrow-color':'#8194aa',width:2}},
       {selector:'edge.path',style:{'line-color':'#175cd3','target-arrow-color':'#175cd3',width:4,color:'#144a91','z-index':2}},
-      {selector:'edge[type = "DEPENDS_ON"]',style:{'line-style':'dashed','line-color':'#a56a19','target-arrow-color':'#a56a19',label:'DEPENDS_ON\n(syntactic)'}},
+      {selector:'edge[type = "DEPENDS_ON"]',style:{'line-style':'dashed','line-color':'#a56a19','target-arrow-color':'#a56a19',label:'data(label)'}},
       {selector:'edge[type = "IMPORTS"], edge[type = "CONTAINS"]',style:{'line-style':'dotted','font-size':11}}
     ]});
     cy.current=c;

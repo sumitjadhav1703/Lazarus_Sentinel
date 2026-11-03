@@ -42,6 +42,7 @@
     "spec/05_DEMO_CLOSEOUT.md",
     "spec/06_COMPETITION_VERIFICATION.md",
     "spec/07_SUBMISSION_AND_COST_PLAN.md",
+    "spec/09_AGENT_CONTEXT.md",
     "spec/README.md"
   ],
   "entrypoint": "CODEX_BOOTSTRAP_PROMPT.md",

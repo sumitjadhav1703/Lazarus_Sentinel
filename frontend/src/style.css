@@ -13,3 +13,5 @@
 
 .endpoint-scroll-hint{display:none}.table-wrap th:first-child,.table-wrap td:first-child{min-width:54px;white-space:nowrap}.table-wrap th:nth-child(2),.table-wrap td:nth-child(2){min-width:180px}.network-shell--path .network{height:260px;min-height:260px}.network-shell--overview .network{height:560px;min-height:560px}
 @media(max-width:620px){.finding-list{max-height:230px;overflow:auto}.endpoint-scroll-hint{display:block;font-size:11px;color:#53697b;margin-top:8px}.network-shell--path .network{height:600px;min-height:600px}.network-shell--overview .network{height:620px;min-height:620px}}
+
+.agent-context{overflow-wrap:anywhere}.agent-context>label,.agent-context>input,.agent-context>select{display:block;margin-top:8px;max-width:100%}.agent-context pre{max-width:100%;overflow:auto;padding:12px;background:#eef3f8}.agent-context button{margin-top:8px}
