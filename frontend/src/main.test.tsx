@@ -61,3 +61,18 @@ it('exposes a skip link to the main landmark and labelled regions',async()=>{
   expect(screen.getByRole('complementary',{name:'Endpoint context'})).toBeTruthy();
   expect(screen.getByRole('region',{name:'Coverage and limitations'})).toBeTruthy();
 });
+
+import investigationRecord from './testdata/investigation.json';
+it('switches to the full graph when an investigation step inspects a node off the focused path',async()=>{
+  const data=structuredClone(graph); const finding=data.findings[0];
+  const offPath=data.nodes.find(n=>n.type==='API_ENDPOINT' && !finding.path_node_ids.includes(n.id))!;
+  const record=structuredClone(investigationRecord) as unknown as {finding_id:string; steps:{arguments:Record<string,string>; result:Record<string,unknown>}[]}; record.finding_id=finding.id;
+  record.steps[1].arguments={node_id:offPath.id}; record.steps[1].result={...record.steps[1].result,name:offPath.name};
+  vi.mocked(loadDemo).mockResolvedValue({...demo(data),investigations:[record]} as unknown as Demo);
+  render(<App/>);
+  await screen.findByText('Agent investigation · offline mock rehearsal');
+  expect(screen.getByRole('button',{name:'Focused path'}).getAttribute('aria-pressed')).toBe('true');
+  fireEvent.click(screen.getByRole('button',{name:new RegExp('get_node')}));
+  expect(screen.getByRole('button',{name:'Full graph'}).getAttribute('aria-pressed')).toBe('true');
+});
+

@@ -4,7 +4,7 @@ Written 2026-11-03. This increment is built and verified offline only. **No live
 
 ## What it does
 
-Muse Spark investigates one existing candidate by calling read-only tools over the committed graph. It ends by calling `submit_investigation`. The analyzer's finding stays authoritative. The output is a recorded, UNREVIEWED set of investigation notes and is never a verdict.
+Muse Spark investigates one existing candidate by calling read-only tools over the committed graph. It ends by calling `submit_investigation`. The analyzer's finding stays authoritative. The output is a recorded, UNREVIEWED set of investigation notes and is never a verdict. Validation covers the tool steps and the cited evidence IDs. It does not check whether each sentence of the model's prose follows from that evidence, because the model receives locations and hashes, not source text.
 
 ```sh
 uv run --project backend --locked --no-env-file lazarus investigate --scan-id <scan_id> --finding-id <finding_id> --provider mock
@@ -26,11 +26,12 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 | Replay | `validate_investigation` re-runs every recorded step against the graph and requires identical results. The bundle exporter and `scripts/verify_demo.py` apply it. The viewer checks bindings, step hashes and citations. |
 | Budget | Live turns use a separate ledger, `artifacts/agent-budget.sqlite3`, capped at 20 calls and USD 1. The cap was approved by the owner on 2026-11-03. The shared `model-budget.sqlite3` explanation ledger (USD 3, five attempts) is never touched. Each call reserves at least USD 0.10 and settles from the reported usage. |
 | Failure | The run fails closed. No partial trace is written, and calls are never retried. |
-| Viewer | The **Agent investigation** panel appears under the recorded explanation only when the bundle lists `investigations.json`. Selecting a step highlights the node it inspected. A mock record is labelled "offline mock rehearsal". |
+| Viewer | The **Agent investigation** panel appears under the recorded explanation only when the bundle lists `investigations.json`. Selecting a step highlights the node it inspected. If that node is outside the focused path, the viewer switches to the full graph so the node is visible. A mock record is labelled "offline mock rehearsal". |
 
 ## Evidence (measured 2026-11-03 on branch `codex/agent-investigation`)
 
 - `scripts/verify_demo.py` reported PASSED with `live_provider_attempts: 0` on the unchanged packaged bundle (6 endpoints, 23 nodes, 36 edges, 2 findings).
+- After the PR #56 review fixes (2026-11-04): backend 245 passed and 4 skipped, frontend 29 passed, and `verify_demo.py` PASSED with 0 live attempts.
 - After merging `main` with PR #55 (2026-11-04): backend 243 passed and 4 skipped, frontend 28 passed, the LangGraph extra 3 passed, the context-MCP extra 7 passed, and `verify_demo.py` PASSED with 0 live attempts.
 - After the weakness references were added (2026-11-04): with the default install, backend 236 passed and 3 skipped, frontend 22 passed, and `verify_demo.py` PASSED with 0 live attempts.
 - Backend at the first checkpoint: 218 passed and 3 skipped. 32 of the passing tests are new investigation tests covering hostile model output, tampered records, request shape, a separate ledger and the attempt cap. The optional LangGraph tests passed (3). Frontend: 21 tests passed, and typecheck, lint and build passed.
@@ -59,7 +60,7 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 | Static mapping | `references.RULE_REFERENCES`: CWE-862 and OWASP Top 10:2025 A01, with links verified 2026-11-03. The viewer always shows this mapping, from its mirror `frontend/src/rule-references.json`. A backend test checks that the two match. |
 | Live refresh | One `POST /v1/responses` with `tools: [{"type": "web_search", "search_context_size": "low"}]`, `reasoning.effort: "low"`, `max_output_tokens: 1024`, `store: false`. The input is a fixed per-rule question. **No code, graph or finding text is sent.** |
 | Citations | Only `url_citation` entries with https URLs on `cwe.mitre.org`, `owasp.org` or `top10.owasp.org` are kept, deduplicated by URL. If none qualify, the run fails with `NO_TRUSTED_CITATIONS`. More than 3 searches, or any status other than `completed`, fails the run. |
-| Cost | The call is settled on the agent ledger as token cost plus USD 2.50 per 1,000 searches (Meta pricing page, checked 2026-11-03). Settlement happens before content validation, so every billed search is recorded. |
+| Cost | The call is settled on the agent ledger as token cost plus USD 2.50 per 1,000 search queries (Meta pricing page, checked 2026-11-03). Queries are counted per `search` action from its `queries` array (Meta Responses schema, checked 2026-11-04). Any other or unknown `web_search_call` shape counts as one query, so the ledger may over-count but never under-count. The 3-query cap applies to this count. Settlement happens before content validation, so every billed search is recorded. |
 | Bundle | The optional `references.json` sidecar is valid only when its rule matches a finding in the graph. The viewer shows it as **Recorded live web search**. |
 
 ## Gates before a live run

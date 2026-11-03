@@ -280,6 +280,20 @@ SEARCH_MAX_QUERIES = 3
 SEARCH_TOOLS = [{"type": "web_search", "search_context_size": "low"}]
 
 
+def _search_queries(item: object) -> int:
+    """Billable queries in one output item. Per Meta's Responses schema (checked 2026-11-04),
+    a `search` action may run several `queries`. Unknown shapes count as one, so the
+    ledger can over-count but never under-count."""
+    if not isinstance(item, dict) or item.get("type") != "web_search_call":
+        return 0
+    action = item.get("action")
+    if isinstance(action, dict) and action.get("type") == "search":
+        queries = action.get("queries")
+        if isinstance(queries, list) and queries:
+            return len(queries)
+    return 1
+
+
 def generate_search(payload: bytes, ledger_path: Path) -> tuple[dict[str, Any], dict[str, int]]:
     """One bounded Responses call with Meta's built-in web search. The input carries no code."""
     key = os.environ.get("MODEL_API_KEY")
@@ -316,7 +330,7 @@ def generate_search(payload: bytes, ledger_path: Path) -> tuple[dict[str, Any], 
         raise ValueError("UNVERIFIABLE_USAGE")
     if "total_tokens" in usage and usage["total_tokens"] != input_tokens + output_tokens:
         raise ValueError("UNVERIFIABLE_USAGE")
-    searches = sum(isinstance(i, dict) and i.get("type") == "web_search_call" for i in output)
+    searches = sum(_search_queries(i) for i in output)
     # Settle before validating content so every billed search is recorded.
     budget.settle(attempt, input_tokens, output_tokens, searches * WEB_SEARCH_MICRO_USD)
     if result.get("status") != "completed" or searches > SEARCH_MAX_QUERIES:

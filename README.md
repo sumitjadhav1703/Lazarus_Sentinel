@@ -2,8 +2,8 @@
 
 # Lazarus Sentinel
 
-**An AI security assistant that can't make up evidence.**
-Graph-first, read-only application-security analysis. Every candidate traces back to code, and every AI claim is checked against that trace.
+**An AI security assistant that can only cite evidence that exists.**
+Graph-first, read-only application-security analysis. Every candidate traces back to code, and every evidence ID the AI cites must come from that trace.
 
 [![CI](https://github.com/sumitjadhav1703/Lazarus_Sentinel/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sumitjadhav1703/Lazarus_Sentinel/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
@@ -22,7 +22,7 @@ Graph-first, read-only application-security analysis. Every candidate traces bac
 
 Missing-authorization bugs ([CWE-862](https://cwe.mitre.org/data/definitions/862.html), part of OWASP's #1 risk, [Broken Access Control](https://top10.owasp.org/2025/A01_2025-Broken_Access_Control/)) hide across routes, dependencies and handlers. A reviewer has to follow a request from the route, through its handler and calls, to the sensitive operation. They also need to know what the tool could not see. Many AI security tools skip that and report findings with confidence they have not earned.
 
-Lazarus Sentinel builds a deterministic graph of the code and flags *candidates*, never confirmed vulnerabilities. It shows the exact source evidence and lists what it could not verify. Meta's Muse Spark explains and investigates a candidate only through that evidence. Any citation the model cannot trace back to the graph is rejected.
+Lazarus Sentinel builds a deterministic graph of the code and flags *candidates*, never confirmed vulnerabilities. It shows the exact source evidence and lists what it could not verify. Meta's Muse Spark explains and investigates a candidate using that evidence's metadata. Any evidence ID the model cites that cannot be traced back to the graph is rejected. The checks cover citation IDs, not whether each sentence of the model's prose is correct, so the prose stays UNREVIEWED notes for a human.
 
 > **What to look at in 60 seconds**
 > 1. Open the [live demo](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) and select **GET /authenticated**.
@@ -72,7 +72,7 @@ Lazarus Sentinel builds a deterministic graph of the code and flags *candidates*
 | Meta explanation | One validated live Muse Spark 1.3 explanation, recorded and replayed in the public viewer |
 | Agent investigation | Muse Spark calls read-only graph tools step by step, and every step is replayed on load. **Built and tested offline. The live run is pending review.** See [spec/10](spec/10_AGENT_INVESTIGATION.md). |
 | Weakness references | Reviewed CWE/OWASP links per rule, with an optional refresh through Meta's built-in `web_search` (allowlisted hosts only). **Live search pending review.** |
-| Quality | [Native Windows, macOS and Linux CI](docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md); on macOS, measured 2026-11-04: 243 backend tests passed and 4 skipped (optional-extra or Windows-only tests); 28 frontend tests passed |
+| Quality | [Native Windows, macOS and Linux CI](docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md); on macOS, measured 2026-11-04: 245 backend tests passed and 4 skipped (optional-extra or Windows-only tests); 29 frontend tests passed |
 | Controlled assessments | Separate fixed-fixture DATA, TRUST and actor/action/resource reports |
 | Optional workflow | LangGraph over the fixed demo stages. See [orchestration](docs/05_ORCHESTRATION.md). |
 | Blocked / deferred | Joern, canonical DATA/TRUST graph integration, HTTP API, durable review, arbitrary repositories, OS isolation |

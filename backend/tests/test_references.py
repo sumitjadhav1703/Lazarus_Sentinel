@@ -83,11 +83,16 @@ def test_tampered_references_rejected(workspace, mutate, code):
         validate_references(value)
 
 
-def response(citations, status="completed", searches=1):
+def response(citations, status="completed", searches=1, calls=None):
+    calls = (
+        calls
+        if calls is not None
+        else [{"type": "web_search_call", "id": f"ws_{i}"} for i in range(searches)]
+    )
     return {
         "status": status,
         "usage": {"input_tokens": 400, "output_tokens": 100, "total_tokens": 500},
-        "output": [{"type": "web_search_call", "id": f"ws_{i}"} for i in range(searches)]
+        "output": calls
         + [
             {
                 "type": "message",
@@ -173,3 +178,29 @@ def test_generate_search_rejects_unreviewed_requests(monkeypatch, tmp_path, over
     with pytest.raises(ValueError, match="INVALID_META_REQUEST"):
         meta_provider.generate_search(payload, tmp_path / "agent.sqlite3")
     assert not (tmp_path / "agent.sqlite3").exists()
+
+
+def search_call(*queries):
+    return {
+        "type": "web_search_call",
+        "id": "ws",
+        "action": {"type": "search", "query": "q", "queries": list(queries)},
+    }
+
+
+def test_multi_query_search_action_is_billed_per_query(workspace, monkeypatch):
+    citation = [("https://cwe.mitre.org/data/definitions/862.html", "CWE-862")]
+    live(monkeypatch, response(citation, calls=[search_call("cwe 862", "owasp a01")]))
+    value = validate_references(recorded(workspace, lookup_references("LS-AUTH-001", "meta")))
+    assert value.usage.searches == 2
+
+
+def test_query_cap_counts_queries_and_still_settles(workspace, monkeypatch):
+    citation = [("https://cwe.mitre.org/data/definitions/862.html", "CWE-862")]
+    live(monkeypatch, response(citation, calls=[search_call("a", "b", "c", "d")]))
+    with pytest.raises(ValueError, match="META_INVALID_RESPONSE"):
+        lookup_references("LS-AUTH-001", "meta")
+    with sqlite3.connect(workspace / "artifacts" / "agent-budget.sqlite3") as db:
+        assert db.execute("SELECT actual,state FROM attempts").fetchall() == [
+            (500 + 425 + 10000, "SETTLED")
+        ]
