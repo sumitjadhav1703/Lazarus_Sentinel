@@ -19,7 +19,7 @@ Written 2026-11-03 by Claude Code (Sonnet 5.5) for the owner. Read this so any a
 
 ## Known limits and decisions left open
 
-- **No LICENSE** was added; the owner must decide (issue #40). README says so explicitly.
+- **License:** at this checkpoint none had been added. The owner later chose Apache-2.0 on 2026-11-03 (issue #40); see `LICENSE` and `NOTICE`.
 - `actions/checkout@v7` and `actions/setup-node@v7`, `actions/upload-artifact@v4` and `github/codeql-action@v3` are tag-pinned, not SHA-pinned; only `setup-uv` is SHA-pinned. Tracked in the CI hardening issue.
 - No coverage tool yet (issue #24). The README statement of 139 backend and 16 frontend tests is the last verified count, not a guarantee.
 - Branch protection requiring the CI checks, private vulnerability reporting, and the repository Website field are owner actions in GitHub settings.

@@ -19,7 +19,7 @@ At this 2026-11-02 checkpoint, the recorded milestones were baseline `7797b85`, 
 |---|---|---|
 | N01 | BLOCKED | Owner portal acceptance, complete rules and receipt unknown. |
 | N02 | VERIFIED | Standard Muse Spark API access verified on the fixed synthetic workflow. |
-| N03 | DONE; license pending | Baseline 7797b85 and subsequent demo/viewer commits preserved; current owner-authorized publication evidence in document 23. |
+| N03 | DONE; Apache-2.0 licensed 2026-11-03 | Baseline 7797b85 and subsequent demo/viewer commits preserved; current owner-authorized publication evidence in document 23. |
 | N04 | DONE | Predeclared variant: 3 endpoints, 1 candidate, 1 declaration, 1 unknown; finite synthetic evaluation only. |
 | N05 | DONE | Bundle/explanation/viewer contract frozen in document 16. |
 | N06 | DONE | Fixed accessible graph/findings/coverage viewer; final checks/review in document 19. |

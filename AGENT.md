@@ -342,3 +342,18 @@ PR #53 merged at 47c5d2e after native macOS, Windows and Ubuntu checks. Hosted b
 ### Submission documentation and optional LangGraph
 
 Audited the repository Markdown, refreshed all docs/ reference files and spec/ pages, and wrote the [submission and cost plan](spec/07_SUBMISSION_AND_COST_PLAN.md). Historical checkpoints keep their original evidence. Added an opt-in pinned LangGraph workflow over the same fixed scan, explanation and export stages. The default linear path and deployed live recording are unchanged. The graph rehearsal uses mock by default, disables tracing and adds no durable state or retries. No new paid call was made.
+
+
+### Agent investigation, offline build — 2026-11-03 (Claude Code, Opus 5.5)
+
+Branch `codex/agent-investigation` from `main` at f771da6. This adds `lazarus investigate` (disabled, mock or meta), a tool-calling turn in the Meta adapter beside the unchanged `generate()`, a separate agent ledger, replay validation, an optional `investigations.json` bundle sidecar and the viewer's **Agent investigation** panel. Measured results: `scripts/verify_demo.py` PASSED with 0 live attempts; backend 218 passed and 3 skipped; LangGraph extra 3 passed; frontend 21 passed. The packaged bundle is unchanged. No live call was made, and no secret was read. The live run is gated on review and owner authorization. See [spec/10](spec/10_AGENT_INVESTIGATION.md).
+
+### Weakness references, problem-first viewer, README and license — 2026-11-03 (Claude Code, Opus 5.5)
+
+On the same branch:
+- **References:** added `lazarus references` (a static CWE-862 / OWASP A01 mapping plus an optional Meta `web_search` refresh with allowlisted citations, on the agent ledger), an optional `references.json` sidecar, and viewer weakness references.
+- **Viewer:** the intro is now problem-first, and the coverage banner moved below the summary.
+- **README:** rewritten with a walkthrough GIF (`docs/assets/viewer-walkthrough.gif`) and a "What to look at in 60 seconds" box.
+- **License:** added the Apache-2.0 `LICENSE` and `NOTICE` (D-031), and updated the license status across the docs.
+
+No live call was made. The packaged bundle is unchanged. Measured counts are in spec/10 and the README.

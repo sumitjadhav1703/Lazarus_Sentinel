@@ -42,4 +42,4 @@ The agent workflow (`AGENTS.md`, `CLAUDE.md`, `AGENT.md`, `TASK_BOARD.md`) appli
 
 ## License
 
-Not yet chosen (owner decision, tracked in an issue). Do not add a license file or claim unrestricted reuse until decided.
+Apache License 2.0; see [LICENSE](LICENSE) and [NOTICE](NOTICE). By contributing, you agree that your contribution is licensed under the same terms (Apache-2.0, section 5).

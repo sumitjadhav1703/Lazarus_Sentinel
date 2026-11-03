@@ -8,7 +8,7 @@ Updated 2026-11-03, IST. Release evidence is in [competition verification](06_CO
 |---|---|---|
 | 1 | Open the public demo in a clean browser. Select **GET /authenticated** and expand **Recorded live explanation**. | Graph, policy context, coverage, provider identity and recorded prose render. No account or API key is needed to replay. |
 | 2 | Prepare the entry using the public URL, repository, tested revision, screenshot or walkthrough recording, and scope summary below. | A teammate can open the links and reproduce the walkthrough from [the closeout guide](05_DEMO_CLOSEOUT.md). |
-| 3 | Check the organizer portal for required fields, file formats, license terms and any live execution requirement. | The owner verifies the actual portal checklist. Store the submission receipt after submitting. |
+| 3 | Check the organizer portal for required fields, file formats, license terms (the repository is now Apache-2.0) and any live execution requirement. | The owner verifies the actual portal checklist. Store the submission receipt after submitting. |
 | 4 | Freeze functionality. Fix only a broken submission link, demo regression, or requirement confirmed by the portal. | Preserve the last green deployment and keep the offline replay available. |
 
 Suggested entry description: **Lazarus Sentinel is a graph-based security review assistant. On a controlled synthetic FastAPI fixture, it traces an authorization candidate to source evidence. Meta Muse Spark 1.3 explains that evidence, and the application validates the citations before exporting the annotation for human review.**

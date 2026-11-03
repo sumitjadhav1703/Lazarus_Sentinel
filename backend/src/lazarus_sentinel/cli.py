@@ -9,6 +9,8 @@ from uuid import uuid4
 
 from .bundle import export_demo_bundle
 from .explanations import explain_finding
+from .investigation import investigate
+from .references import lookup_references
 from .service import scan
 
 SAFE_CODES = frozenset(
@@ -65,6 +67,24 @@ SAFE_CODES = frozenset(
         "BUDGET_RECONCILIATION_REQUIRED",
         "BUDGET_EXHAUSTED",
         "UNVERIFIABLE_USAGE",
+        "META_NO_TOOL_CALL",
+        "AGENT_UNKNOWN_TOOL",
+        "AGENT_INVALID_ARGUMENTS",
+        "AGENT_TOOL_ERRORS",
+        "AGENT_TURN_LIMIT",
+        "AGENT_CONTEXT_LIMIT",
+        "AGENT_INVALID_SUBMISSION",
+        "INVESTIGATION_BINDING_MISMATCH",
+        "INVESTIGATION_REQUEST_MISMATCH",
+        "INVESTIGATION_REPLAY_MISMATCH",
+        "INVESTIGATION_SIZE_LIMIT",
+        "INVESTIGATION_ID_MISMATCH",
+        "UNKNOWN_RULE",
+        "REFERENCES_REQUEST_MISMATCH",
+        "UNTRUSTED_CITATION",
+        "NO_TRUSTED_CITATIONS",
+        "REFERENCES_ID_MISMATCH",
+        "REFERENCES_RULE_MISMATCH",
     ]
 )
 
@@ -92,6 +112,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     export_parser = demo_commands.add_parser("export")
     export_parser.add_argument("--scan-id", required=True)
     export_parser.add_argument("--annotation-id")
+    export_parser.add_argument("--investigation-id")
+    export_parser.add_argument("--references-id")
     context = commands.add_parser("context")
     contexts = context.add_subparsers(dest="context_command", required=True)
     contexts.add_parser("build").add_argument("--target", choices=("self",), required=True)
@@ -106,6 +128,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     explain_parser.add_argument("--scan-id", required=True)
     explain_parser.add_argument("--finding-id", required=True)
     explain_parser.add_argument(
+        "--provider", choices=("disabled", "mock", "meta"), default="disabled"
+    )
+    investigate_parser = commands.add_parser("investigate")
+    investigate_parser.add_argument("--scan-id", required=True)
+    investigate_parser.add_argument("--finding-id", required=True)
+    investigate_parser.add_argument(
+        "--provider", choices=("disabled", "mock", "meta"), default="disabled"
+    )
+    references_parser = commands.add_parser("references")
+    references_parser.add_argument("--rule-id", required=True)
+    references_parser.add_argument(
         "--provider", choices=("disabled", "mock", "meta"), default="disabled"
     )
     try:
@@ -130,7 +163,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "scan":
             summary = scan(args.target)
         elif args.command == "demo":
-            summary = export_demo_bundle(args.scan_id, args.annotation_id)
+            summary = export_demo_bundle(
+                args.scan_id, args.annotation_id, args.investigation_id, args.references_id
+            )
+        elif args.command == "references":
+            summary = lookup_references(args.rule_id, args.provider)
+        elif args.command == "investigate":
+            summary = investigate(args.scan_id, args.finding_id, args.provider)
         else:
             summary = explain_finding(args.scan_id, args.finding_id, args.provider)
     except ValueError as error:

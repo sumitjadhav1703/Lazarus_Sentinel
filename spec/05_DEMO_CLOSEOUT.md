@@ -50,7 +50,7 @@ Open `http://127.0.0.1:4173/`, choose the candidate identified by the annotation
 - Second-person reproduction, real screen reader output, native 200% zoom, and audience feedback remain separate from local browser and CI results.
 - A recorded live Meta annotation is available for the competition demo. Offline rehearsal defaults to mock and requires no credential.
 - The current Pages deployment and Website link are verified. Any replacement still requires the publication review and URL smoke check.
-- Owner verifies the actual portal requirements, records the license choice, and retains a submission receipt if submitting.
+- Owner verifies the actual portal requirements, confirms the Apache-2.0 license is acceptable for the event, and retains a submission receipt if submitting.
 
 ## Next AI increment after the freeze
 

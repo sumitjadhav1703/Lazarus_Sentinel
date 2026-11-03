@@ -18,7 +18,7 @@ The [public viewer](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) replays
 | Intake and extraction | `intake.py`, `worker.py`, `analysis.py`; bounded snapshots and child execution |
 | Canonical facts | `models.py`, `rules.py`; schema 0.1.0 and policy assessments |
 | Artifacts | `persistence.py`, `bundle.py`, `demo_models.py`; committed references, hashes and export validation |
-| Explanation boundary | `explanations.py`, `meta_provider.py`, `budget.py`; stateless assistance and fail-closed reservations |
+| Meta boundary | `explanations.py`, `investigation.py`, `references.py`, `meta_provider.py`, `budget.py`; stateless assistance, replayed tool steps, allowlisted citations and fail-closed reservations |
 | Viewer | `frontend/src/`; fixed local assets in `frontend/public/demo/v1/` |
 | Reproduction | `scripts/verify_demo.py`, `prepare_demo.py`, `inspect_artifacts.py`; trusted implementation tools |
 | Fixture truth | `fixtures/`; expected-results oracle is test-only, never analyzer input |
@@ -39,7 +39,7 @@ uv run --project backend --locked python scripts/verify_demo.py
 npm run dev --prefix frontend
 ```
 
-Use the loopback URL Vite prints. The terminal stays occupied while the viewer is running; press Ctrl+C to stop it. The reviewed delivery is published on remote `main`. Native Windows, macOS and Ubuntu clean setup/tests/build passed; document23 links the exact tested source commit and jobs. This does not establish hostile-repository isolation or live-provider access.
+Use the loopback URL Vite prints. The terminal stays occupied while the viewer is running; press Ctrl+C to stop it. The reviewed delivery is published on remote `main`. Native Windows, macOS and Ubuntu clean setup/tests/build passed; document 23 links the exact tested source commit and jobs. This does not establish hostile-repository isolation or live-provider access.
 
 In a second terminal, run the controlled scan:
 
@@ -64,7 +64,7 @@ Use actual supported Codex models: Astra for critical/security decisions, Sol fo
 
 ## Security and publication boundaries
 
-Analyze only the fixed owned fixture. No target execution, exploitation, automatic remediation, network scanning or arbitrary intake. Repository content and model prose are untrusted. Never read or print secret values; presence checks are sufficient. External provider use requires explicit selection, minimal redacted context, owner account/privacy approval, current price verification and the existing USD3/five-attempt ledger; never retry failed jobs silently. License selection and event eligibility/submission remain owner decisions. A public repository does not imply an open-source license or a submission receipt.
+Analyze only the fixed owned fixture. No target execution, exploitation, automatic remediation, network scanning or arbitrary intake. Repository content and model prose are untrusted. Never read or print secret values; presence checks are sufficient. External provider use requires explicit selection, minimal redacted context, owner account/privacy approval, current price verification and the existing USD 3/five-attempt ledger; never retry failed jobs silently. The project is licensed under Apache-2.0 (see `LICENSE` and `NOTICE`). Event eligibility and submission remain owner decisions; a public repository does not imply a submission receipt. Agent investigations and web-search references use a separate ledger capped at 20 calls and USD 1, and their live runs are gated on review.
 
 ## Copyable agent task
 

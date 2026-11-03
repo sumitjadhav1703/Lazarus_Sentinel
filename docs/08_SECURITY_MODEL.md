@@ -45,3 +45,26 @@ These references are guidance, not certification of the current implementation.
 ## Bounded cross-platform compatibility contract — 2026-11-02
 
 The portability increment preserves POSIX directory-relative/no-follow reads and POSIX resource controls. The approved Windows design rejects reparse/junction ancestry, non-exact path case, reserved names and nonregular or unstable files; it retains byte caps and parent deadlines. CPU/file-descriptor resource limits are POSIX-specific; Windows compatibility does not establish equivalent OS resource or filesystem/network isolation. Meta child startup uses the platform-supported process context without changing redaction, budget or absolute-deadline requirements. See document 23 for measured implementation/native-run outcomes. N14 denial probes remain required before broader intake.
+
+## Agent investigation and web-search references — 2026-11-03
+
+**New trust boundaries.** Both are added beside the existing explanation adapter:
+- a tool-calling turn on `/v1/chat/completions`
+- a Responses call with Meta's built-in `web_search` on `/v1/responses`
+
+**Egress:**
+- Investigations send graph metadata only: IDs, names, types, declared properties, paths, line ranges and hashes. They never send source text.
+- Web search sends one fixed per-rule question, with no code, graph or finding text.
+
+**Controls:**
+- Exact request-shape allowlists.
+- One tool call per turn.
+- Strict argument validation, with unknown tools rejected.
+- Result size caps.
+- Citations restricted to tool-returned evidence of the finding.
+- Web citations restricted to https on `cwe.mitre.org` and `owasp.org`.
+- A separate fail-closed ledger: 20 calls and USD 1, with web-search fees settled at USD 2.50 per 1,000 queries.
+- No retries.
+- Every recorded tool step is replayed on validation.
+
+**Status.** These boundaries are implemented and tested offline. Before any live call, they need review by Astra or an owner-approved fallback reviewer, plus explicit owner authorization ([spec/10](../spec/10_AGENT_INVESTIGATION.md)).

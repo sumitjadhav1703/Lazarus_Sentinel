@@ -1,0 +1,287 @@
+{
+  "$defs": {
+    "Investigation": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "display_provenance": {
+          "const": "recorded",
+          "title": "Display Provenance",
+          "type": "string"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "generation": {
+          "enum": [
+            "mock",
+            "live"
+          ],
+          "title": "Generation",
+          "type": "string"
+        },
+        "graph_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Graph Sha256",
+          "type": "string"
+        },
+        "investigation_id": {
+          "title": "Investigation Id",
+          "type": "string"
+        },
+        "investigation_version": {
+          "const": "0.1.0",
+          "title": "Investigation Version",
+          "type": "string"
+        },
+        "model": {
+          "enum": [
+            "deterministic-mock-v1",
+            "muse-spark-1.3"
+          ],
+          "title": "Model",
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "mock",
+            "meta"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
+        "request_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Request Sha256",
+          "type": "string"
+        },
+        "response": {
+          "$ref": "#/$defs/InvestigationResponse"
+        },
+        "review_status": {
+          "const": "UNREVIEWED",
+          "title": "Review Status",
+          "type": "string"
+        },
+        "revision": {
+          "title": "Revision",
+          "type": "string"
+        },
+        "scan_id": {
+          "title": "Scan Id",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/InvestigationStep"
+          },
+          "maxItems": 5,
+          "title": "Steps",
+          "type": "array"
+        },
+        "usage": {
+          "$ref": "#/$defs/InvestigationUsage"
+        }
+      },
+      "required": [
+        "investigation_version",
+        "investigation_id",
+        "scan_id",
+        "revision",
+        "graph_sha256",
+        "finding_id",
+        "request_sha256",
+        "provider",
+        "model",
+        "generation",
+        "display_provenance",
+        "review_status",
+        "created_at",
+        "steps",
+        "usage",
+        "response"
+      ],
+      "title": "Investigation",
+      "type": "object"
+    },
+    "InvestigationResponse": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "limitations": {
+          "items": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Limitations",
+          "type": "array"
+        },
+        "reviewer_checklist": {
+          "items": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Reviewer Checklist",
+          "type": "array"
+        },
+        "summary": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "why_it_matters": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Why It Matters",
+          "type": "string"
+        }
+      },
+      "required": [
+        "summary",
+        "why_it_matters",
+        "reviewer_checklist",
+        "limitations",
+        "evidence_ids"
+      ],
+      "title": "InvestigationResponse",
+      "type": "object"
+    },
+    "InvestigationStep": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "additionalProperties": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxProperties": 1,
+          "title": "Arguments",
+          "type": "object"
+        },
+        "index": {
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Index",
+          "type": "integer"
+        },
+        "result": {
+          "additionalProperties": true,
+          "title": "Result",
+          "type": "object"
+        },
+        "result_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Result Sha256",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OK",
+            "ERROR"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "tool": {
+          "enum": [
+            "get_finding",
+            "get_node",
+            "get_neighbors",
+            "get_evidence",
+            "list_endpoints",
+            "get_coverage"
+          ],
+          "title": "Tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "tool",
+        "arguments",
+        "status",
+        "result_sha256",
+        "result"
+      ],
+      "title": "InvestigationStep",
+      "type": "object"
+    },
+    "InvestigationUsage": {
+      "additionalProperties": false,
+      "properties": {
+        "calls": {
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Calls",
+          "type": "integer"
+        },
+        "estimated_micro_usd": {
+          "minimum": 0,
+          "title": "Estimated Micro Usd",
+          "type": "integer"
+        },
+        "input_tokens": {
+          "minimum": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "minimum": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "calls",
+        "input_tokens",
+        "output_tokens",
+        "estimated_micro_usd"
+      ],
+      "title": "InvestigationUsage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "investigation_version": {
+      "const": "0.1.0",
+      "title": "Investigation Version",
+      "type": "string"
+    },
+    "investigations": {
+      "items": {
+        "$ref": "#/$defs/Investigation"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "title": "Investigations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "investigation_version",
+    "investigations"
+  ],
+  "title": "InvestigationEnvelope",
+  "type": "object"
+}

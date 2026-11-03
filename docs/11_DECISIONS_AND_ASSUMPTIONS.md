@@ -51,7 +51,7 @@ Updated 2026-11-02. Approved current scope is in [document 13](13_FIRST_SLICE_CO
 | Event acceptance, complete rules, team/track, required Meta usage | Owner-only portal facts unverified; N01 |
 | Public deadline | Official page reopened Nov 2: Nov 4, 9:00 PM ET = Nov 5, 7:30 AM IST; may change |
 | Actual Meta account/model access, quota, privacy/spend approval | Not verified by public documentation; N02/N08 |
-| License, Git baseline, publication/deployment | Baseline 7797b85 preserved; license pending; remote actions require separate selection |
+| License, Git baseline, publication/deployment | Baseline 7797b85 preserved; Apache-2.0 chosen 2026-11-03 (D-031); remote actions require separate selection |
 | Next demo contract and team allocation | Contract frozen and fixed viewer implemented; no second human teammate assumed; N05/N06 |
 | Joern/value-flow capability and trust policy | No measurements/implemented families; N09/N10 |
 | Arbitrary-repository isolation/intake | Not approved or implemented; N14/N15 before expansion |
@@ -99,3 +99,18 @@ Use a standalone standard-library AST experiment to test local assignment proven
 ### D-029 — Opt-in LangGraph demo orchestration (2026-11-03)
 
 Keep the default linear scanner and published recording. Add a pinned optional LangGraph extra for the fixed rehearsal stages, with tracing disabled and the existing Meta ledger unchanged. Durable review and pause/resume require a separate design and replay checks. The live competition recording predates this optional integration.
+
+
+### D-030 — Read-only agent investigation with a separate ledger (2026-11-03)
+
+The owner approved building an offline Muse Spark investigation loop over the committed graph. It uses a separate agent ledger capped at 20 calls and USD 1. The shared USD 3 / five-attempt explanation ledger is unchanged. The tools are pure graph lookups. No source text is sent. Every recorded step is replayed on bundle validation. Citations must come from tool results for the investigated finding. Any malformed turn fails the run with no retry and no partial record. The output is UNREVIEWED notes, never a verdict. The live run waits for owner-approved Astra or a fallback review and explicit owner authorization. See [agent investigation](../spec/10_AGENT_INVESTIGATION.md).
+
+
+### D-031 — Apache-2.0 license (2026-11-03)
+
+The owner chose the Apache License 2.0 for the repository (issue #40). `LICENSE` holds the unmodified text from GitHub's license API. `NOTICE` names "Sumit Jadhav and Lazarus Sentinel contributors". Contributions are accepted under the same terms. Teammates listed on the event entry should agree to this choice. Third-party dependencies keep their own licenses.
+
+
+### D-032 — Weakness references and bounded web search (2026-11-03)
+
+Each rule carries a reviewed static mapping to public weakness categories; `LS-AUTH-001` maps to CWE-862 and OWASP A01:2025. The mapping is a category label, not evidence. An optional Meta `web_search` refresh sends only a fixed question and keeps only allowlisted https citations. It settles search fees on the agent ledger and fails closed. Its live run shares the D-030 review and authorization gate.
