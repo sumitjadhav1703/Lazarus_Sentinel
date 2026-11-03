@@ -14,7 +14,7 @@ export function projectGraph(graph:Pick<Graph,'nodes'|'edges'>, selected:Item|un
     const ids=new Set(graph.nodes.some(n=>n.id===endpointId)?[endpointId]:[]);
     depth.set(endpointId,0); edges=[];
     // Follow stored structure only; declaration edges are not execution paths.
-    for(const id of ids) for(const e of graph.edges) if(e.source===id && ['HANDLES','CALLS'].includes(e.type)) {
+    for(const id of ids) for(const e of graph.edges) if(e.source===id && e.fact_status==='OBSERVED' && ['HANDLES','CALLS'].includes(e.type)) {
       edges.push(e);
       if(!ids.has(e.target)) {ids.add(e.target);depth.set(e.target,(depth.get(id)??0)+1);}
     }

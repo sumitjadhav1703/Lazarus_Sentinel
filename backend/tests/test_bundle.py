@@ -132,3 +132,23 @@ def test_bundle_required_metadata_and_total_limit(committed_scan):
             validate_bundle(changed, {"graph.json": data})
     with pytest.raises(ValueError, match="BUNDLE_SIZE_LIMIT"):
         validate_bundle(manifest, {"graph.json": b" " * 1048576})
+
+
+def test_bundle_rejects_node_edge_identity_collision(committed_scan):
+    _, scan_id = committed_scan
+    loaded = load_committed_graph(scan_id)
+    graph = loaded.graph.model_dump(mode="json")
+    used = {edge for finding in graph["findings"] for edge in finding["path_edge_ids"]}
+    edge = next(edge for edge in graph["edges"] if edge["id"] not in used)
+    edge["id"] = graph["nodes"][0]["id"]
+    payload = bundle.canonical_bytes(graph)
+    manifest = {
+        "bundle_version": "0.1.0",
+        "bundle_id": scan_id,
+        "origin": "controlled-synthetic-fixture",
+        "generator_version": "0.1.0",
+        "scan": {key: loaded.summary[key] for key in ("scan_id", "revision", "status", "profile")},
+        "artifacts": {"graph.json": {"size": len(payload), "sha256": bundle.digest(payload)}},
+    }
+    with pytest.raises(ValueError, match="DUPLICATE_IDENTIFIERS"):
+        validate_bundle(manifest, {"graph.json": payload})

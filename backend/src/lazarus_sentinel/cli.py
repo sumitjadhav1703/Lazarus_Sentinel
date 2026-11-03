@@ -14,6 +14,18 @@ from .service import scan
 SAFE_CODES = frozenset(
     [
         "INVALID_ARGUMENTS",
+        "CONTEXT_INDEX_FAILED",
+        "CONTEXT_INVALID_GRAPH",
+        "CONTEXT_INVALID_REFERENCES",
+        "CONTEXT_GRAPH_LIMIT",
+        "CONTEXT_INVALID_MANIFEST",
+        "CONTEXT_HASH_MISMATCH",
+        "CONTEXT_INVALID_SNAPSHOT",
+        "CONTEXT_INVALID_QUERY",
+        "CONTEXT_INVALID_CURSOR",
+        "CONTEXT_UNKNOWN_ENTITY",
+        "CONTEXT_RESULT_LIMIT",
+        "CONTEXT_MCP_EXTRA_REQUIRED",
         "INVALID_UUID",
         "INVALID_PROVIDER",
         "FINDING_NOT_FOUND",
@@ -80,6 +92,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     export_parser = demo_commands.add_parser("export")
     export_parser.add_argument("--scan-id", required=True)
     export_parser.add_argument("--annotation-id")
+    context = commands.add_parser("context")
+    contexts = context.add_subparsers(dest="context_command", required=True)
+    contexts.add_parser("build").add_argument("--target", choices=("self",), required=True)
+    query = contexts.add_parser("query")
+    query.add_argument("--snapshot", required=True)
+    query.add_argument("--operation", required=True)
+    query.add_argument("--id", dest="entity_id")
+    query.add_argument("--text")
+    query.add_argument("--cursor")
+    contexts.add_parser("serve").add_argument("--snapshot", required=True)
     explain_parser = commands.add_parser("explain")
     explain_parser.add_argument("--scan-id", required=True)
     explain_parser.add_argument("--finding-id", required=True)
@@ -88,6 +110,23 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     try:
         args = parser.parse_args(argv)
+        if args.command == "context":
+            from .context import build_context, load_context, query_context
+
+            if args.context_command == "serve":
+                from .context_mcp import serve
+
+                serve(args.snapshot)
+                return 0
+            if args.context_command == "build":
+                summary = build_context()
+            else:
+                manifest, graph = load_context(args.snapshot)
+                summary = query_context(
+                    manifest, graph, args.operation, args.entity_id, args.text, args.cursor
+                )
+            print(json.dumps(summary, sort_keys=True, separators=(",", ":")))
+            return 0
         if args.command == "scan":
             summary = scan(args.target)
         elif args.command == "demo":

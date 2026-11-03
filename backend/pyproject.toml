@@ -15,6 +15,9 @@ lazarus = "lazarus_sentinel.cli:main"
 langgraph = [
     "langgraph==1.2.19",
 ]
+context-mcp = [
+    "mcp>=1.26,<2",
+]
 
 [dependency-groups]
 dev = ["pytest>=8.4,<10", "ruff>=0.14,<1", "mypy>=2.4.1,<3"]
