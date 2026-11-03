@@ -61,7 +61,7 @@ Correlate program structure with endpoints, permissions and trust boundaries, an
 
 The fixture intentionally contains unsupported dynamic registration, so its normal outcome is **PARTIAL / exit 2**. A matching authorization declaration is syntax evidence, not proof of enforcement.
 
-See [competition verification](spec/06_COMPETITION_VERIFICATION.md) for the live annotation, the bounded assessment results, and the demo limitations. The static viewer replays the recorded Meta result.
+See [competition verification](spec/06_COMPETITION_VERIFICATION.md) for the live annotation, the bounded assessment results, and the demo limitations. The [public demo](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) replays the recorded Meta result.
 
 ## Quickstart
 
@@ -170,7 +170,7 @@ Planned work is tracked as [GitHub issues](https://github.com/sumitjadhav1703/La
 - [ ] P08 reviewed sandbox runtime with denial probes
 - [ ] P09 bounded next-intake contract, optional Joern spike, `LS-DATA-001` / `LS-TRUST-001`
 - [ ] P10 public demo on GitHub Pages
-- [ ] S01 semantic contract for the next analysis stage
+- [x] S01 semantic contract for the next analysis stage
 
 ## Contributing
 

@@ -75,10 +75,10 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 - [x] Exercise P07 offline response and accounting paths through the CLI.
 - [x] Record P05 production cold-load baseline on loopback.
 - [ ] Collect P03 teammate evidence and finish P04 native accessibility and feedback checks.
-- [ ] Complete P07 live annotation verification after required review.
+- [x] Complete P07 live annotation verification after required review.
 - [ ] Resolve P06 owner prerequisites and P08 runtime approval. P09 depends on verified isolation.
 - [x] P10 local readiness. Verify root and repository subpath builds and prepare a manual Pages workflow.
-- [ ] Review P10 publication and verify the deployed URL before setting the repository Website.
+- [x] Publish the reviewed P10 recording, verify the deployed bundle and set the repository Website.
 
 ### Demo closeout
 
@@ -90,3 +90,4 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 
 - [x] Add the explicit fixed-fixture Meta demo mode and offline workflow regressions.
 - [x] Run and independently review one successful live annotation export.
+- [x] Replay the reviewed live annotation in Chrome and verify the public bundle bytes.

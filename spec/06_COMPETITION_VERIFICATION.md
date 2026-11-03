@@ -15,6 +15,12 @@ Chrome 156 replayed the live bundle on loopback, showing the exact narrative, mo
 
 Use the [closeout guide](05_DEMO_CLOSEOUT.md) to replay the recorded result without another call. [Meta structured output](https://dev.meta.ai/docs/structured-output) · [Meta reasoning](https://dev.meta.ai/docs/reasoning) · [Meta pricing](https://dev.meta.ai/docs/pricing-rate-limits).
 
+## Public demo
+
+[GitHub Pages](https://sumitjadhav1703.github.io/Lazarus_Sentinel/) serves the recorded Meta annotation. The deployed revision is `47c5d2ed4090ffa0d7b77c1882608a483bccfb26`. The deployment succeeded and the public HTML and all three bundle files were checked against the reviewed bytes. The repository Website field points to the verified URL. The static viewer does not expose a provider endpoint or require a key. [Deployment run](https://github.com/sumitjadhav1703/Lazarus_Sentinel/actions/runs/41624406844).
+
+PR #53 passed native macOS, Windows and Ubuntu CI. The backend job recorded 185 tests passed and one platform-specific skip. The local verifier passed all nine checks.
+
 ## Measured controlled assessments
 
 Run from the repository root using the locked backend. Each command writes a new evidence report under ignored artifacts. Cases are fixed synthetic programs and their classifications are explicit policy assumptions.
