@@ -52,3 +52,5 @@ A future resumable review experiment requires a state contract, safe identifiers
 - the loop has no checkpoint store or resume
 
 Each step is a deterministic graph lookup that is recorded with its result hash and replayed when the bundle is validated. Any malformed turn fails the whole run, with no retry and no partial record. The mock provider follows the same loop offline. The live provider uses a separate ledger. Contract and gates: [spec/10](../spec/10_AGENT_INVESTIGATION.md).
+
+The local v2 prompt supplies the current turn and remaining lookups, with submission required on turn six. Backend replay accepts both the original v1 and v2 request identities. A scripted test reached a valid final-turn submission. See [live verification status](../spec/10_AGENT_INVESTIGATION.md).

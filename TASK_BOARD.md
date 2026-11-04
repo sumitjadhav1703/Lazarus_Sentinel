@@ -99,15 +99,27 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 - [x] Add the opt-in LangGraph workflow for credential-free rehearsal.
 - [ ] Confirm portal fields and keep the submission receipt. Use the [submission and cost plan](spec/07_SUBMISSION_AND_COST_PLAN.md).
 
+- [x] Verify the live organizer form and prepare local submission answers and a video outline.
+- [ ] Owner to provide an accessible three-minute video, confirm roster and survey, review consent, and retain submission confirmation.
+
 ### Agent investigation — 2026-11-03
 
 - [x] Offline investigation loop, replay validation, separate ledger, bundle sidecar and viewer panel. See [spec/10](spec/10_AGENT_INVESTIGATION.md).
-- [ ] Get Astra or an approved fallback review of the tool-calling boundary, then one owner-authorized live run, then packaging and the manual Pages deploy.
+- [x] Run the owner-authorized initial live investigation and separate search. Neither produced an accepted artifact. See [measured outcomes](spec/10_AGENT_INVESTIGATION.md#initial-live-checks--2026-11-04).
+- [x] Test the v2 turn-aware prompt and redacted search diagnostics offline.
+- [ ] Obtain attributable Meta billing evidence for the unsettled reservation, resolve the account restriction, and verify live submission before packaging.
 - [x] Weakness references (static CWE/OWASP mapping and offline-tested `web_search` refresh), problem-first viewer intro, README GIF and 60-second guide, Apache-2.0 license.
-- [ ] Get the live web-search reference record under the same review gate, then package it with the investigation.
+- [ ] Confirm a provider-side search query ceiling or obtain explicit acceptance of spending uncertainty. Then verify the live search separately before packaging.
 
 ### Repository context and canonical detectors
 
 - [x] Release repository context in PR #55 after native Windows, macOS and Linux CI. Verify real-export browser and CLI entity parity on PR #56 main.
-- [ ] Review the fixed canonical DATA graph projection before release. The draft covers four positive, four control and four unknown fixtures, plus held-out tests.
+- [x] Complete independent fallback review of the fixed DATA draft at `65b9be0`. All eight GitHub checks passed.
+- [ ] Release the reviewed DATA draft.
 - [ ] Review and integrate TRUST and richer AUTH separately. Broader intake still requires demonstrated filesystem and network isolation.
+
+### Recording freeze — 2026-11-04
+
+- [x] Rehearse the public viewer, verify its three artifact hashes, and validate a fresh offline mock export.
+- [x] Verify the frozen local viewer with five visible explanation citations, keyboard access, 320 px reflow, and corrupt-bundle rejection.
+- [ ] Record the chosen frozen viewer, check video access signed out, and retain the portal receipt.

@@ -67,4 +67,4 @@ The portability increment preserves POSIX directory-relative/no-follow reads and
 - No retries.
 - Every recorded tool step is replayed on validation.
 
-**Status.** These boundaries are implemented and tested offline. Before any live call, they need review by Astra or an owner-approved fallback reviewer, plus explicit owner authorization ([spec/10](../spec/10_AGENT_INVESTIGATION.md)).
+**Status.** The initial authorized checks produced no accepted live artifact. Search diagnostics identify only the validation stage and preserve ambiguous reservations. The three-query check runs after Meta responds. Follow-up calls require ledger reconciliation, account access, review, and owner authorization. See [spec/10](../spec/10_AGENT_INVESTIGATION.md).

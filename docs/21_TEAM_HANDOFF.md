@@ -77,3 +77,7 @@ Perform the smallest complete change and run relevant checks. Do not make paid c
 For critical/security decisions use owner-approved Astra, or stop that decision for an approved fallback.
 Return changed files, commands/results, limitations and next steps; update the task ledger/log through the coordinator.
 ```
+
+## Current follow-up — 2026-11-04
+
+Use mock mode for agent rehearsal. The latest live search left the agent ledger blocked pending request-specific billing evidence, and Meta reported an account restriction. Keep both ledgers intact. [Investigation handoff](../spec/10_AGENT_INVESTIGATION.md).

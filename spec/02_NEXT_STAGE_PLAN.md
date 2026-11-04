@@ -72,3 +72,14 @@ Do not add automatic exploitation/remediation, unapproved active validation, uni
 ## Completion rule
 
 A stage closes only when its exact capability is implemented, meaningful tests and source evidence validate it, limitations are visible, native compatibility is checked, independent review is complete where required, and audit/checklist/log/task-board statuses agree. Report BLOCKED or NOT_IMPLEMENTED when a gate fails; do not spend the remaining schedule building a misleading substitute. The PDF's original dates and three-rule promise are historical context, not a newly validated delivery deadline.
+
+## Recording decision — 2026-11-04
+
+The fixed viewer, evidence path, and recorded Meta explanation passed recording-day checks. Use the [recording freeze](05_DEMO_CLOSEOUT.md#recording-freeze--2026-11-04) to choose the exact viewer. The production release of DATA, separate TRUST and AUTH integration, live agent verification, and OS isolation remain post-recording work.
+
+## Current execution order — 2026-11-04
+
+1. The reviewed, fixed-fixture DATA projection merged in [PR #57](https://github.com/sumitjadhav1703/Lazarus_Sentinel/pull/57).
+2. Review and integrate TRUST, then richer AUTH under separate graph contracts.
+3. Keep broader intake gated on the independent S09 isolation probes.
+4. In parallel, obtain attributable Meta search usage and restore account access before another separately reviewed live check. Use offline replay in the interim. See [agent investigation](10_AGENT_INVESTIGATION.md).

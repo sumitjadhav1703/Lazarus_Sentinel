@@ -62,7 +62,7 @@ The detailed exit criteria below remain useful for unresolved portions; complete
 - Initialize a local Git repository as a separately selected execution task; review ignores, source/fixture files, lockfile, docs, and absence of credentials/generated artifacts before the first commit. Decide project license and dependency notices with the owner.
 - Keep `.venv`, caches, `.env`, and scan artifacts out of commits. Do not push/publish without explicit instruction; a remote repository is not required for local reproducibility.
 - Continue using the scanned-byte manifest for source evidence; a Git commit supplements it and never substitutes for dirty/untracked content identity.
-- **Done when:** a reviewed baseline commit can be reproduced locally, or a dated source archive/content inventory is retained pending Git setup. Baseline 7797b85 now exists; license remains owner-selected and pending.
+- **Done when:** a reviewed baseline commit can be reproduced locally, or a dated source archive/content inventory is retained pending Git setup. Baseline 7797b85 now exists; Apache-2.0 was selected on 2026-11-03.
 
 ### N04 — Lock the demo and evaluation fixture
 

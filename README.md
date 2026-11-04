@@ -70,12 +70,13 @@ Lazarus Sentinel builds a deterministic graph of the code and flags *candidates*
 | Persistence / report | SQLite committed references; graph, findings and coverage JSON; escaped Markdown |
 | Measured demo | 6 endpoints, 23 nodes, 36 edges, 2 candidates, 3 matching declarations with effectiveness unverified |
 | Meta explanation | One validated live Muse Spark 1.3 explanation, recorded and replayed in the public viewer |
-| Agent investigation | Muse Spark calls read-only graph tools step by step, and every step is replayed on load. **Built and tested offline. The live run is pending review.** See [spec/10](spec/10_AGENT_INVESTIGATION.md). |
-| Weakness references | Reviewed CWE/OWASP links per rule, with an optional refresh through Meta's built-in `web_search` (allowlisted hosts only). **Live search pending review.** |
+| Agent investigation | Muse Spark calls read-only graph tools step by step, and every step is replayed on load. **Offline verified. The first live run reached six turns without submitting.** See [spec/10](spec/10_AGENT_INVESTIGATION.md). |
+| Weakness references | Reviewed CWE/OWASP links per rule, with an optional refresh through Meta's built-in `web_search` (allowlisted hosts only). **The first live search returned unverifiable usage. Further paid calls are blocked pending reconciliation.** |
 | Quality | [Native Windows, macOS and Linux CI](docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md); on macOS, measured 2026-11-04: 245 backend tests passed and 4 skipped (optional-extra or Windows-only tests); 29 frontend tests passed |
 | Controlled assessments | Separate fixed-fixture DATA, TRUST and actor/action/resource reports |
 | Optional workflow | LangGraph over the fixed demo stages. See [orchestration](docs/05_ORCHESTRATION.md). |
-| Blocked / deferred | Joern, canonical DATA/TRUST graph integration, HTTP API, durable review, arbitrary repositories, OS isolation |
+| Canonical DATA | The fixed synthetic projection merged in [PR #57](https://github.com/sumitjadhav1703/Lazarus_Sentinel/pull/57). |
+| Blocked / deferred | Joern, canonical TRUST and richer AUTH, HTTP API, durable review, arbitrary repositories, OS isolation |
 
 The fixture intentionally contains unsupported dynamic registration, so its normal outcome is **PARTIAL / exit 2**. A matching authorization declaration is syntax evidence, not proof of enforcement.
 
@@ -207,7 +208,8 @@ Planned work is tracked as [GitHub issues](https://github.com/sumitjadhav1703/La
 - [ ] P05 measure and, if justified, split the viewer chunk
 - [x] P07 one validated, authorized live Meta explanation export
 - [x] Offline agent investigation and weakness references ([spec/10](spec/10_AGENT_INVESTIGATION.md))
-- [ ] Reviewed live agent investigation and web-search reference record
+- [x] Test the turn-aware prompt and redacted search diagnostics offline
+- [ ] Reconcile the agent ledger and verify the live investigation and search separately
 - [ ] P08 reviewed sandbox runtime with denial probes
 - [ ] P09 bounded next-intake contract, optional Joern spike, `LS-DATA-001` / `LS-TRUST-001`
 - [x] P10 public demo on GitHub Pages

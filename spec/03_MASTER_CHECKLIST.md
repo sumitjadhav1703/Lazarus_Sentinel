@@ -7,6 +7,8 @@ This checklist preserves the November 2 audit statuses. The [competition checkpo
 Checked means `IMPLEMENTED` for its stated scope or `NOT_APPLICABLE` because it is an explicit non-goal. Partial, blocked, superseded technology choices and future ideas remain unchecked. A checked declaration-context capability does not mean effective authorization, and a checked evidence hash does not prove semantic correctness.
 
 
+Recording-day disposition is tracked in the [demo closeout](05_DEMO_CLOSEOUT.md#recording-freeze--2026-11-04). The fixed evidence path and public recording were verified. An accessible video and submission receipt remain external deliverables. The historical BP rows below retain their original scope and statuses.
+
 - [x] **BP-001** `IMPLEMENTED` / `MVP` — Defensive read-only informational product.
 - [x] **BP-002** `IMPLEMENTED` / `MVP` — Snapshot authorization and scope.
 - [ ] **BP-003** `PARTIAL` / `MVP` — Repository URL/local path, commit SHA and branch identity.

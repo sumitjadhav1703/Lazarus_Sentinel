@@ -15,8 +15,8 @@
 ## Current status
 
 - **Project:** Lazarus Sentinel
-- **Status:** Integrated fixed synthetic demo complete; 139 backend tests (plus one Windows-only skip on macOS), 16 frontend tests and quality checks pass; independent Astra review accepted. Live access/submission and platform-expansion gates remain explicit in docs/19_INTEGRATED_DEMO_REVIEW.md.
-- **Blueprint audit:** [spec/README.md](spec/README.md) maps 107 scope items and all 28 Appendix B bullets; the original three-detector MVP remains incomplete. Next analysis step is a controlled semantic contract, alongside teammate reproduction.
+- **Status:** The fixed synthetic demo and repository context are released. The local investigation follow-up passed 266 backend tests with one skip. Live investigation and web search produced no accepted artifact. See [spec/10](spec/10_AGENT_INVESTIGATION.md).
+- **Blueprint audit:** [spec/README.md](spec/README.md) maps 107 scope items and all 28 Appendix B bullets; the original three-detector MVP remains incomplete. Canonical DATA is independently reviewed in [merged PR #57](https://github.com/sumitjadhav1703/Lazarus_Sentinel/pull/57). Canonical TRUST and richer AUTH remain open, alongside teammate reproduction.
 - **Current phase:** Team-ready source published on GitHub main; native Windows/macOS/Linux CI verified. See docs/23_PORTABILITY_AND_RELEASE_VERIFICATION.md.
 - **Primary MVP language/framework:** CPython 3.13.14 analyzing a synthetic FastAPI fixture without importing FastAPI.
 - **Primary code-analysis candidate:** Python AST structure adapter; Joern NOT_ATTEMPTED (absent from PATH; no failed POC claim).
@@ -363,3 +363,57 @@ No live call was made. The packaged bundle is unchanged. Measured counts are in 
 Verified that PR #55 merged after native Windows, macOS and Ubuntu checks. Synced the follow-up branch to main at 883a221, retaining the Claude Code investigation workflow, weakness references, viewer/README changes and Apache-2.0 license from PR #56. On the new checkout, the five-question evaluation found all five exact starts, with zero unsupported claims in 12,602 response bytes. Chrome opened Agent Context by keyboard at 320 px and copied parsed JSON identical to the CLI entity result. The page did not overflow horizontally. The full local offline verifier passed all nine checks, with zero live calls.
 
 The fixed DATA graph draft reuses validated AST evidence and the synthetic policy. It passed five focused tests including three held-out outcomes, deterministic bytes and tamper rejection. An independent reviewer confirmed the fixed exporter boundary but could not attest Astra routing. Release remains gated. TRUST, richer AUTH and OS isolation remain open.
+
+### Hackathon submission packet
+
+Inspected the organizer's participant guide and signed-in form in Chrome. Prepared a local submission packet with verified requirements, draft answers, and a timed walkthrough. The official deadline is November 4 at 9:00 p.m. EST (November 5 at 07:30 IST). The required accessible video URL remains outstanding, along with owner confirmation of roster, ratings, consent and submission. No form data was changed. PR #54 was independently confirmed merged after native macOS, Windows and Ubuntu checks passed.
+
+### Canonical detector preparation — 2026-11-04
+
+All eight checks on DATA draft PR #57 passed, including native macOS, Windows and Ubuntu verification. GitHub had no submitted review. Added six held-out regressions for the existing TRUST and actor/action/resource assessors, covering candidates, recognized declarations and unknown expressions with CRLF and UTF-8 evidence. The focused DATA/TRUST/AUTH suite passed 28 tests. Canonical TRUST and AUTH edge semantics still require review.
+
+### DATA and investigation security review — 2026-11-04
+
+Independent fallback review found no blocker for the fixed DATA scope at 65b9be0. All eight GitHub checks passed. The Astra routing requested for review was not independently attested. The draft was left on its reviewed head.
+
+Reviewed the investigation and reference workflows and rechecked official Meta tool, Responses, search and pricing documentation. Fixed guessed billing for unknown search shapes and added simulated transport/reservation tests. Documented that the three-query acceptance limit runs after the provider responds. Live investigation, live web search, and packaged deployment remain unverified. No paid calls were made.
+
+### Initial live investigation and web search — 2026-11-04
+
+Owner authorized one investigation and one separate search after disclosure of search billing uncertainty. Meta Standard Muse Spark investigation reached six settled turns and failed with AGENT_TURN_LIMIT. Estimated settled cost was USD 0.022813. Search returned UNVERIFIABLE_USAGE and retained a USD 0.10 reservation. No live investigation or reference artifact was written. No retry or reconciliation was performed. The mock investigation exported successfully with the existing recorded explanation into a new local bundle. The published assets were unchanged. See spec/10 for evidence and next gates.
+
+### Agent live-check preparation — 2026-11-04
+
+Added and tested the turn-aware v2 prompt with v1 replay compatibility and fixed redacted search diagnostics. Checked the agent ledger read-only and the signed-in Meta Usage dashboard. Available usage totals did not establish the charge for the reserved search, and Meta displayed an account restriction after a failed temporary payment hold. The reservation remains unsettled. No new paid request was made.
+
+### Markdown status audit — 2026-11-04
+
+Reconciled current onboarding, product, security, testing, roadmap, and cost documentation with the measured offline and live evidence. Dated checkpoints retain their original results.
+
+### Recording-day verification — 2026-11-04
+
+Independent checks covered the viewer, public release, and blueprint recording gates. Public Chrome replay and the three reviewed artifact hashes matched. The local production recording build is artifacts/demo-recording-S4v25s with adjacent file hashes. It highlights the live recording and shows five validated source locations. Browser checks passed for keyboard opening, candidate-to-control transition, dynamic coverage, stable 320 px reflow, and corrupt-bundle rejection. All nine offline verifier checks and 30 frontend tests passed. A fresh mock bundle exported. The live provider and canonical detector backlog remain tracked separately. See spec/05 for the timed recording sequence.
+
+### Argo recording export
+
+Recorded the frozen local demo with Argo 0.42.1 in an ignored project-only workspace. The full narrated export runs 4:16.56 and the submission cut runs 2:47.20. Both contain 1440×900 H.264 video and AAC narration. The extended cut adds full graph and Agent Context coverage. The recordings are local files pending upload and signed-out link verification.
+
+### Single submission film revision
+
+Recut the Argo capture into one 2:04 submission film. Original diagrams introduce the export-permission question and show the analysis flow before the browser footage. The film highlights the recorded Muse Spark response and five validated source locations, then shows the protected-route contrast, partial coverage, and repository context. The project-local edit uses HeyGen catalog narration and embedded English captions. Reviewed representative decoded frames and caption timing, and checked that the final video and audio streams decode. The output is artifacts/argo-recording/directors-cut/Lazarus-Sentinel.mp4.
+
+### Five-minute showcase film
+
+Exported one 4:58 showcase to artifacts/argo-recording/showcase/Lazarus-Sentinel-Showcase.mp4. The film illustrates an export permission question, explains deterministic graph construction, and shows commands and results from a fresh clone at 883a221. That run produced the expected PARTIAL scan and a replayable offline mock investigation tied to the same scan ID. Fresh Argo footage verified the five cited source locations in the recorded live Muse Spark explanation and confirmed that selecting a mock tool step changed the highlighted node. The two modes carry distinct labels. The closing roadmap identifies C/C++ memory safety as research.
+
+HeyGen timed out without a returned narration asset, so the edit uses the local macOS Daniel voice. Verified the full H.264 and AAC decode, 96 ordered English caption cues, the 298-second duration, and representative frames across the film. Setup is presented as terminal cards using executed commands and captured results. The five-minute export is a showcase. The earlier 2:04 submission cut remains available.
+
+### Showcase narration revision
+
+Replaced the showcase narration with Kokoro af_heart, generated locally after the connected voice service reported insufficient allowance. Kept the approved picture stream byte-identical. The new 4:58 MP4 includes the revised AAC narration and 96 English caption cues aligned to the measured takes. Verified the final duration, full audio/video decode, and picture-stream SHA-256. Output: artifacts/argo-recording/showcase/Lazarus-Sentinel-Showcase-Narrated.mp4.
+
+### Post-submission handoff — 2026-11-04
+
+The owner reported submitting the hackathon entry. GitHub confirmed PR #57 merged to public main at 806a0c6. The submitted X permalink and showcase are available on [X](https://x.com/SumitJadhav1703/status/2118012933783593298) and [YouTube](https://youtu.be/ya1EMtOg3Sw). The owner retains the portal receipt separately. Preserve the local offline follow-up on a separate branch from the submitted version.
+
+Ran `backend/.venv/bin/python scripts/verify_demo.py` against the follow-up. All nine offline checks passed with zero live provider attempts.

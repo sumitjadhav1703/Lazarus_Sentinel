@@ -1,6 +1,6 @@
 # Agent investigation of one candidate
 
-Written 2026-11-03. This increment is built and verified offline only. **No live call has been made.** The packaged public bundle in `frontend/public/demo/v1/` is unchanged.
+Written 2026-11-03. The offline workflow is verified. Both initial live checks were attempted and produced no accepted record. The packaged public bundle in `frontend/public/demo/v1/` is unchanged.
 
 ## What it does
 
@@ -39,7 +39,7 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 
 ## Not verified
 
-- No live call has been made. On 2026-11-04 the request shapes were checked against Meta's docs ([tool calling](https://dev.meta.ai/docs/tool-calling), [cookbook](https://dev.meta.ai/docs/cookbook/tool-function-calling), [search grounding](https://dev.meta.ai/docs/search-grounding), [Responses](https://dev.meta.ai/docs/protocols/responses), [models](https://dev.meta.ai/docs/models)):
+- The initial live calls reached the provider path, but neither produced a validated artifact. On 2026-11-04 the request shapes were checked against Meta's docs ([tool calling](https://dev.meta.ai/docs/tool-calling), [cookbook](https://dev.meta.ai/docs/cookbook/tool-function-calling), [search grounding](https://dev.meta.ai/docs/search-grounding), [Responses](https://dev.meta.ai/docs/protocols/responses), [models](https://dev.meta.ai/docs/models)):
   - **Tools:** function tools nested under `function` with no `strict` (optional, default false).
   - **Parallel calls:** `parallel_tool_calls: false` is supported.
   - **`tool_choice`:** omitted, so the only supported value, `auto`, applies.
@@ -51,6 +51,24 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 - **Failure cost:** a provider error such as HTTP 400 leaves that call's reservation unsettled, by design. The agent ledger then refuses new calls (`BUDGET_RECONCILIATION_REQUIRED`) until the owner reconciles it by hand. The shared explanation ledger is not affected.
 - The viewer does not recompute `request_sha256` and does not replay tools. The backend verifier does both.
 
+### Security review update — 2026-11-04
+
+- **Verified offline:** Tool dispatch, evidence replay, citation filtering, known-usage settlement, and failure isolation. A simulated transport failure makes one transport call, leaves an unsettled reservation, and blocks the next call while leaving the explanation ledger untouched.
+- **Still requires live evidence:** One valid investigation trace within six turns, and separately one web-search result with allowlisted citations and verifiable billed usage. The public viewer's existing recorded explanation is a different feature.
+- **Web-search release blocker:** Meta's public search grounding guide documents context size but gives no verified provider-side query cap for this request. The owner authorized the initial request after disclosure of spending uncertainty. A future live search needs a reconciled reservation and a separately reviewed verification run. The local three-query check runs after billing can occur. [Search grounding](https://dev.meta.ai/docs/search-grounding) · [Pricing](https://dev.meta.ai/docs/pricing-rate-limits)
+- **Viewer boundary:** The browser checks artifact integrity and citations. Full tool replay and request binding are backend checks. Hashes and replay establish internal consistency. Remote model origin still requires trusted capture provenance.
+
+### Initial live checks — 2026-11-04
+
+| Check | Result | Agent ledger |
+|---|---|---|
+| One live investigation of the committed synthetic candidate | `AGENT_TURN_LIMIT`. The sixth response did not submit the investigation. No live trace was written, so there is no live replay to verify. | Six settled calls, USD 0.022813 estimated in total. |
+| One live search for LS-AUTH-001 | `UNVERIFIABLE_USAGE`. The safe diagnostic cannot distinguish malformed token usage from an unrecognized search accounting shape. No reference record was written, so allowlisted citations and billed queries remain unverified. | One USD 0.10 reservation remains unsettled. It is reserved capacity, not a confirmed charge. |
+
+No retry was made. Use provider-side usage evidence to reconcile the reserved call before any new paid request. The v2 prompt reports the turn and remaining lookups, and requires submission on the final turn. Offline scripted transport verified a submission on turn six and replay compatibility with v1 records. Search now emits fixed diagnostic codes for output shape, token usage, query shape, and rejected settlement. Provider payloads are excluded from those diagnostics. The offline mock still exported and validated successfully, and the public bundle was unchanged.
+
+The signed-in Meta Usage dashboard showed daily aggregate usage and no verified charge attributable to the reserved request. It also showed an account restriction after a failed temporary payment hold. The reservation stays unsettled until Meta supplies attributable usage or confirms no charge.
+
 ## Weakness references and Meta web search
 
 `lazarus references --rule-id LS-AUTH-001 --provider disabled|mock|meta` records which public weaknesses a rule's candidates may represent.
@@ -60,7 +78,7 @@ uv run --project backend --locked --no-env-file lazarus demo export --scan-id <s
 | Static mapping | `references.RULE_REFERENCES`: CWE-862 and OWASP Top 10:2025 A01, with links verified 2026-11-03. The viewer always shows this mapping, from its mirror `frontend/src/rule-references.json`. A backend test checks that the two match. |
 | Live refresh | One `POST /v1/responses` with `tools: [{"type": "web_search", "search_context_size": "low"}]`, `reasoning.effort: "low"`, `max_output_tokens: 1024`, `store: false`. The input is a fixed per-rule question. **No code, graph or finding text is sent.** |
 | Citations | Only `url_citation` entries with https URLs on `cwe.mitre.org`, `owasp.org` or `top10.owasp.org` are kept, deduplicated by URL. If none qualify, the run fails with `NO_TRUSTED_CITATIONS`. More than 3 searches, or any status other than `completed`, fails the run. |
-| Cost | The call is settled on the agent ledger as token cost plus USD 2.50 per 1,000 search queries (Meta pricing page, checked 2026-11-03). Queries are counted per `search` action from its `queries` array (Meta Responses schema, checked 2026-11-04). Any other or unknown `web_search_call` shape counts as one query, so the ledger may over-count but never under-count. The 3-query cap applies to this count. Settlement happens before content validation, so every billed search is recorded. |
+| Cost | The call is settled on the agent ledger as token cost plus USD 2.50 per 1,000 search queries (Meta pricing page, checked 2026-11-03). Queries are counted per `search` action from its `queries` array (Meta Responses schema, checked 2026-11-04). Unknown or malformed search billing shapes leave the reservation unsettled and block further paid calls pending reconciliation. Recognized usage settles before content validation. Three queries is a post-response acceptance limit. Meta may already have billed more queries before Lazarus rejects the result. |
 | Bundle | The optional `references.json` sidecar is valid only when its rule matches a finding in the graph. The viewer shows it as **Recorded live web search**. |
 
 ## Gates before a live run
