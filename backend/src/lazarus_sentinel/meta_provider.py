@@ -281,17 +281,22 @@ SEARCH_TOOLS = [{"type": "web_search", "search_context_size": "low"}]
 
 
 def _search_queries(item: object) -> int:
-    """Billable queries in one output item. Per Meta's Responses schema (checked 2026-11-04),
-    a `search` action may run several `queries`. Unknown shapes count as one, so the
-    ledger can over-count but never under-count."""
+    """Count recognized search queries or leave ambiguous usage unsettled."""
     if not isinstance(item, dict) or item.get("type") != "web_search_call":
         return 0
     action = item.get("action")
     if isinstance(action, dict) and action.get("type") == "search":
         queries = action.get("queries")
-        if isinstance(queries, list) and queries:
+        if (
+            isinstance(queries, list)
+            and queries
+            and all(isinstance(query, str) and query.strip() for query in queries)
+        ):
             return len(queries)
-    return 1
+        legacy_query = action.get("query")
+        if "queries" not in action and isinstance(legacy_query, str) and legacy_query.strip():
+            return 1
+    raise ValueError("META_SEARCH_QUERY_SHAPE")
 
 
 def generate_search(payload: bytes, ledger_path: Path) -> tuple[dict[str, Any], dict[str, int]]:
@@ -323,16 +328,26 @@ def generate_search(payload: bytes, ledger_path: Path) -> tuple[dict[str, Any], 
     attempt = budget.reserve(len(payload))
     result = bounded_transport(payload, key, RESPONSES_PATH)
     usage, output = result.get("usage"), result.get("output")
-    if not isinstance(usage, dict) or not isinstance(output, list):
-        raise ValueError("UNVERIFIABLE_USAGE")  # noqa: TRY004 - allowlisted CLI diagnostic
+    if not isinstance(output, list):
+        raise ValueError("META_SEARCH_OUTPUT_SHAPE")  # noqa: TRY004 - safe CLI diagnostic
+    if not isinstance(usage, dict):
+        raise ValueError("META_SEARCH_TOKEN_USAGE")  # noqa: TRY004 - safe CLI diagnostic
     input_tokens, output_tokens = usage.get("input_tokens"), usage.get("output_tokens")
     if type(input_tokens) is not int or type(output_tokens) is not int:
-        raise ValueError("UNVERIFIABLE_USAGE")
-    if "total_tokens" in usage and usage["total_tokens"] != input_tokens + output_tokens:
-        raise ValueError("UNVERIFIABLE_USAGE")
+        raise ValueError("META_SEARCH_TOKEN_USAGE")
+    if "total_tokens" in usage and (
+        type(usage["total_tokens"]) is not int
+        or usage["total_tokens"] != input_tokens + output_tokens
+    ):
+        raise ValueError("META_SEARCH_TOKEN_USAGE")
     searches = sum(_search_queries(i) for i in output)
     # Settle before validating content so every billed search is recorded.
-    budget.settle(attempt, input_tokens, output_tokens, searches * WEB_SEARCH_MICRO_USD)
+    try:
+        budget.settle(attempt, input_tokens, output_tokens, searches * WEB_SEARCH_MICRO_USD)
+    except ValueError as exc:
+        if str(exc) != "UNVERIFIABLE_USAGE":
+            raise
+        raise ValueError("META_SEARCH_SETTLEMENT_REJECTED") from None
     if result.get("status") != "completed" or searches > SEARCH_MAX_QUERIES:
         raise ValueError("META_INVALID_RESPONSE")
     texts: list[str] = []

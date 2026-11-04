@@ -19,7 +19,8 @@ The public event page lists November 4 at 9:00 p.m. ET, which is November 5 at 0
 
 | Item | Observed or planned cost |
 |---|---|
-| Model usage to date | Four settled requests, **USD 0.023824 estimated** at ledger rates. The successful recording cost USD 0.004686 estimated. |
+| Explanation ledger | Four settled requests, **USD 0.023824 estimated** at ledger rates. The successful recording cost USD 0.004686 estimated. |
+| Separate agent ledger | Six settled investigation requests, **USD 0.022813 estimated**, plus one unresolved **USD 0.10 reservation** for search. The actual search charge is unverified. |
 | Recorded browser replay and offline verification | **USD 0 in additional model calls.** Use the deployed recording and the mock rehearsal for repeated demos. |
 | One remaining live attempt | The shared application ledger permits at most one further attempt under the existing five-attempt cap, subject to reconciliation and the USD 3 cap. The ledger reserves at least USD 0.10 before transport. A reservation is a budget hold. |
 | Hosting | Keep the existing static deployment. This plan adds no paid backend, database, model service or runner. |

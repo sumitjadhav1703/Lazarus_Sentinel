@@ -156,6 +156,27 @@ def test_scripted_live_run_records_usage(committed_scan, monkeypatch):
     assert all("strict" not in tool["function"] for tool in requests[0]["tools"])
 
 
+def test_turn_prompt_reaches_final_submission_and_preserves_legacy_replay(
+    committed_scan, monkeypatch
+):
+    root, scan_id, loaded = committed_scan
+    finding = loaded.graph.findings[0]
+    requests = scripted(
+        monkeypatch,
+        [("get_finding", {"finding_id": finding.id})] * 5 + [submit(finding.evidence_ids[:1])],
+    )
+    record = recorded(root, investigate(scan_id, finding.id, "meta"))
+    for turn, request in enumerate(requests, 1):
+        prompt = request["messages"][0]["content"]
+        assert f"Turn {turn} of 6" in prompt
+        assert f"{max(0, 5 - turn)} more lookup turns" in prompt
+    assert "submit_investigation only" in requests[-1]["messages"][0]["content"]
+    assert validate_investigation(record, loaded).usage.calls == 6
+    legacy_identity = investigation.request_identity(finding.id, "meta", legacy=True)
+    record["request_sha256"] = bundle.digest(bundle.canonical_bytes(legacy_identity))
+    assert validate_investigation(record, loaded).usage.calls == 6
+
+
 @pytest.mark.parametrize(
     "calls,code",
     [
@@ -218,6 +239,24 @@ def test_generate_turn_uses_separate_ledger(monkeypatch, tmp_path):
     call, usage = meta_provider.generate_turn(turn_request(), tmp_path / "agent.sqlite3", TOOLS)
     assert call == {"id": "call_1", "name": "get_coverage", "arguments": "{}"}
     assert usage == {"input_tokens": 100, "output_tokens": 20}
+    assert not (tmp_path / "model-budget.sqlite3").exists()
+
+
+def test_transport_failure_blocks_next_turn_without_retry(monkeypatch, tmp_path):
+    monkeypatch.setenv("MODEL_API_KEY", "fake-test-key")
+    calls = []
+
+    def fail_transport(*args):
+        calls.append(1)
+        raise ValueError("META_TRANSPORT_FAILED")
+
+    monkeypatch.setattr(meta_provider, "bounded_transport", fail_transport)
+    ledger = tmp_path / "agent-budget.sqlite3"
+    with pytest.raises(ValueError, match="META_TRANSPORT_FAILED"):
+        meta_provider.generate_turn(turn_request(), ledger, TOOLS)
+    with pytest.raises(ValueError, match="BUDGET_RECONCILIATION_REQUIRED"):
+        meta_provider.generate_turn(turn_request(), ledger, TOOLS)
+    assert len(calls) == 1
     assert not (tmp_path / "model-budget.sqlite3").exists()
 
 

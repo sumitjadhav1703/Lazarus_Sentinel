@@ -17,3 +17,7 @@
 .intro .lead{color:#21374b;font-size:16px;line-height:1.5;max-width:760px}
 
 .agent-context{overflow-wrap:anywhere}.agent-context>label,.agent-context>input,.agent-context>select{display:block;margin-top:8px;max-width:100%}.agent-context pre{max-width:100%;overflow:auto;padding:12px;background:#eef3f8}.agent-context button{margin-top:8px}
+
+.recorded-explanation{padding:0 12px 12px;background:#edf4ff;border:1px solid #bdd2f4;border-radius:5px}
+.recorded-explanation:not([open]){padding-bottom:0}
+.recorded-explanation li{overflow-wrap:anywhere}

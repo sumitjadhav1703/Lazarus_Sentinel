@@ -29,11 +29,11 @@ Implemented. Verify against `AGENT.md` and `TASK_BOARD.md`, which are the live l
   - Muse Spark calls read-only graph tools and finishes with `submit_investigation`.
   - Every step is replayed on validation, and citations must have been returned by a tool.
   - It uses a separate agent ledger (`artifacts/agent-budget.sqlite3`, 20 calls / USD 1).
-  - Built and tested offline. The live run needs review and owner authorization.
+  - Offline verified. The first live run reached the six-turn limit. The local v2 prompt adds a turn countdown and preserves v1 record replay.
 - **Weakness references** (`references.py`, `lazarus references`):
   - A static CWE-862 / OWASP A01:2025 mapping, mirrored in `frontend/src/rule-references.json`.
   - An optional Meta `web_search` refresh that keeps only allowlisted https citations, on the agent ledger.
-  - Built and tested offline.
+  - Offline verified. The first live search left a USD 0.10 reservation unsettled. Use fixed diagnostics and preserve the ledger until provider evidence establishes the charge.
 - **Optional extras** (not in the default install): `--extra langgraph` (opt-in LangGraph rehearsal over the same fixed stages, mock by default, no tracing).
 - **Repository context for agents** (`context.py`, `context_index.py`, `context_mcp.py`, `frontend/src/AgentContext*`, [spec/09](spec/09_AGENT_CONTEXT.md)): `lazarus context build|query|serve --target self`, merged through PR #55. It is a structural index of this repository, not data flow or proof of behaviour. Optional extra: `--extra context-mcp`.
 

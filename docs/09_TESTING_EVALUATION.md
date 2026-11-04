@@ -44,3 +44,7 @@ Joern, Semgrep and CodeQL comparisons have not run. Canonical data-flow/trust in
 ## Future evaluation proposals
 
 Use declared benchmark denominators for endpoint extraction, path accuracy, evidence completeness, unsupported scope and seeded candidate outcomes. Measure latency/resource use against declared workloads. Model factuality/egress tests apply only after a provider increment exists. Verify external benchmark language/license fit before adoption and compare like-for-like tool configurations. Qualitative confidence labels are not calibrated probabilities, and synthetic outcomes must remain visibly scoped.
+
+## Local investigation follow-up — 2026-11-04
+
+The backend suite passed 266 tests with one skip. The tests cover final-turn submission via scripted transport, v1 replay compatibility, redacted search diagnostics, and retention of ambiguous reservations. See [the investigation spec](../spec/10_AGENT_INVESTIGATION.md) for the separate live outcomes.

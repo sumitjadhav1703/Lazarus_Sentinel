@@ -9,7 +9,7 @@ import {loadDemo, type Demo} from './validation';
 vi.mock('./validation',()=>({loadDemo:vi.fn()}));
 vi.mock('./Network',()=>({default:()=> <div data-testid="network"/>}));
 afterEach(()=>{cleanup();vi.clearAllMocks();});
-const demo = (data=graph) => ({manifest:{scan:{status:'PARTIAL',profile:'reduced-static-auth',revision:data.repository.revision}},graph:data,annotations:[{finding_id:data.findings[0].id,generation:'mock',provider:'mock',model:'deterministic-mock-v1',response:{summary:'Mock explanation',why_it_matters:'Fixture',limitations:[]}}],investigations:[],references:[]} as unknown as Demo);
+const demo = (data=graph) => ({manifest:{scan:{status:'PARTIAL',profile:'reduced-static-auth',revision:data.repository.revision}},graph:data,annotations:[{finding_id:data.findings[0].id,generation:'mock',provider:'mock',model:'deterministic-mock-v1',response:{summary:'Mock explanation',why_it_matters:'Fixture',limitations:[],evidence_ids:data.findings[0].evidence_ids.slice(0,1)}}],investigations:[],references:[]} as unknown as Demo);
 
 it('guides selection and clears candidate details for an endpoint without a finding',async()=>{
   vi.mocked(loadDemo).mockResolvedValue(demo());
@@ -76,3 +76,17 @@ it('switches to the full graph when an investigation step inspects a node off th
   expect(screen.getByRole('button',{name:'Full graph'}).getAttribute('aria-pressed')).toBe('true');
 });
 
+
+it('opens the recorded live candidate first and shows its cited source location',async()=>{
+  const data=demo();
+  const finding=data.graph.findings[1];
+  const id=finding.evidence_ids[0];
+  const evidence=data.graph.evidence.find(item=>item.id===id)!;
+  data.annotations[0]={...data.annotations[0],generation:'live',finding_id:finding.id,response:{...data.annotations[0].response,evidence_ids:[id]}};
+  vi.mocked(loadDemo).mockResolvedValue(data);
+  render(<App/>);
+  const disclosure=(await screen.findByText('Recorded live explanation')).closest('details')!;
+  expect(within(disclosure).getByText(`${evidence.file_path}:${evidence.start_line}–${evidence.end_line}`)).toBeTruthy();
+  const endpoint=data.graph.nodes.find(n=>n.id===finding.entry_node_id)!;
+  expect(within(screen.getByRole('navigation',{name:'Endpoint list'})).getByRole('button',{name:new RegExp(endpoint.name)}).getAttribute('aria-pressed')).toBe('true');
+});

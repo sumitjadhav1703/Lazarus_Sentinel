@@ -83,12 +83,16 @@ def test_tampered_references_rejected(workspace, mutate, code):
         validate_references(value)
 
 
+def search_call(*queries):
+    return {
+        "type": "web_search_call",
+        "id": "ws",
+        "action": {"type": "search", "query": "q", "queries": list(queries)},
+    }
+
+
 def response(citations, status="completed", searches=1, calls=None):
-    calls = (
-        calls
-        if calls is not None
-        else [{"type": "web_search_call", "id": f"ws_{i}"} for i in range(searches)]
-    )
+    calls = calls if calls is not None else [search_call(f"query {i}") for i in range(searches)]
     return {
         "status": status,
         "usage": {"input_tokens": 400, "output_tokens": 100, "total_tokens": 500},
@@ -151,7 +155,12 @@ def test_live_keeps_only_allowlisted_citations_and_bills_search(workspace, monke
         (response([("https://evil.example/", "x")]), "NO_TRUSTED_CITATIONS"),
         (response([], status="failed"), "META_INVALID_RESPONSE"),
         (response([("https://cwe.mitre.org/a", "a")], searches=4), "META_INVALID_RESPONSE"),
-        ({"status": "completed", "usage": {}, "output": []}, "UNVERIFIABLE_USAGE"),
+        ({"status": "completed", "usage": {}, "output": []}, "META_SEARCH_TOKEN_USAGE"),
+        ({"usage": {}, "output": {"untrusted": "private text"}}, "META_SEARCH_OUTPUT_SHAPE"),
+        (
+            {"usage": {"input_tokens": 10, "output_tokens": 4096}, "output": []},
+            "META_SEARCH_SETTLEMENT_REJECTED",
+        ),
     ],
 )
 def test_live_failures_write_nothing(workspace, monkeypatch, result, code):
@@ -180,19 +189,21 @@ def test_generate_search_rejects_unreviewed_requests(monkeypatch, tmp_path, over
     assert not (tmp_path / "agent.sqlite3").exists()
 
 
-def search_call(*queries):
-    return {
-        "type": "web_search_call",
-        "id": "ws",
-        "action": {"type": "search", "query": "q", "queries": list(queries)},
-    }
-
-
 def test_multi_query_search_action_is_billed_per_query(workspace, monkeypatch):
     citation = [("https://cwe.mitre.org/data/definitions/862.html", "CWE-862")]
     live(monkeypatch, response(citation, calls=[search_call("cwe 862", "owasp a01")]))
     value = validate_references(recorded(workspace, lookup_references("LS-AUTH-001", "meta")))
     assert value.usage.searches == 2
+
+
+def test_legacy_search_query_settles_as_one_query(workspace, monkeypatch):
+    citation = [("https://cwe.mitre.org/data/definitions/862.html", "CWE-862")]
+    call = {"type": "web_search_call", "id": "ws", "action": {"type": "search", "query": "CWE-862"}}
+    live(monkeypatch, response(citation, calls=[call]))
+    value = validate_references(recorded(workspace, lookup_references("LS-AUTH-001", "meta")))
+    assert value.usage.searches == 1
+    with sqlite3.connect(workspace / "artifacts" / "agent-budget.sqlite3") as db:
+        assert db.execute("SELECT actual,state FROM attempts").fetchall() == [(3425, "SETTLED")]
 
 
 def test_query_cap_counts_queries_and_still_settles(workspace, monkeypatch):
@@ -204,3 +215,25 @@ def test_query_cap_counts_queries_and_still_settles(workspace, monkeypatch):
         assert db.execute("SELECT actual,state FROM attempts").fetchall() == [
             (500 + 425 + 10000, "SETTLED")
         ]
+
+
+@pytest.mark.parametrize(
+    "action",
+    [
+        None,
+        {"type": "search"},
+        {"type": "search", "query": " "},
+        {"type": "search", "query": "CWE-862", "queries": [1]},
+    ],
+)
+def test_unknown_search_billing_retains_reservation(workspace, monkeypatch, action):
+    paths = live(
+        monkeypatch,
+        response([], calls=[{"type": "web_search_call", "id": "ws", "action": action}]),
+    )
+    with pytest.raises(ValueError, match="^META_SEARCH_QUERY_SHAPE$"):
+        lookup_references("LS-AUTH-001", "meta")
+    with pytest.raises(ValueError, match="BUDGET_RECONCILIATION_REQUIRED"):
+        lookup_references("LS-AUTH-001", "meta")
+    assert paths == ["/v1/responses"]
+    assert not (workspace / "artifacts" / "references").exists()

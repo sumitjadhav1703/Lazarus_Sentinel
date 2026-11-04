@@ -4,6 +4,31 @@ The demo presents reproducible authorization-context evidence for a controlled s
 
 A fresh clone on macOS arm64 passed all nine offline checks and returned the expected scan exit code 2. Initial dependency installation used the package registries because the local cache lacked a locked wheel. The new rehearsal command was verified separately in the closeout checkout.
 
+## Recording freeze — 2026-11-04
+
+Record the public Pages viewer if the video should match the link judges open. A clean Chrome session verified the live explanation and protected-route transition, and the public bundle, graph, and explanation matched the reviewed hashes. In that viewer, show source locations through the graph inspector.
+
+The enhanced local production build is available at [loopback](http://127.0.0.1:4173/). It opens the recorded candidate and shows the five cited locations in the explanation panel. The fixed build and file hashes are in the ignored recording directory and its adjacent manifest. Use the same build for every take. If the server has stopped, run from the project root:
+
+```sh
+python3 -m http.server 4173 --bind 127.0.0.1 --directory artifacts/demo-recording-S4v25s
+```
+
+| Time | Show |
+|---|---|
+| 0:00–0:30 | Explain the review problem and introduce the synthetic FastAPI fixture. |
+| 0:30–1:15 | On GET /authenticated, trace the candidate from endpoint through calls to source evidence. |
+| 1:15–2:15 | Open Recorded live explanation. Identify Muse Spark 1.3, the verified citations, and the explanation’s UNREVIEWED label. |
+| 2:15–3:00 | Switch to GET /protected, show the declared control and PARTIAL coverage, and point to the public repository. |
+
+The packaged viewer shows the recorded explanation. Use a clearly labeled mock rehearsal if demonstrating the optional agent loop. Live tool-calling and search verification remain separate. Open the final video link signed out and retain the submission receipt.
+
+## Argo recording files
+
+The [Argo project](https://github.com/shreyaskarnik/argo) supplied the recorder, scene overlays, narration alignment, and MP4 exporter. The project-only installation and scene manifest are under the ignored `artifacts/argo-recording/` directory. The narration uses the local macOS Samantha voice. The full walkthrough includes the full graph and Agent Context. The shorter edit ends after coverage so it fits the documented three-minute submission limit.
+
+The recordings use the enhanced local build. The public link shares the verified bundle and provides the source locations through the graph inspector.
+
 ## Rehearse from a fresh checkout
 
 Use the locked setup in [the teammate guide](../docs/21_TEAM_HANDOFF.md). Then run these commands from the repository root.
