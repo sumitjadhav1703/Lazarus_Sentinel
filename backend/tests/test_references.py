@@ -196,6 +196,16 @@ def test_multi_query_search_action_is_billed_per_query(workspace, monkeypatch):
     assert value.usage.searches == 2
 
 
+def test_legacy_search_query_settles_as_one_query(workspace, monkeypatch):
+    citation = [("https://cwe.mitre.org/data/definitions/862.html", "CWE-862")]
+    call = {"type": "web_search_call", "id": "ws", "action": {"type": "search", "query": "CWE-862"}}
+    live(monkeypatch, response(citation, calls=[call]))
+    value = validate_references(recorded(workspace, lookup_references("LS-AUTH-001", "meta")))
+    assert value.usage.searches == 1
+    with sqlite3.connect(workspace / "artifacts" / "agent-budget.sqlite3") as db:
+        assert db.execute("SELECT actual,state FROM attempts").fetchall() == [(3425, "SETTLED")]
+
+
 def test_query_cap_counts_queries_and_still_settles(workspace, monkeypatch):
     citation = [("https://cwe.mitre.org/data/definitions/862.html", "CWE-862")]
     live(monkeypatch, response(citation, calls=[search_call("a", "b", "c", "d")]))
@@ -207,7 +217,15 @@ def test_query_cap_counts_queries_and_still_settles(workspace, monkeypatch):
         ]
 
 
-@pytest.mark.parametrize("action", [None, {"type": "search"}, {"type": "search", "queries": [1]}])
+@pytest.mark.parametrize(
+    "action",
+    [
+        None,
+        {"type": "search"},
+        {"type": "search", "query": " "},
+        {"type": "search", "query": "CWE-862", "queries": [1]},
+    ],
+)
 def test_unknown_search_billing_retains_reservation(workspace, monkeypatch, action):
     paths = live(
         monkeypatch,

@@ -169,7 +169,7 @@ def test_turn_prompt_reaches_final_submission_and_preserves_legacy_replay(
     for turn, request in enumerate(requests, 1):
         prompt = request["messages"][0]["content"]
         assert f"Turn {turn} of 6" in prompt
-        assert f"{6 - turn} more lookup turns" in prompt
+        assert f"{max(0, 5 - turn)} more lookup turns" in prompt
     assert "submit_investigation only" in requests[-1]["messages"][0]["content"]
     assert validate_investigation(record, loaded).usage.calls == 6
     legacy_identity = investigation.request_identity(finding.id, "meta", legacy=True)

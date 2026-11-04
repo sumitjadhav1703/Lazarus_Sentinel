@@ -379,7 +379,9 @@ def investigate(scan_id: str, finding_id: str, provider: str = "disabled") -> di
             "role": "system",
             "content": PROMPT
             + " "
-            + TURN_PROMPT.format(turn=turn, limit=MAX_TURNS, remaining=MAX_TURNS - turn),
+            + TURN_PROMPT.format(
+                turn=turn, limit=MAX_TURNS, remaining=max(0, MAX_TURNS - turn - 1)
+            ),
         }
         # Checked for the mock too, so rehearsal proves the live conversation fits.
         if len(transport_payload(messages)) > AGENT_MAX_REQUEST_BYTES:

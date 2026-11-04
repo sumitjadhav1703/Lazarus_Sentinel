@@ -293,6 +293,9 @@ def _search_queries(item: object) -> int:
             and all(isinstance(query, str) and query.strip() for query in queries)
         ):
             return len(queries)
+        legacy_query = action.get("query")
+        if "queries" not in action and isinstance(legacy_query, str) and legacy_query.strip():
+            return 1
     raise ValueError("META_SEARCH_QUERY_SHAPE")
 
 

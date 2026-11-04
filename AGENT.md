@@ -417,3 +417,7 @@ Replaced the showcase narration with Kokoro af_heart, generated locally after th
 The owner reported submitting the hackathon entry. GitHub confirmed PR #57 merged to public main at 806a0c6. The submitted X permalink and showcase are available on [X](https://x.com/SumitJadhav1703/status/2118012933783593298) and [YouTube](https://youtu.be/ya1EMtOg3Sw). The owner retains the portal receipt separately. Preserve the local offline follow-up on a separate branch from the submitted version.
 
 Ran `backend/.venv/bin/python scripts/verify_demo.py` against the follow-up. All nine offline checks passed with zero live provider attempts.
+
+### PR #58 review follow-up — 2026-11-04
+
+Accepted both automated review findings. Meta's Responses schema allows a legacy single query when the query array is absent. A malformed array still leaves billing unsettled. The investigation countdown now reserves turn six for submission and reports zero future lookup turns on turns five and six. The focused offline suites passed 61 tests. No live provider calls were made.
