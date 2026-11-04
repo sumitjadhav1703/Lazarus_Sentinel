@@ -357,3 +357,9 @@ On the same branch:
 - **License:** added the Apache-2.0 `LICENSE` and `NOTICE` (D-031), and updated the license status across the docs.
 
 No live call was made. The packaged bundle is unchanged. Measured counts are in spec/10 and the README.
+
+### Resume and verify repository context — 2026-11-04
+
+Verified that PR #55 merged after native Windows, macOS and Ubuntu checks. Synced the follow-up branch to main at 883a221, retaining the Claude Code investigation workflow, weakness references, viewer/README changes and Apache-2.0 license from PR #56. On the new checkout, the five-question evaluation found all five exact starts, with zero unsupported claims in 12,602 response bytes. Chrome opened Agent Context by keyboard at 320 px and copied parsed JSON identical to the CLI entity result. The page did not overflow horizontally. The full local offline verifier passed all nine checks, with zero live calls.
+
+The fixed DATA graph draft reuses validated AST evidence and the synthetic policy. It passed five focused tests including three held-out outcomes, deterministic bytes and tamper rejection. An independent reviewer confirmed the fixed exporter boundary but could not attest Astra routing. Release remains gated. TRUST, richer AUTH and OS isolation remain open.
