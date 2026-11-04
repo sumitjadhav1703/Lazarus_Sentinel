@@ -19,14 +19,23 @@ QUESTIONS = (
     ("Viewer bundle loading", "frontend/src/validation.ts", "loadDemo", 48),
 )
 
+# PR #56 moved three definitions. Preserve the original answer key for replay.
+ANCHOR_SETS = {
+    "pr55": (85, 26, 26, 33, 48),
+    "pr56": (105, 26, 26, 45, 55),
+}
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--snapshot", required=True)
+    parser.add_argument("--anchor-set", choices=ANCHOR_SETS, default="pr56")
     args = parser.parse_args()
     manifest, graph = load_context(args.snapshot)
     cases = []
-    for question, path, symbol, line in QUESTIONS:
+    for (question, path, symbol, _), line in zip(
+        QUESTIONS, ANCHOR_SETS[args.anchor_set], strict=True
+    ):
         baseline = [file.path for file in graph.files if file.path == path]
         cursor = None
         records = []
@@ -61,7 +70,12 @@ def main() -> None:
         )
     print(
         json.dumps(
-            {"snapshot_id": manifest.snapshot_id, "cases": cases}, sort_keys=True
+            {
+                "snapshot_id": manifest.snapshot_id,
+                "anchor_set": args.anchor_set,
+                "cases": cases,
+            },
+            sort_keys=True,
         )
     )
 

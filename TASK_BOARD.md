@@ -105,3 +105,9 @@ DONE (PR #41, pending merge): CI split and hardened, CodeQL, Dependabot, templat
 - [ ] Get Astra or an approved fallback review of the tool-calling boundary, then one owner-authorized live run, then packaging and the manual Pages deploy.
 - [x] Weakness references (static CWE/OWASP mapping and offline-tested `web_search` refresh), problem-first viewer intro, README GIF and 60-second guide, Apache-2.0 license.
 - [ ] Get the live web-search reference record under the same review gate, then package it with the investigation.
+
+### Repository context and canonical detectors
+
+- [x] Release repository context in PR #55 after native Windows, macOS and Linux CI. Verify real-export browser and CLI entity parity on PR #56 main.
+- [ ] Review the fixed canonical DATA graph projection before release. The draft covers four positive, four control and four unknown fixtures, plus held-out tests.
+- [ ] Review and integrate TRUST and richer AUTH separately. Broader intake still requires demonstrated filesystem and network isolation.

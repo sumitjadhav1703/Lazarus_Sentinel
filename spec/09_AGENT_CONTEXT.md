@@ -33,7 +33,7 @@ The frozen questions cover CLI dispatch, scanner orchestration, graph validation
 
 ## Release gates
 
-The implementation and temporary-repository tests are local. Complete the required security review before release of the real self-index and MCP boundary. Native CI, real-repository evaluation, broader intake isolation, and canonical DATA/TRUST/AUTH integration remain separate checks. The hosted security demo uses the original artifacts.
+PR #55 merged after Windows, macOS and Ubuntu verification, including CLI/MCP parity tests on a controlled snapshot. Broader intake still requires demonstrated OS isolation. The hosted security demo uses the original artifacts.
 
 ### Measured self-index release evidence
 
@@ -42,3 +42,9 @@ The owner authorized the release and independent fallback review. The reviewer f
 All five expected definition starts matched. The path-only baseline found five files and zero definition spans, using 195 response bytes. The structured queries used 12,032 bytes in total and returned zero unsupported claims in this five-question test. The questions include file hints, so this establishes source-anchor retrieval for the named cases. It does not measure general agent reasoning.
 
 Snapshot `39ae0bd4-0add-4b55-a66e-e41a63a7632d`, graph revision `efc39a3ea2a327f6eb36de2b610f645b2a968b596420851125ddaec07cedc5c2`. The local export remains outside Git.
+
+### Verification after PR #56
+
+The investigation release moved three frozen source anchors. On main at `883a221`, the updated `--anchor-set pr56` key matched all five definitions with zero unsupported claims. Graph responses used 12,602 bytes versus 195 bytes for the path baseline. Use `--anchor-set pr55` to replay the original snapshot.
+
+Chrome opened Agent Context by keyboard at 320 CSS pixels, verified the real export, and copied the `validate_graph` entity result. Its parsed JSON matched the CLI result. The page had no horizontal overflow at that width.

@@ -76,3 +76,28 @@ def test_reject_changed_or_duplicate_policy(trust):
         trust.load_policy(
             raw.replace(b'"policy_version": "1"', b'"policy_version":"2","policy_version":"1"')
         )
+
+
+@pytest.mark.parametrize(
+    ("body", "outcome", "evidence_kinds"),
+    [
+        ("handoff('partner')", "CANDIDATE", ["handoff_declaration"]),
+        (
+            "check_consent('partner')\n    handoff('partner')",
+            "NO_CANDIDATE_IN_SUBSET",
+            ["handling_declaration", "handoff_declaration"],
+        ),
+        ("handoff(destination())", "NEEDS_CONTEXT", []),
+    ],
+)
+def test_held_out_trust_projection_inputs(trust, body, outcome, evidence_kinds):
+    policy = (trust.CORPUS / "policy.json").read_bytes()
+    source = f"# café\ndef transfer():\n    {body}\n".replace("\n", "\r\n").encode()
+    result = trust.assess_source(source, policy, file_path="held_out.py")
+    assert result["outcome"] == outcome
+    assert [item["kind"] for item in result["evidence"]] == evidence_kinds
+    for item in result["evidence"]:
+        assert item["start_line"] >= 3
+        lines = source.splitlines()
+        span = lines[item["start_line"] - 1][item["start_col"] : item["end_col"]]
+        assert item["sha256"] == hashlib.sha256(span).hexdigest()
