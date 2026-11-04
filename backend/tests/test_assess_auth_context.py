@@ -88,3 +88,28 @@ def test_tampered_evidence_prevents_publication(runner, monkeypatch, tmp_path):
     with pytest.raises(ValueError, match="INVALID_AUTH_CONTEXT_EVIDENCE"):
         runner.assess()
     assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize(
+    ("declaration", "outcome", "diagnostics"),
+    [
+        ("authorize(actor, 'préview', resource)", "CANDIDATE", ["ACTION_MISMATCH"]),
+        ("authorize(actor, 'export', resource)", "DECLARATION_RECOGNIZED", []),
+        ("authorize(actor, action(), resource)", "NEEDS_CONTEXT", None),
+    ],
+)
+def test_held_out_auth_projection_inputs(runner, declaration, outcome, diagnostics):
+    source = f"def case(actor, resource):\r\n    {declaration}\r\n    export(resource)\r\n".encode()
+    result = runner.analyze(source, "held_out.py", runner.POLICY)
+    assert result["outcome"] == outcome
+    assert result.get("diagnostics") == diagnostics
+    runner.validate_evidence(source, result["evidence"])
+    if diagnostics is None:
+        assert result["evidence"] == []
+    else:
+        assert [item["kind"] for item in result["evidence"]] == [
+            "actor_parameter",
+            "resource_parameter",
+            "authorization_declaration",
+            "protected_operation",
+        ]
