@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "lazarus-sentinel"
 version = "0.1.0"
 requires-python = ">=3.13,<3.14"
-dependencies = ["pydantic>=2.12,<3", "networkx>=3.5,<4"]
+dependencies = ["pydantic>=2.14.3,<3", "networkx>=3.5,<4"]
 
 [project.scripts]
 lazarus = "lazarus_sentinel.cli:main"
