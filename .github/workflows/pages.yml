@@ -52,7 +52,7 @@ jobs:
           cmp public/demo/v1/bundle.json dist/demo/v1/bundle.json
           cmp public/demo/v1/graph.json dist/demo/v1/graph.json
           cmp public/demo/v1/explanations.json dist/demo/v1/explanations.json
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         if: inputs.deploy
         with:
           path: frontend/dist
