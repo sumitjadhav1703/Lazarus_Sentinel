@@ -16,7 +16,7 @@ langgraph = [
     "langgraph==1.2.19",
 ]
 context-mcp = [
-    "mcp>=1.26,<2",
+    "mcp>=2.3.0,<3",
 ]
 
 [dependency-groups]
